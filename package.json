@@ -1,0 +1,66 @@
+{
+  "name": "pino-prettier",
+  "description": "Prettiest Prettifier for Pino log lines",
+  "version": "0.0.0",
+  "author": "James Sumners <james.sumners@gmail.com>",
+  "bugs": {
+    "url": "https://github.com/pinojs/pino-pretty/issues"
+  },
+  "bin": {
+    "pino-prettier": "./bin.js"
+  },
+  "dependencies": {
+    "chalk": "^4",
+    "dayjs": "^1.11.1",
+    "fast-json-parse": "^1.0.3",
+    "on-exit-leak-free": "^0.2.0",
+    "pino-abstract-transport": "^0.5.0",
+    "pretty-ms": "^7.0.1",
+    "pump": "^3.0.0",
+    "readable-stream": "^3.6.0",
+    "sonic-boom": "^2.2.0"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^16.2.4",
+    "@commitlint/config-conventional": "^16.2.4",
+    "ava": "^4.2.0",
+    "fixpack": "^4.0.0",
+    "husky": "^7.0.4",
+    "lint-staged": "^12.4.1",
+    "xo": "^0.48.0"
+  },
+  "homepage": "https://github.com/pinojs/pino-pretty#readme",
+  "keywords": [
+    "pino"
+  ],
+  "license": "MIT",
+  "main": "index.js",
+  "precommit": [
+    "lint",
+    "test"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/spence-s/pino-prettier.git"
+  },
+  "scripts": {
+    "lint": "xo"
+  },
+  "tsd": {
+    "directory": "./test/types"
+  },
+  "type": "commonjs",
+  "xo": {
+    "space": true,
+    "prettier": true,
+    "rules": {
+      "unicorn/prefer-module": "off",
+      "import/extensions": "off",
+      "unicorn/no-array-reduce": "off",
+      "unicorn/prefer-object-from-entries": "off",
+      "no-negated-condition": "off",
+      "unicorn/prevent-abbreviations": "off",
+      "capitalized-comments": "off"
+    }
+  }
+}
