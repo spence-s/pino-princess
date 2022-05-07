@@ -11,14 +11,18 @@
   },
   "dependencies": {
     "chalk": "^4",
+    "cosmiconfig": "^7.0.1",
     "dayjs": "^1.11.1",
     "fast-json-parse": "^1.0.3",
+    "get-value": "^3.0.1",
     "on-exit-leak-free": "^0.2.0",
     "pino-abstract-transport": "^0.5.0",
     "pretty-ms": "^7.0.1",
     "pump": "^3.0.0",
     "readable-stream": "^3.6.0",
-    "sonic-boom": "^2.2.0"
+    "set-value": "^4.1.0",
+    "sonic-boom": "^2.2.0",
+    "unset-value": "^2.0.1"
   },
   "devDependencies": {
     "@commitlint/cli": "^16.2.4",
