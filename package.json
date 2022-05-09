@@ -1,13 +1,13 @@
 {
-  "name": "pino-prettier",
-  "description": "Prettiest Prettifier for Pino log lines",
+  "name": "pino-princess",
+  "description": "Prettiest Pino Prettifier in all the land",
   "version": "0.0.0",
-  "author": "James Sumners <james.sumners@gmail.com>",
+  "author": "Spencer Snyder <sasnyde2@gmail.com>",
   "bugs": {
     "url": "https://github.com/pinojs/pino-pretty/issues"
   },
   "bin": {
-    "pino-prettier": "./bin.js"
+    "pino-princess": "./cli.js"
   },
   "dependencies": {
     "chalk": "^4",
@@ -33,9 +33,16 @@
     "lint-staged": "^12.4.1",
     "xo": "^0.48.0"
   },
-  "homepage": "https://github.com/pinojs/pino-pretty#readme",
+  "homepage": "https://github.com/pinojs/pino-princess#readme",
   "keywords": [
-    "pino"
+    "pino",
+    "pino-pretty",
+    "ndjson",
+    "prettifier",
+    "pino-colada",
+    "prettifier",
+    "pretty",
+    "prettify"
   ],
   "license": "MIT",
   "main": "index.js",
@@ -45,7 +52,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@github.com/spence-s/pino-prettier.git"
+    "url": "git+ssh://git@github.com/spence-s/pino-princess.git"
   },
   "scripts": {
     "lint": "xo"
