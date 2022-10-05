@@ -1,68 +1,36 @@
 {
   "name": "pino-princess",
-  "description": "Prettiest Pino Prettifier in all the land",
   "version": "0.0.0",
-  "author": "Spencer Snyder <sasnyde2@gmail.com>",
-  "bugs": {
-    "url": "https://github.com/pinojs/pino-pretty/issues"
-  },
-  "bin": {
-    "pino-princess": "./cli.js"
-  },
-  "dependencies": {
-    "chalk": "^4",
-    "cosmiconfig": "^7.0.1",
-    "dayjs": "^1.11.1",
-    "fast-json-parse": "^1.0.3",
-    "get-value": "^3.0.1",
-    "on-exit-leak-free": "^0.2.0",
-    "pino-abstract-transport": "^0.5.0",
-    "pretty-ms": "^7.0.1",
-    "pump": "^3.0.0",
-    "readable-stream": "^3.6.0",
-    "set-value": "^4.1.0",
-    "sonic-boom": "^2.2.0",
-    "unset-value": "^2.0.1"
-  },
-  "devDependencies": {
-    "@commitlint/cli": "^16.2.4",
-    "@commitlint/config-conventional": "^16.2.4",
-    "ava": "^4.2.0",
-    "fixpack": "^4.0.0",
-    "husky": "^7.0.4",
-    "lint-staged": "^12.4.1",
-    "xo": "^0.48.0"
-  },
-  "homepage": "https://github.com/pinojs/pino-princess#readme",
+  "description": "Prettiest Pino Prettifier in all the land",
   "keywords": [
     "pino",
     "pino-pretty",
     "ndjson",
     "prettifier",
     "pino-colada",
-    "prettifier",
     "pretty",
     "prettify"
   ],
-  "license": "MIT",
-  "main": "index.js",
-  "precommit": [
-    "lint",
-    "test"
-  ],
+  "homepage": "https://github.com/pinojs/pino-princess#readme",
+  "bugs": {
+    "url": "https://github.com/pinojs/pino-pretty/issues"
+  },
   "repository": {
     "type": "git",
     "url": "git+ssh://git@github.com/spence-s/pino-princess.git"
   },
+  "license": "MIT",
+  "author": "Spencer Snyder <sasnyde2@gmail.com>",
+  "type": "commonjs",
+  "main": "index.js",
+  "bin": {
+    "pino-princess": "./cli.js"
+  },
   "scripts": {
+    "check": "tsc --project tsconfig.json",
     "lint": "xo"
   },
-  "tsd": {
-    "directory": "./test/types"
-  },
-  "type": "commonjs",
   "xo": {
-    "space": true,
     "prettier": true,
     "rules": {
       "unicorn/prefer-module": "off",
@@ -72,6 +40,37 @@
       "no-negated-condition": "off",
       "unicorn/prevent-abbreviations": "off",
       "capitalized-comments": "off"
-    }
+    },
+    "space": true
+  },
+  "dependencies": {
+    "chalk": "^4",
+    "cosmiconfig": "^7.0.1",
+    "dayjs": "^1.11.5",
+    "fast-json-parse": "^1.0.3",
+    "get-value": "^3.0.1",
+    "on-exit-leak-free": "^2.1.0",
+    "pino-abstract-transport": "^1.0.0",
+    "pretty-ms": "^7",
+    "pump": "^3.0.0",
+    "readable-stream": "^4.2.0",
+    "set-value": "^4.1.0",
+    "sonic-boom": "^3.2.0",
+    "unset-value": "^2.0.1"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^17.1.2",
+    "@commitlint/config-conventional": "^17.1.0",
+    "@types/events": "^3.0.0",
+    "@types/get-value": "^3.0.3",
+    "@types/node": "^16.11.64",
+    "@types/set-value": "^4.0.1",
+    "ava": "^4.3.3",
+    "fixpack": "^4.0.0",
+    "husky": "^8.0.1",
+    "lint-staged": "^13.0.3",
+    "prettier-plugin-packagejson": "^2.3.0",
+    "typescript": "^4.8.4",
+    "xo": "^0.52.3"
   }
 }

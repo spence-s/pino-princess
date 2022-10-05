@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "module": "CommonJS",
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "target": "ES2021",
+    "checkJs": true,
+    "allowJs": true,
+    "maxNodeModuleJsDepth": 0,
+    "strict": true,
+    "noEmit": true
+  },
+  "exclude": ["node_modules", "lib/build-safe-sonic-boom.js"],
+  "include": ["lib/**/*"]
+}
