@@ -1,5 +1,6 @@
 import type {ClientRequest, ServerResponse} from 'node:http';
 import type {Chalk} from 'chalk';
+import type {SerializedError} from 'pino';
 
 export type Levels = 'trace' | 'debug' | 'info' | 'warn' | 'error' | 'fatal';
 
@@ -28,7 +29,7 @@ export type LogObject = {
   url?: string;
   contentLength?: string;
   stack?: string;
-  err?: Partial<Error>;
+  err?: Partial<SerializedError>;
   pid?: string;
   hostname?: string;
   extraFields?: unknown;
@@ -46,6 +47,6 @@ export type Formatters = {
   formatStack?: Formatter<string>;
   formatUrl?: Formatter<string>;
   formatStatusCode?: Formatter<number>;
-  formatErrorProp?: Formatter<Partial<Error> | string>;
+  formatErrorProp?: Formatter<Partial<SerializedError>>;
   formatMethod?: Formatter<string>;
 };
