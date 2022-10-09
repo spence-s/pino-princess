@@ -50,3 +50,9 @@ export type Formatters = {
   formatErrorProp?: Formatter<Partial<SerializedError>>;
   formatMethod?: Formatter<string>;
 };
+
+export type PrettifyOptions = {
+  blackList?: string[];
+  whiteList?: string[];
+  formatters?: Formatters;
+};

@@ -1,25 +1,23 @@
-const chalk = require('chalk');
-const dayjs = require('dayjs');
-const prettyMs = require('pretty-ms');
-// const isEmpty = require('./is-empty');
-// const isObject = require('./is-object');
-
-/**
- * @typedef {import('./types').Formatters} Formatters
- * @typedef {import('./types').Levels} Levels
- * @typedef {import('./types').Colors} Colors
- * @typedef {import('./types').MessageObj} MessageObj
- */
+import chalk from 'chalk';
+import dayjs from 'dayjs';
+import type {SerializedError} from 'pino';
+import prettyMs from 'pretty-ms';
+import type {Formatters, Levels, Colors, MessageObj} from './types';
 
 const nl = '\n';
-/** @type {Formatters} */
-let formatters;
+
+const stringify = (obj: unknown) =>
+  JSON.stringify(obj, null, 2).replace(/^{\n|\n}$/g, '');
+
+let formatters: Formatters | undefined;
+
+export default getFormatters;
 
 /**
  * @param {Formatters} _formatters
  * @returns {Formatters}
  */
-module.exports = (_formatters) => {
+function getFormatters(_formatters?: Formatters): Formatters {
   formatters = _formatters;
 
   return {
@@ -37,7 +35,7 @@ module.exports = (_formatters) => {
     formatStatusCode,
     formatErrorProp,
   };
-};
+}
 
 const emojiMap = {
   warn: '⚠️',
@@ -49,8 +47,7 @@ const emojiMap = {
   trace: '🔍',
 };
 
-/** @type {Record<Levels | 'userlvl', Colors>} */
-const colorMap = {
+const colorMap: Record<Levels | 'userlvl', Colors> = {
   warn: 'yellow',
   info: 'cyan',
   userlvl: 'cyan',
@@ -60,22 +57,12 @@ const colorMap = {
   fatal: 'red',
 };
 
-/**
- * @name isWideEmoji
- * @param {string} character
- * @returns {boolean}
- */
-function isWideEmoji(character) {
+function isWideEmoji(character: string): boolean {
   return character !== '⚠️';
 }
 
-/**
- * @name formatLevel
- * @param {Levels | 'userlvl'} level
- * @returns {string}
- */
-function formatLevel(level) {
-  if (formatters.formatLevel) return formatters.formatLevel(level, {chalk});
+function formatLevel(level: Levels | 'userlvl'): string {
+  if (formatters?.formatLevel) return formatters.formatLevel(level, {chalk});
   if (!emojiMap?.[level]) return '';
   const endlen = 5;
   const emoji = emojiMap[level];
@@ -85,13 +72,8 @@ function formatLevel(level) {
   return emoji + padding + formattedLevel + ''.padEnd(endPadding, ' ');
 }
 
-/**
- * @name formatLoadTime
- * @param {string|number} elapsedTime
- * @returns {string}
- */
-function formatLoadTime(elapsedTime) {
-  if (formatters.formatLoadTime)
+function formatLoadTime(elapsedTime: string | number): string {
+  if (formatters?.formatLoadTime)
     return formatters.formatLoadTime(elapsedTime, {chalk});
   const elapsed =
     typeof elapsedTime === 'string'
@@ -105,36 +87,21 @@ function formatLoadTime(elapsedTime) {
     : chalk.green(time);
 }
 
-/**
- * @name formatDate
- * @param {string|number} instant
- * @returns {string}
- */
-function formatDate(instant) {
-  if (formatters.formatDate) return formatters.formatDate(instant, {chalk});
+function formatDate(instant: string | number): string {
+  if (formatters?.formatDate) return formatters.formatDate(instant, {chalk});
   return chalk.gray(dayjs(instant).format('H:mm:ss'));
 }
 
-/**
- * @name formatName
- * @param {string} name
- * @returns {string}
- */
-function formatName(name) {
-  if (formatters.formatName) return formatters.formatName(name, {chalk});
+function formatName(name: string): string {
+  if (formatters?.formatName) return formatters.formatName(name, {chalk});
 
   if (!name) return '';
 
   return `- ${chalk.blue(name)}:`;
 }
 
-/**
- * @name formatMessage
- * @param {MessageObj} obj
- * @returns {string}
- */
-function formatMessage({level, message}) {
-  if (formatters.formatMessage)
+function formatMessage({level, message}: MessageObj): string {
+  if (formatters?.formatMessage)
     return formatters.formatMessage({level, message}, {chalk});
   if (typeof message === 'undefined') return '';
   message = formatMessageName(message);
@@ -149,75 +116,41 @@ function formatMessage({level, message}) {
   return pretty;
 }
 
-/**
- * @name formatMessageName
- * @param {string} message
- * @returns {string}
- */
-function formatMessageName(message) {
+function formatMessageName(message: string): string {
   if (message === 'request') return '<--';
   if (message === 'response') return '-->';
   return message;
 }
 
-/**
- * @name formatBundleSize
- * @param {string} bundle
- * @returns {string}
- */
-function formatBundleSize(bundle) {
+function formatBundleSize(bundle: string): string {
   const bytes = Number.parseInt(bundle, 10);
   const size = `${bytes}B`;
   return chalk.gray(size);
 }
 
-/**
- * @param {string} name
- * @returns {string}
- */
-function formatNs(name) {
+function formatNs(name: string): string {
   return chalk.cyan(name);
 }
 
-/**
- * @param {string} url
- * @returns {string}
- */
-function formatUrl(url) {
+function formatUrl(url: string): string {
   return chalk.magenta(url);
 }
 
-/**
- * @param {string} method
- * @returns {string}
- */
-function formatMethod(method) {
+function formatMethod(method: string): string {
   return method ? chalk.white(method) : '';
 }
 
-/**
- * @param {string|number} statusCode
- * @returns {string}
- */
-function formatStatusCode(statusCode = 'xxx') {
+function formatStatusCode(statusCode: string | number = 'xxx'): string {
   return chalk[
     statusCode < 300 ? 'green' : statusCode < 500 ? 'yellow' : 'red'
   ](statusCode);
 }
 
-/**
- * @param {string} stack
- * @returns {string}
- */
-function formatStack(stack) {
+function formatStack(stack: string): string {
   return stack ? chalk.grey(nl + stack) : '';
 }
 
-/**
- * @param {Partial<import('pino').SerializedError>} errorPropValue
- * @returns {string}
- */
-function formatErrorProp(errorPropValue) {
+function formatErrorProp(errorPropValue: Partial<SerializedError>): string {
   if (
     errorPropValue.type &&
     ['Error', 'TypeError'].includes(errorPropValue.type)
@@ -229,14 +162,10 @@ function formatErrorProp(errorPropValue) {
 
   if (Object.keys(errorPropValue).length === 0) return '';
 
-  return nl + chalk.grey(JSON.stringify(errorPropValue));
+  return nl + chalk.grey(stringify(errorPropValue));
 }
 
-/**
- * @param {Record<string, any>} extraFields
- * @returns {string}
- */
-function formatExtraFields(extraFields) {
+function formatExtraFields(extraFields: Record<string, any>): string {
   // const deepClean = (obj) => {
   //   for (const val of Object.keys(obj)) {
   //     if (isObject(obj) && isEmpty(obj[val])) {
@@ -251,5 +180,5 @@ function formatExtraFields(extraFields) {
 
   // if (isEmpty(extraFields)) return '';
 
-  return nl + chalk.grey(JSON.stringify(extraFields, null, 2));
+  return nl + chalk.grey(stringify(extraFields));
 }

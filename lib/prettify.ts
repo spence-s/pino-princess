@@ -1,26 +1,23 @@
-const chalk = require('chalk');
-const jsonParse = require('fast-json-parse');
-const unset = require('unset-value');
-const get = require('get-value');
-const set = require('set-value');
-const isObject = require('./utils/is-object');
-const isEmpty = require('./utils/is-empty');
-const isPinoLog = require('./utils/is-pino-log');
-const convertLogNumber = require('./utils/convert-log-number');
-const {WHITE_LIST, BLACK_LIST} = require('./defaults');
-
-/**
- * @typedef {import('./utils/types').Formatters} Formatters
- * @typedef {import('./utils/types').LogObject} LogObject
- */
+import chalk from 'chalk';
+import jsonParse from 'fast-json-parse';
+import unset from 'unset-value';
+import get from 'get-value';
+import set from 'set-value';
+import isObject from './utils/is-object';
+import isEmpty from './utils/is-empty';
+import isPinoLog from './utils/is-pino-log';
+import convertLogNumber from './utils/convert-log-number';
+import {WHITE_LIST, BLACK_LIST} from './defaults';
+import getFormatters from './utils/format';
+import type {
+  PrettifyOptions,
+  Formatters,
+  LogObject,
+  Formatter,
+} from './utils/types';
 
 const nl = '\n';
 
-/**
- * @name prettify
- * @param {{ blackList?: Array<string>, whiteList?: Array<string>, formatters?: Formatters}} options
- * @returns
- */
 function prettify({
   // white list and black list both take keys with dot notation
   blackList = [],
@@ -29,7 +26,7 @@ function prettify({
   // custom format objects
   // support the same func names as seen below
   formatters: {...formatters} = {},
-} = {}) {
+}: PrettifyOptions = {}) {
   const {
     formatLevel,
     formatLoadTime,
@@ -44,13 +41,12 @@ function prettify({
     formatUrl,
     formatStatusCode,
     formatErrorProp,
-  } = require('./utils/format')(formatters);
+  }: Formatters = getFormatters(formatters);
 
   // eslint-disable-next-line complexity
-  return function (/** @type {unknown} */ inputData) {
+  return function (inputData: unknown): string | undefined {
     try {
-      /** @type {LogObject} */
-      let object;
+      let object: LogObject;
       if (typeof inputData === 'string') {
         const parsedData = jsonParse(inputData);
         if (
@@ -63,16 +59,16 @@ function prettify({
 
         object = parsedData.value;
       } else if (isObject(inputData) && isPinoLog(inputData)) {
-        /** @type {LogObject} */
-        object = /** @type {LogObject} */ (inputData);
+        object = inputData as LogObject;
       } else {
+        // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
         return inputData + nl;
       }
 
       // cache the whitelist
       const whiteListObj = {};
       for (const key of [...whiteList, ...WHITE_LIST]) {
-        const val = get(object, key);
+        const val: unknown = get(object, key);
         if (val) set(whiteListObj, key, val);
       }
 
@@ -117,6 +113,7 @@ function prettify({
         object.res = res;
       }
 
+      // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
       if (!level) return inputData + nl;
       if (!message) message = msg;
       if (typeof level === 'number') level = convertLogNumber(level);
@@ -128,17 +125,17 @@ function prettify({
       if (!ns) ns = '';
 
       output.push(
-        formatDate ? formatDate(time || Date.now()) : '',
+        formatDate ? formatDate(time ?? Date.now()) : '',
         formatLevel ? formatLevel(level) : '',
         formatNs ? formatNs(ns) : '',
         formatName ? formatName(name) : '',
       );
 
-      responseTime = responseTime || elapsed;
+      responseTime = responseTime ?? elapsed;
       stack =
         (level === 'fatal' || level === 'error') &&
         (!statusCode || statusCode < 500)
-          ? stack || (err && err.stack)
+          ? stack ?? (err ? err.stack : undefined)
           : undefined;
       // Output err if it has more keys than 'stack'
       /** @type {Partial<import('pino').SerializedError> | undefined} */
@@ -184,10 +181,10 @@ function prettify({
       if (!outputString.endsWith('\n')) outputString += '\n';
 
       return outputString;
-    } catch (error) {
+    } catch (error: unknown) {
       console.error(error);
     }
   };
 }
 
-module.exports = prettify;
+export default prettify;

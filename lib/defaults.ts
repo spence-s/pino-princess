@@ -1,5 +1,6 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 // whitelist overrides blacklist
-const WHITE_LIST = [
+export const WHITE_LIST = [
   'res.statusCode',
   'req.method',
   'req.url',
@@ -10,9 +11,4 @@ const WHITE_LIST = [
   'responseTime',
 ];
 
-const BLACK_LIST = ['req', 'res'];
-
-module.exports = {
-  WHITE_LIST,
-  BLACK_LIST,
-};
+export const BLACK_LIST = ['req', 'res'];

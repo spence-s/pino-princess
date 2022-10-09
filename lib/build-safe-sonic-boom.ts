@@ -1,18 +1,18 @@
-const {isMainThread} = require('worker_threads');
-const SonicBoom = require('sonic-boom');
+import {isMainThread} from 'node:worker_threads';
+import type {SonicBoomOpts} from 'sonic-boom';
+import SonicBoom from 'sonic-boom';
+import * as onExit from 'on-exit-leak-free';
 
+// eslint-disable-next-line @typescript-eslint/no-empty-function
 function noop() {}
 
-module.exports = buildSafeSonicBoom;
+export default buildSafeSonicBoom;
 
 /**
  * Creates a safe SonicBoom instance
  *
- * @param {object} opts Options for SonicBoom
- *
- * @returns {object} A new SonicBoom stream
  */
-function buildSafeSonicBoom(options) {
+function buildSafeSonicBoom(options: SonicBoomOpts) {
   const stream = new SonicBoom(options);
   stream.on('error', filterBrokenPipe);
   // If we are sync: false, we must flush on exit
@@ -22,9 +22,9 @@ function buildSafeSonicBoom(options) {
 
   return stream;
 
-  function filterBrokenPipe(error) {
+  function filterBrokenPipe(error: Error & {code?: string}) {
     if (error.code === 'EPIPE') {
-      stream.write = noop;
+      // stream.write = noop;
       stream.end = noop;
       stream.flushSync = noop;
       stream.destroy = noop;
@@ -35,21 +35,25 @@ function buildSafeSonicBoom(options) {
   }
 }
 
-function setupOnExit(stream) {
+function setupOnExit(stream: SonicBoom) {
   /* istanbul ignore next */
   if (global.WeakRef && global.WeakMap && global.FinalizationRegistry) {
     // This is leak free, it does not leave event handlers
-    const onExit = require('on-exit-leak-free');
 
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
     onExit.register(stream, autoEnd);
 
     stream.on('close', function () {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
       onExit.unregister(stream);
     });
   }
 }
 
-function autoEnd(stream, eventName) {
+function autoEnd(
+  stream: SonicBoom & {destroyed?: boolean},
+  eventName: string,
+): void {
   // This check is needed only on some platforms
 
   if (stream.destroyed) {

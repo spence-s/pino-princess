@@ -27,7 +27,7 @@
     "pino-princess": "./cli.js"
   },
   "scripts": {
-    "check": "tsc --project tsconfig.json",
+    "build": "rm -rf dist && tsc --project tsconfig.json",
     "lint": "xo",
     "test": "ava"
   },
@@ -36,6 +36,7 @@
     "rules": {
       "unicorn/prefer-module": "off",
       "import/extensions": "off",
+      "n/file-extension-in-import": "off",
       "unicorn/no-array-reduce": "off",
       "unicorn/prefer-object-from-entries": "off",
       "no-negated-condition": "off",
@@ -66,6 +67,7 @@
     "@types/events": "^3.0.0",
     "@types/get-value": "^3.0.3",
     "@types/node": "^16.11.64",
+    "@types/pump": "^1.1.1",
     "@types/set-value": "^4.0.1",
     "ava": "^4.3.3",
     "fixpack": "^4.0.0",

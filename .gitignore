@@ -58,7 +58,6 @@ test/.tmp*
 
 *.tgz
 
-
 .DS_Store
 .idea
 Thumbs.db
@@ -66,3 +65,5 @@ tmp/
 temp/
 *.lcov
 .nyc_output
+
+dist

@@ -3,11 +3,20 @@
     "module": "CommonJS",
     "moduleResolution": "node",
     "target": "ES2021",
+    "esModuleInterop": true,
     "checkJs": true,
     "allowJs": true,
     "strict": true,
-    "noEmit": true
+    "outDir": "dist",
+    "declaration": true
   },
-  "exclude": ["node_modules", "lib/build-safe-sonic-boom.js"],
-  "include": ["lib/**/*", "test/**/*"]
+  "exclude": [
+    "node_modules",
+    "lib/build-safe-sonic-boom.ts"
+  ],
+  "include": [
+    "lib/**/*",
+    "index.ts",
+    "cli.ts"
+  ]
 }
