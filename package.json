@@ -22,14 +22,16 @@
   "license": "MIT",
   "author": "Spencer Snyder <sasnyde2@gmail.com>",
   "type": "commonjs",
-  "main": "index.js",
+  "main": "dist/cli.js",
   "bin": {
-    "pino-princess": "./cli.js"
+    "pino-princess": "./dist/cli.js"
   },
   "scripts": {
-    "build": "rm -rf dist && tsc --project tsconfig.json",
+    "build": "npm run clean && tsc --project tsconfig.json",
+    "clean": "rm -rf dist",
     "lint": "xo",
-    "test": "ava"
+    "test": "ava",
+    "watch": "npm run clean && tsc --project tsconfig.json --watch"
   },
   "xo": {
     "prettier": true,

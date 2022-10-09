@@ -4,15 +4,18 @@
     "moduleResolution": "node",
     "target": "ES2021",
     "esModuleInterop": true,
-    "checkJs": true,
-    "allowJs": true,
     "strict": true,
     "outDir": "dist",
     "declaration": true
   },
+  "watchOptions": {
+    "excludeDirectories": [
+      "dist",
+      "node_modules"
+    ]
+  },
   "exclude": [
-    "node_modules",
-    "lib/build-safe-sonic-boom.ts"
+    "node_modules"
   ],
   "include": [
     "lib/**/*",

@@ -7,16 +7,17 @@ import type {Formatters, Levels, Colors, MessageObj} from './types';
 const nl = '\n';
 
 const stringify = (obj: unknown) =>
-  JSON.stringify(obj, null, 2).replace(/^{\n|\n}$/g, '');
+  JSON.stringify(obj, null, 2)
+    .replace(/^{\n/, '')
+    // .replace(/\n}$/, '')
+    .replace(/{/g, '')
+    .replace(/\s*},/g, '')
+    .replace(/\s*}/g, '');
 
 let formatters: Formatters | undefined;
 
 export default getFormatters;
 
-/**
- * @param {Formatters} _formatters
- * @returns {Formatters}
- */
 function getFormatters(_formatters?: Formatters): Formatters {
   formatters = _formatters;
 
