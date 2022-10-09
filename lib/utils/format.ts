@@ -2,17 +2,13 @@ import chalk from 'chalk';
 import dayjs from 'dayjs';
 import type {SerializedError} from 'pino';
 import prettyMs from 'pretty-ms';
+import pcStringify from 'json-stringify-pretty-compact';
 import type {Formatters, Levels, Colors, MessageObj} from './types';
 
 const nl = '\n';
 
 const stringify = (obj: unknown) =>
-  JSON.stringify(obj, null, 2)
-    .replace(/^{\n/, '')
-    // .replace(/\n}$/, '')
-    .replace(/{/g, '')
-    .replace(/\s*},/g, '')
-    .replace(/\s*}/g, '');
+  pcStringify(obj).replace(/^{\n/, '').replace(/\n}$/, '');
 
 let formatters: Formatters | undefined;
 
