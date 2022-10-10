@@ -1,7 +1,7 @@
 const {default: test} = require('ava');
 const chalk = require('chalk');
 const dayjs = require('dayjs');
-const prettify = require('../lib/prettify')({});
+const prettify = require('../dist/lib/prettify').default({});
 
 test('creates log lines with given data', (t) => {
   const time = Date.now();
@@ -13,10 +13,10 @@ test('creates log lines with given data', (t) => {
 
   const output = prettify(input);
 
-  t.log(output);
-
   t.is(
-    output,
-    `${dayjs(time).format('HH:mm:ss')} ✨ ${chalk.cyan('INFO')}  hello\n`,
+    output?.trim(),
+    `${chalk.grey(dayjs(time).format('HH:mm:ss'))} ✨ ${chalk.cyan(
+      'INFO',
+    )}  ${chalk.white('hello')}`,
   );
 });
