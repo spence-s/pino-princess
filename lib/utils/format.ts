@@ -7,8 +7,13 @@ import type {Formatters, Levels, Colors, MessageObj} from './types';
 
 const nl = '\n';
 
-const stringify = (obj: unknown) =>
-  pcStringify(obj).replace(/^{\n/, '').replace(/\n}$/, '');
+const stringify = (obj: unknown) => {
+  const stringified = pcStringify(obj);
+
+  return stringified.startsWith('{"')
+    ? '  ' + stringified.replace(/^{/, '').replace(/}$/, '')
+    : stringified.replace(/^{\n/, '').replace(/\n}$/, '');
+};
 
 let formatters: Formatters | undefined;
 
@@ -144,18 +149,27 @@ function formatStatusCode(statusCode: string | number = 'xxx'): string {
 }
 
 function formatStack(stack: string): string {
-  return stack ? chalk.grey(nl + stack) : '';
+  return stack ? chalk.grey(nl + '  ' + stack) : '';
 }
 
-function formatErrorProp(errorPropValue: Partial<SerializedError>): string {
-  if (
-    errorPropValue.type &&
-    ['Error', 'TypeError'].includes(errorPropValue.type)
-  ) {
-    delete errorPropValue.type;
-    if (errorPropValue.stack) delete errorPropValue.stack;
-    if (errorPropValue.message) delete errorPropValue.message;
+function formatErrorProp(
+  errorPropValue: Partial<
+    SerializedError & {aggregateErrors?: SerializedError[]}
+  >,
+): string {
+  if (Array.isArray(errorPropValue.aggregateErrors)) {
+    const {aggregateErrors, ...ogErr} = errorPropValue;
+    return (
+      formatErrorProp(ogErr) +
+      aggregateErrors
+        .map((err: Partial<SerializedError>) => formatErrorProp(err))
+        .join('')
+    );
   }
+
+  if (errorPropValue.type) delete errorPropValue.type;
+  if (errorPropValue.stack) delete errorPropValue.stack;
+  if (errorPropValue.message) delete errorPropValue.message;
 
   if (Object.keys(errorPropValue).length === 0) return '';
 

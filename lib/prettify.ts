@@ -3,6 +3,7 @@ import jsonParse from 'fast-json-parse';
 import unset from 'unset-value';
 import get from 'get-value';
 import set from 'set-value';
+import type {SerializedError} from 'pino';
 import isObject from './utils/is-object';
 import isEmpty from './utils/is-empty';
 import isPinoLog from './utils/is-pino-log';
@@ -132,15 +133,27 @@ function prettify({
       );
 
       responseTime = responseTime ?? elapsed;
+
       stack =
-        (level === 'fatal' || level === 'error') &&
-        (!statusCode || statusCode < 500)
-          ? stack ?? (err ? err.stack : undefined)
-          : undefined;
+        stack ??
+        (err
+          ? Array.isArray(err.aggregateErrors)
+            ? [err.stack]
+                .concat(
+                  err.aggregateErrors.map(
+                    (err: Partial<SerializedError>) =>
+                      // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
+                      '  ' + err.stack,
+                  ),
+                )
+                .filter((str) => Boolean(str?.trim()))
+                .join('\n')
+            : err.stack
+          : undefined);
+
       // Output err if it has more keys than 'stack'
       /** @type {Partial<import('pino').SerializedError> | undefined} */
       const error =
-        (level === 'fatal' || level === 'error') &&
         (!statusCode || statusCode < 500) &&
         err &&
         Object.keys(err).some((key) => key !== 'stack')

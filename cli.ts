@@ -12,6 +12,7 @@ const {config} = (explorer.search(process.cwd()) ?? {}) as {
   config: PrettifyOptions;
 };
 
+// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
 const res = build(config);
 
 pump(process.stdin, res);

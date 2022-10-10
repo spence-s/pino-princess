@@ -10,9 +10,8 @@ Pino pretty is hard to configure and I didn't like the defaults. However, it was
 
 Pino colada was an awesome output format, but it was inflexible. I also couldn't see all my data when I wanted to because of its rigidity.
 
-In order to get the best of both worlds, I started from a fork of pino-pretty, and developed a configurable version that always displays all your data, except when you don't want it to!
+In order to get the best of both worlds, I started from a fork of pino-pretty, and developed a configurable version that always displays all your data, except when you don't want it to! You could probably get something pretty similar with just an advanced pino-pretty configuration, but use this if you are too lazy.
 
-## Use
 
 ### Install
 
@@ -20,16 +19,3 @@ In order to get the best of both worlds, I started from a fork of pino-pretty, a
 or
 `yarn install -D pino-princess`
 
-### Configure
-
-As a pino v7 transport.
-
-```js
-const pino = require('pino');
-
-const logger = pino({
-  transports: {
-    ...
-  }
-})
-```
