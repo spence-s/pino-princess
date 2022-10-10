@@ -60,7 +60,7 @@
     "json-stringify-pretty-compact": "^3.0.0",
     "on-exit-leak-free": "^2.1.0",
     "pino-abstract-transport": "^1.0.0",
-    "pretty-ms": "^7",
+    "pretty-ms": "^8",
     "pump": "^3.0.0",
     "readable-stream": "^4.2.0",
     "set-value": "^4.1.0",
