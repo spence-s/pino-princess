@@ -26,6 +26,9 @@
   "bin": {
     "pino-princess": "./dist/cli.js"
   },
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "npm run clean && tsc --project tsconfig.json",
     "clean": "rm -rf dist",

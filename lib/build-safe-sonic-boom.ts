@@ -39,12 +39,9 @@ function setupOnExit(stream: SonicBoom) {
   /* istanbul ignore next */
   if (global.WeakRef && global.WeakMap && global.FinalizationRegistry) {
     // This is leak free, it does not leave event handlers
-
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
     onExit.register(stream, autoEnd);
 
     stream.on('close', function () {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
       onExit.unregister(stream);
     });
   }
