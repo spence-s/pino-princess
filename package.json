@@ -52,7 +52,7 @@
     "space": true
   },
   "dependencies": {
-    "chalk": "^4",
+    "chalk": "^5",
     "cosmiconfig": "^7.0.1",
     "dayjs": "^1.11.5",
     "fast-json-parse": "^1.0.3",
