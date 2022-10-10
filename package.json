@@ -57,7 +57,7 @@
     "dayjs": "^1.11.5",
     "fast-json-parse": "^1.0.3",
     "get-value": "^3.0.1",
-    "json-stringify-pretty-compact": "^3.0.0",
+    "json-stringify-pretty-compact": "^4.0.0",
     "on-exit-leak-free": "^2.1.0",
     "pino-abstract-transport": "^1.0.0",
     "pretty-ms": "^7",
