@@ -72,7 +72,7 @@
     "@commitlint/config-conventional": "^17.1.0",
     "@types/events": "^3.0.0",
     "@types/get-value": "^3.0.3",
-    "@types/node": "^16.11.64",
+    "@types/node": "^18.8.4",
     "@types/pump": "^1.1.1",
     "@types/set-value": "^4.0.1",
     "ava": "^4.3.3",
