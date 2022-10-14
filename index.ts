@@ -5,7 +5,7 @@ import abstractTransport from 'pino-abstract-transport';
 import type {SonicBoom, SonicBoomOpts} from 'sonic-boom';
 import prettify from './lib/prettify.js';
 import buildSafeSonicBoom from './lib/build-safe-sonic-boom.js';
-import type {PrettifyOptions} from './lib/utils/types';
+import type {PrettifyOptions} from './lib/utils/types.js';
 
 function build(
   options: PrettifyOptions &
