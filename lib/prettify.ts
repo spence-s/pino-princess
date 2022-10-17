@@ -134,23 +134,6 @@ function prettify({
 
       responseTime = responseTime ?? elapsed;
 
-      stack =
-        stack ??
-        (err
-          ? Array.isArray(err.aggregateErrors)
-            ? [err.stack]
-                .concat(
-                  err.aggregateErrors.map(
-                    (err: Partial<SerializedError>) =>
-                      // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
-                      '  ' + err.stack,
-                  ),
-                )
-                .filter((str) => Boolean(str?.trim()))
-                .join('\n')
-            : err.stack
-          : undefined);
-
       // Output err if it has more keys than 'stack'
       /** @type {Partial<import('pino').SerializedError> | undefined} */
       const error =
@@ -183,15 +166,9 @@ function prettify({
       if (isObject(extraFields) && !isEmpty(extraFields) && formatExtraFields)
         output.push(formatExtraFields(extraFields));
 
-      if (isObject(req) && !isEmpty(req))
-        output.push(nl + chalk.grey('req ' + JSON.stringify(req, null, 2)));
-
-      if (isObject(res) && !isEmpty(res))
-        output.push(nl + chalk.grey('res ' + JSON.stringify(res, null, 2)));
-
       let outputString = output.filter(Boolean).join(' ');
 
-      if (!outputString.endsWith('\n')) outputString += '\n';
+      if (!outputString.endsWith(nl)) outputString += nl;
 
       return outputString;
     } catch (error: unknown) {

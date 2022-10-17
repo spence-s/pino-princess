@@ -14,7 +14,7 @@ import {build} from './index';
   const cli = meow(
     `
   Usage
-    $ my-app | pino-princess
+    $ node my-app-with-pino-logging | pino-princess
 
   Options
     --blackList, -b Blacklisted log fields separated by comma. Is overriden by whiteListed fields.

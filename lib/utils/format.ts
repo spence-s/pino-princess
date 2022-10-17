@@ -3,12 +3,13 @@ import dayjs from 'dayjs';
 import type {SerializedError} from 'pino';
 import prettyMs from 'pretty-ms';
 import pcStringify from 'json-stringify-pretty-compact';
+import isObject from './is-object';
 import type {Formatters, Levels, Colors, MessageObj} from './types';
 
 const nl = '\n';
 
-const stringify = (obj: unknown) => {
-  const stringified = pcStringify(obj);
+const stringify = (obj: unknown, indent?: number) => {
+  const stringified = pcStringify(obj, {indent});
 
   return stringified.startsWith('{"')
     ? '  ' + stringified.replace(/^{/, '').replace(/}$/, '')
@@ -82,9 +83,9 @@ function formatLoadTime(elapsedTime: string | number): string {
       ? Number.parseInt(elapsedTime, 10)
       : elapsedTime;
   const time = prettyMs(elapsed);
-  return elapsed > 500
+  return elapsed > 750
     ? chalk.red(time)
-    : elapsed > 250
+    : elapsed > 450
     ? chalk.yellow(time)
     : chalk.green(time);
 }
@@ -113,7 +114,7 @@ function formatMessage({level, message}: MessageObj): string {
   if (level === 'warn') pretty = chalk.yellow(message);
   if (level === 'debug') pretty = chalk.white(message);
   if (level === 'info' || level === 'userlvl') pretty = chalk.white(message);
-  if (level === 'fatal') pretty = chalk.white.bgRed(message);
+  if (level === 'fatal') pretty = chalk.white.bgRedBright(message);
 
   return pretty;
 }
@@ -159,37 +160,42 @@ function formatErrorProp(
 ): string {
   if (Array.isArray(errorPropValue.aggregateErrors)) {
     const {aggregateErrors, ...ogErr} = errorPropValue;
-    return (
-      formatErrorProp(ogErr) +
-      aggregateErrors
-        .map((err: Partial<SerializedError>) => formatErrorProp(err))
-        .join('')
-    );
+    return [isObject(ogErr) ? formatErrorProp(ogErr) : undefined]
+      .concat(
+        aggregateErrors.map(
+          (err: Partial<SerializedError>) => '  ' + formatErrorProp(err),
+        ),
+      )
+      .filter(Boolean)
+      .join(nl);
   }
 
+  let stack = '';
+
   if (errorPropValue.type) delete errorPropValue.type;
-  if (errorPropValue.stack) delete errorPropValue.stack;
+  if (errorPropValue.stack) {
+    stack += formatStack(errorPropValue.stack);
+    delete errorPropValue.stack;
+  }
+
   if (errorPropValue.message) delete errorPropValue.message;
 
-  if (Object.keys(errorPropValue).length === 0) return '';
+  if (!stack && Object.keys(errorPropValue).length === 0) return '';
 
-  return nl + chalk.grey(stringify(errorPropValue));
+  return stack + (stack ? nl : '') + chalk.grey(stringify(errorPropValue, 4));
 }
 
 function formatExtraFields(extraFields: Record<string, any>): string {
-  // const deepClean = (obj) => {
-  //   for (const val of Object.keys(obj)) {
-  //     if (isObject(obj) && isEmpty(obj[val])) {
-  //       delete obj[val];
-  //     } else if (isObject(obj[val])) obj[val] = deepClean(obj[val]);
-  //   }
-
-  //   return obj;
-  // };
-
-  // deepClean(extraFields);
-
-  // if (isEmpty(extraFields)) return '';
+  if (isObject(extraFields) && (extraFields.req || extraFields.res)) {
+    const {req, res} = extraFields;
+    delete extraFields.req;
+    delete extraFields.req;
+    extraFields = {
+      req, // eslint-disable-line @typescript-eslint/no-unsafe-assignment
+      res, // eslint-disable-line @typescript-eslint/no-unsafe-assignment
+      ...extraFields,
+    };
+  }
 
   return nl + chalk.grey(stringify(extraFields));
 }
