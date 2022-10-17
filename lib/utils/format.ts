@@ -180,9 +180,15 @@ function formatErrorProp(
 
   if (errorPropValue.message) delete errorPropValue.message;
 
-  if (!stack && Object.keys(errorPropValue).length === 0) return '';
+  const hasExtraData = Object.keys(errorPropValue).length > 0;
 
-  return stack + (stack ? nl : '') + chalk.grey(stringify(errorPropValue, 4));
+  if (!stack && !hasExtraData) return '';
+
+  return (
+    stack +
+    (stack ? nl : '') +
+    (hasExtraData ? chalk.grey(stringify(errorPropValue, 4)) : '')
+  );
 }
 
 function formatExtraFields(extraFields: Record<string, any>): string {
