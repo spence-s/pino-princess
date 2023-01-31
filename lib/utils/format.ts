@@ -203,7 +203,7 @@ function formatErrorProp(
 
 function formatExtraFields(
   extraFields: Record<string, any>,
-  options?: {theme: Theme},
+  options?: {theme?: Theme},
 ): string {
   if (isObject(extraFields) && (extraFields.req || extraFields.res)) {
     const {req, res} = extraFields;

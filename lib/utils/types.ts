@@ -1,12 +1,16 @@
 import type {ClientRequest, ServerResponse} from 'node:http';
 import type {Chalk} from 'chalk';
 import type {SerializedError} from 'pino';
+import type {Theme} from 'cli-highlight';
 
 export type Levels = 'trace' | 'debug' | 'info' | 'warn' | 'error' | 'fatal';
 
 export type Colors = 'yellow' | 'cyan' | 'red' | 'blue' | 'white' | 'red';
 
-export type Formatter<Type> = (arg: Type, obj?: {chalk: Chalk}) => string;
+export type Formatter<Type> = (
+  arg: Type,
+  obj?: {chalk: Chalk; theme?: Theme},
+) => string;
 
 export type MessageObj = {
   level: Levels | 'userlvl';
