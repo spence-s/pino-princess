@@ -3,13 +3,23 @@ import dayjs from 'dayjs';
 import type {SerializedError} from 'pino';
 import prettyMs from 'pretty-ms';
 import pcStringify from 'json-stringify-pretty-compact';
+import type {Theme} from 'cli-highlight';
+import highlight from 'cli-highlight';
 import isObject from './is-object';
 import type {Formatters, Levels, Colors, MessageObj} from './types';
 
 const nl = '\n';
 
-const stringify = (obj: unknown, indent?: number) => {
-  const stringified = pcStringify(obj, {indent});
+const stringify = (obj: unknown, indent?: number, theme?: Theme) => {
+  const stringified = highlight(pcStringify(obj, {indent}), {
+    language: 'json',
+    ignoreIllegals: true,
+    theme: {
+      attr: chalk.cyanBright,
+      string: chalk.yellow,
+      ...theme,
+    },
+  });
 
   return stringified.startsWith('{"')
     ? '  ' + stringified.replace(/^{/, '').replace(/}$/, '')
@@ -191,7 +201,10 @@ function formatErrorProp(
   );
 }
 
-function formatExtraFields(extraFields: Record<string, any>): string {
+function formatExtraFields(
+  extraFields: Record<string, any>,
+  options?: {theme: Theme},
+): string {
   if (isObject(extraFields) && (extraFields.req || extraFields.res)) {
     const {req, res} = extraFields;
     delete extraFields.req;
@@ -203,5 +216,5 @@ function formatExtraFields(extraFields: Record<string, any>): string {
     };
   }
 
-  return nl + chalk.grey(stringify(extraFields));
+  return nl + chalk.grey(stringify(extraFields, undefined, options?.theme));
 }

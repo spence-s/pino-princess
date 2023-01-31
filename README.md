@@ -4,6 +4,14 @@ A pretty dev logger for pino and other ndjson.
 
 Largely inspired from the great pino-colada project but with all the bells and whistles of pino-pretty.
 
+#### Gruvbox
+
+![Basic Formatting](./media/screenshot3.png)
+
+![Error Formatting](./media//screenshot4.png)
+
+#### Dracula
+
 ![Basic Formatting](./media/screenshot1.png)
 
 ![Error Formatting](./media//screenshot2.png)
@@ -59,5 +67,3 @@ An array of strings which represent a key on any object. Keys matching any one o
 By default pino-princess whiteLists all the properties required to create our standard log line.
 
 default value: `['res.statusCode', 'req.method', 'req.url', 'level', 'name', 'ns', 'msg', 'responseTime']`
-
-
