@@ -3,7 +3,6 @@ import jsonParse from 'fast-json-parse';
 import unset from 'unset-value';
 import get from 'get-value';
 import set from 'set-value';
-import type {SerializedError} from 'pino';
 import isObject from './utils/is-object';
 import isEmpty from './utils/is-empty';
 import isPinoLog from './utils/is-pino-log';
@@ -24,6 +23,8 @@ function prettify({
   blackList = [],
   // whitelist always overrides black list
   whiteList = [],
+  // custom json colors
+  theme = {},
   // custom format objects
   // support the same func names as seen below
   formatters: {...formatters} = {},
@@ -164,7 +165,7 @@ function prettify({
       if (error && formatErrorProp) output.push(formatErrorProp(error));
 
       if (isObject(extraFields) && !isEmpty(extraFields) && formatExtraFields)
-        output.push(formatExtraFields(extraFields));
+        output.push(formatExtraFields(extraFields, {chalk, theme}));
 
       let outputString = output.filter(Boolean).join(' ');
 

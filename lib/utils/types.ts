@@ -59,4 +59,5 @@ export type PrettifyOptions = {
   blackList?: string[];
   whiteList?: string[];
   formatters?: Formatters;
+  theme?: Theme;
 };
