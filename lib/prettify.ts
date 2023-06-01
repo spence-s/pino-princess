@@ -51,17 +51,22 @@ function prettify({
       let object: LogObject;
       if (typeof inputData === 'string') {
         const parsedData = jsonParse(inputData);
-        if (
-          !parsedData.value ||
-          parsedData.err ||
-          !isPinoLog(parsedData.value)
-        ) {
+        if (!parsedData.value || parsedData.err) {
           return inputData + nl;
         }
 
-        object = parsedData.value;
-      } else if (isObject(inputData) && isPinoLog(inputData)) {
+        object =
+          parsedData.value instanceof Error
+            ? (() => {
+                return {
+                  err: parsedData.value,
+                };
+              })()
+            : parsedData.value;
+      } else if (isObject(inputData)) {
         object = inputData as LogObject;
+      } else if (inputData instanceof Error) {
+        object = {err: inputData};
       } else {
         // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
         return inputData + nl;
@@ -115,8 +120,6 @@ function prettify({
         object.res = res;
       }
 
-      // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
-      if (!level) return inputData + nl;
       if (!message) message = msg;
       if (typeof level === 'number') level = convertLogNumber(level);
 
@@ -173,7 +176,7 @@ function prettify({
 
       return outputString;
     } catch (error: unknown) {
-      console.error(error);
+      console.log(error);
     }
   };
 }

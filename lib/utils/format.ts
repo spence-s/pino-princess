@@ -102,7 +102,7 @@ function formatLoadTime(elapsedTime: string | number): string {
 
 function formatDate(instant: string | number): string {
   if (formatters?.formatDate) return formatters.formatDate(instant, {chalk});
-  return chalk.gray(dayjs(instant).format('H:mm:ss'));
+  return '🕰️ ' + chalk.gray(`[${dayjs(instant).format('H:mm:ss')}]`);
 }
 
 function formatName(name: string): string {
@@ -116,7 +116,7 @@ function formatName(name: string): string {
 function formatMessage({level, message}: MessageObj): string {
   if (formatters?.formatMessage)
     return formatters.formatMessage({level, message}, {chalk});
-  if (typeof message === 'undefined') return '';
+  if (message === undefined) return '';
   message = formatMessageName(message);
   let pretty = '';
   if (level === 'error') pretty = chalk.red(message);
@@ -155,7 +155,11 @@ function formatMethod(method: string): string {
 
 function formatStatusCode(statusCode: string | number = 'xxx'): string {
   return chalk[
-    statusCode < 300 ? 'green' : statusCode < 500 ? 'yellow' : 'red'
+    typeof statusCode === 'number' && statusCode < 300
+      ? 'green'
+      : typeof statusCode === 'number' && statusCode < 500
+      ? 'yellow'
+      : 'red'
   ](statusCode);
 }
 
@@ -208,7 +212,7 @@ function formatExtraFields(
   if (isObject(extraFields) && (extraFields.req || extraFields.res)) {
     const {req, res} = extraFields;
     delete extraFields.req;
-    delete extraFields.req;
+    delete extraFields.res;
     extraFields = {
       req, // eslint-disable-line @typescript-eslint/no-unsafe-assignment
       res, // eslint-disable-line @typescript-eslint/no-unsafe-assignment
