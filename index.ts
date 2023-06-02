@@ -17,7 +17,7 @@ function build(
     const stream = new Transform({
       objectMode: true,
       autoDestroy: true,
-      transform(chunk, enc, cb) {
+      transform(chunk: string, enc: string, cb) {
         const line = pretty(chunk);
         cb(null, line);
       },

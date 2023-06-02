@@ -8,6 +8,7 @@ import {cosmiconfigSync} from 'cosmiconfig';
 import type {PrettifyOptions} from './lib/utils/types';
 import {build} from './index';
 
+// eslint-disable-next-line unicorn/prefer-top-level-await
 (async () => {
   const {default: meow} = await import('meow');
 

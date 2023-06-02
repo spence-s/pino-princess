@@ -26,11 +26,11 @@ const stringify = (obj: unknown, indent?: number, theme?: Theme) => {
     : stringified.replace(/^{\n/, '').replace(/\n}$/, '');
 };
 
-let formatters: Formatters | undefined;
+let formatters: Partial<Formatters> | undefined;
 
 export default getFormatters;
 
-function getFormatters(_formatters?: Formatters): Formatters {
+function getFormatters(_formatters?: Partial<Formatters>): Formatters {
   formatters = _formatters;
 
   return {
@@ -53,7 +53,7 @@ function getFormatters(_formatters?: Formatters): Formatters {
 const emojiMap = {
   warn: '⚠️',
   info: '✨',
-  userlvl: '✨',
+  userlvl: '👤',
   error: '🚨',
   debug: '🐛',
   fatal: '💀',

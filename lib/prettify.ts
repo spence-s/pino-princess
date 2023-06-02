@@ -18,7 +18,7 @@ import type {
 
 const nl = '\n';
 
-function prettify({
+export function prettify({
   // white list and black list both take keys with dot notation
   blackList = [],
   // whitelist always overrides black list
@@ -46,7 +46,9 @@ function prettify({
   }: Formatters = getFormatters(formatters);
 
   // eslint-disable-next-line complexity
-  return function (inputData: unknown): string | undefined {
+  return function (
+    inputData: string | Record<string, unknown>,
+  ): string | undefined {
     try {
       let object: LogObject;
       if (typeof inputData === 'string') {
@@ -68,8 +70,7 @@ function prettify({
       } else if (inputData instanceof Error) {
         object = {err: inputData};
       } else {
-        // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
-        return inputData + nl;
+        return nl;
       }
 
       // cache the whitelist

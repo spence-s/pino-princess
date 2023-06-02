@@ -5,7 +5,7 @@ import type {Theme} from 'cli-highlight';
 
 export type Levels = 'trace' | 'debug' | 'info' | 'warn' | 'error' | 'fatal';
 
-export type Colors = 'yellow' | 'cyan' | 'red' | 'blue' | 'white' | 'red';
+export type Colors = 'yellow' | 'cyan' | 'red' | 'blue' | 'white';
 
 export type Formatter<Type> = (
   arg: Type,
@@ -40,24 +40,24 @@ export type LogObject = {
 };
 
 export type Formatters = {
-  formatLevel?: Formatter<Levels | 'userlvl'>;
-  formatLoadTime?: Formatter<string | number>;
-  formatDate?: Formatter<string | number>;
-  formatName?: Formatter<string>;
-  formatMessage?: Formatter<MessageObj>;
-  formatBundleSize?: Formatter<string>;
-  formatNs?: Formatter<string>;
-  formatExtraFields?: Formatter<Record<string, unknown>>;
-  formatStack?: Formatter<string>;
-  formatUrl?: Formatter<string>;
-  formatStatusCode?: Formatter<number>;
-  formatErrorProp?: Formatter<Partial<SerializedError>>;
-  formatMethod?: Formatter<string>;
+  formatLevel: Formatter<Levels | 'userlvl'>;
+  formatLoadTime: Formatter<string | number>;
+  formatDate: Formatter<string | number>;
+  formatName: Formatter<string>;
+  formatMessage: Formatter<MessageObj>;
+  formatBundleSize: Formatter<string>;
+  formatNs: Formatter<string>;
+  formatExtraFields: Formatter<Record<string, unknown>>;
+  formatStack: Formatter<string>;
+  formatUrl: Formatter<string>;
+  formatStatusCode: Formatter<number>;
+  formatErrorProp: Formatter<Partial<SerializedError>>;
+  formatMethod: Formatter<string>;
 };
 
 export type PrettifyOptions = {
   blackList?: string[];
   whiteList?: string[];
-  formatters?: Formatters;
+  formatters?: Partial<Formatters>;
   theme?: Theme;
 };
