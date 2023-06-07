@@ -15,9 +15,9 @@ const nl = '\n';
 
 export function prettify({
   // white list and black list both take keys with dot notation
-  blackList = [],
+  blacklist = [],
   // whitelist always overrides black list
-  whiteList = [],
+  whitelist = [],
   // custom json colors
   theme = {},
   // custom format objects
@@ -61,13 +61,13 @@ export function prettify({
 
       // cache the whitelist
       const whiteListObj = {};
-      for (const key of [...whiteList, ...WHITE_LIST]) {
+      for (const key of [...whitelist, ...WHITE_LIST]) {
         const val: unknown = get(object, key);
         if (val) set(whiteListObj, key, val);
       }
 
       // remove the blacklist
-      for (const key of [...BLACK_LIST, ...blackList]) unset(object, key);
+      for (const key of [...BLACK_LIST, ...blacklist]) unset(object, key);
 
       // add back in the whitelist
       object = {

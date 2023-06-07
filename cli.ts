@@ -14,21 +14,23 @@ import {build} from './index';
 
   const cli = meow(
     `
-  Usage
-    $ node my-app-with-pino-logging | pino-princess
+Usage
+  $ node my-app-with-pino-logging | pino-princess
 
-  Options
-    --blackList, -b Blacklisted log fields separated by comma. Is overriden by whiteListed fields.
-    --whiteList, -w Whitelisted log fields separated by comma. Overrides blackListed fields.
+Options
+  --blacklist, -b    blacklisted log fields separated by comma. Is overriden by whitelisted fields.
+  --whitelist, -w    whitelisted log fields separated by comma. Overrides blacklisted fields.
   `,
     {
-      importMeta: {url: pathToFileURL(__filename).toString()},
+      importMeta: {
+        url: pathToFileURL(__filename).toString(),
+      },
       flags: {
-        blackList: {
+        blacklist: {
           type: 'string',
           alias: 'b',
         },
-        whiteList: {
+        whitelist: {
           type: 'string',
           alias: 'w',
         },
@@ -37,12 +39,12 @@ import {build} from './index';
   );
   const options: PrettifyOptions = {};
 
-  if (cli.flags.blackList) {
-    options.blackList = cli.flags.blackList.split(',').map((str) => str.trim());
+  if (cli.flags.blacklist) {
+    options.blacklist = cli.flags.blacklist.split(',').map((str) => str.trim());
   }
 
-  if (cli.flags.whiteList) {
-    options.whiteList = cli.flags.whiteList.split(',').map((str) => str.trim());
+  if (cli.flags.whitelist) {
+    options.whitelist = cli.flags.whitelist.split(',').map((str) => str.trim());
   }
 
   const explorer = cosmiconfigSync('pino-princess', {stopDir: os.homedir()});

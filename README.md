@@ -4,6 +4,30 @@ A pretty dev logger for pino and other ndjson.
 
 Largely inspired from the great pino-colada project but with all the bells and whistles of pino-pretty.
 
+- [pino-princess 👸 💅](#pino-princess--)
+  - [Features](#features)
+  - [SAMPLES](#samples)
+      - [Gruvbox](#gruvbox)
+      - [Dracula](#dracula)
+  - [Goals](#goals)
+    - [Install](#install)
+  - [Usage](#usage)
+    - [CLI](#cli)
+    - [Pino v7 transport](#pino-v7-transport)
+  - [Configuration](#configuration)
+      - [example](#example)
+
+## Features
+
+- Works _just like_ [pino-pretty](https://github.com/pinojs/pino-pretty)
+- Awesome looking log lines out of the box
+- All data is displayed with highlighting for _kick-ass_ readability
+- ez to customize
+
+## SAMPLES
+
+> note: these samples are created by changing terminal colors - not by changing themes in pino-princess. However, pino-princess themes are entirely configurable so both ways of changing the colors are possible.
+
 #### Gruvbox
 
 ![Basic Formatting](./media/screenshot3.png)
@@ -14,7 +38,7 @@ Largely inspired from the great pino-colada project but with all the bells and w
 
 ![Basic Formatting](./media/screenshot1.png)
 
-![Error Formatting](./media//screenshot2.png)
+![Error Formatting](./media/screenshot2.png)
 
 ## Goals
 
@@ -38,7 +62,7 @@ or
 
 The reccomended usage of pino-princess is as a separate process from your main application which pipes pino logs from stdout into pino-princess for formatting.
 
-`node my-application-which-logs-with-pino.js | npx pino-princess --blackList "severity" --whiteList "res.headers.ip, res.headers.x-my-important-header"`
+`node my-application-which-logs-with-pino.js | npx pino-princess --blacklist "severity" --whitelist "res.headers.ip, res.headers.x-my-important-header"`
 
 ### Pino v7 transport
 
@@ -48,22 +72,51 @@ pino-princess, as a fork of pino-pretty, is also set up to be used as a pino v7 
 
 pino-princess supports a simple configuration which can be supplied as either command line arguments, or alternatively, pino-princess.config.js file located in the path up from where the application is being ran.
 
-These are `blackList`, `whiteList`, and `formatters`.
-`blackList` and `whiteList` are both arrays of strings which represent the dotpath to any field on a deeply nested log object.
-#### blackList
-string[]
+These are `blacklist`, `whitelist`, and `formatters`. `blacklist` and `whitelist` are both arrays of strings which represent the dotpath to any field on a deeply nested log object.
 
-An array of strings which represent a key on any object. Keys matching any one of these strings cause these keys to be excluded from the log output. The blackList is always overridden by the whitelist. In this way, blackList can be used to exclude large base objects and the whiteList can be used to pick certain fields and "add them back" to the log output.
+#### example
 
-For example, by default, pino-princess blacklists the entire req or res object from any http logger. Because some fields on req and res are required to constuct the core of the log line, these fields are added back via the whiteList.
+`pino-princess.config.js`
 
-default value: `['req', 'res']`
+```ts
+module.exports = {
+  /**
+   * blacklist
+   * string[]
+   *
+   * An array of strings which represent a key on any object.
+   * Keys matching any one of these strings cause these keys to be excluded from the log output.
+   * The blacklist is always overridden by the whitelist.
+   * In this way, blacklist can be used to exclude large base objects and the whitelist
+   * can be used to pick certain fields and "add them back" to the log output.
+   * For example, by default, pino-princess blacklists the entire req or res object from any http logger.
+   * Because some fields on req and res are required to constuct the core of the log line, these fields are added back via the whitelist.
+   *
+   * default value:
+   */
+  blacklist: ["req", "res"],
 
-#### whiteList
-string[]
-
-An array of strings which represent a key on any object. Keys matching any one of these strings cause these keys will ensure the key is always part of the log output. The whiteList always overrides by the blackList. In this way, whiteList can be used to "add back" properties of blackListed objects to the log output.
-
-By default pino-princess whiteLists all the properties required to create our standard log line.
-
-default value: `['res.statusCode', 'req.method', 'req.url', 'level', 'name', 'ns', 'msg', 'responseTime']`
+  /**
+   * whitelist
+   * string[]
+   *
+   * An array of strings which represent a key on any object.
+   * Keys matching any one of these strings cause these keys will ensure the key is always part of the log output.
+   * The whitelist always overrides by the blacklist.
+   * In this way, whitelist can be used to "add back" properties of blackListed objects to the log output.
+   * By default pino-princess whiteLists all the properties required to create our standard log line.
+   *
+   * default value:
+   */
+  whitelist: [
+    "res.statusCode",
+    "req.method",
+    "req.url",
+    "level",
+    "name",
+    "ns",
+    "msg",
+    "responseTime",
+  ],
+};
+```

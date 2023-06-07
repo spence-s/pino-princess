@@ -59,8 +59,8 @@ export type Formatters = {
 };
 
 export type PrettifyOptions = {
-  blackList?: string[];
-  whiteList?: string[];
+  blacklist?: string[];
+  whitelist?: string[];
   formatters?: Partial<Formatters>;
   theme?: Theme;
 };
