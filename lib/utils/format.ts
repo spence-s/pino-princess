@@ -34,6 +34,12 @@ let formatters: Partial<Formatters> | undefined;
 
 export default getFormatters;
 
+/**
+ * Get the default formatters or user supplied formatters.
+ *
+ * @param _formatters user supplied formatters
+ * @returns user supplied formatters or default formatters
+ */
 function getFormatters(_formatters?: Partial<Formatters>): Formatters {
   formatters = _formatters;
 
@@ -51,6 +57,7 @@ function getFormatters(_formatters?: Partial<Formatters>): Formatters {
     formatUrl,
     formatStatusCode,
     formatErrorProp,
+    ...formatters,
   };
 }
 

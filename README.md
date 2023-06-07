@@ -121,16 +121,55 @@ module.exports = {
   ],
 
   /**
+   * theme
+   * (chalk: Chalk) => string
+   *
+   * This determines the colors of any extra fields that are not included in the pino-princess log line
+   *
+   * For convenience an instance of chalk is passed
+   *
+   * default below
+   */
+  theme: (chalk) => ({
+    /**
+     * The color of JSON keys in the log message
+     */
+    attr: chalk.cyanBright,
+    /**
+     * The color of strings
+     */
+    string: chalk.yellow,
+    /**
+     * The color of numbers
+     */
+    number: chalk.default,
+    /**
+     * The color of boolean and null values
+     */
+    literal: chalk.default
+  }),
+
+  /**
    * formatters
    *
-   * For the defaults see ./lib/utils/format.ts
+   * These are functions which format segments of the pino-princess log-line
    *
-   * below is a small example of how to use in the config.
+   * For the defaults see ./lib/utils/format.ts
    */
   formatters: {
-    formatLevel: (level, {chalk}) => {
-
-    }
+    formatLevel: (level) => {},
+    formatLoadTime: (timestamp) => {},
+    formatDate: (date) => {},
+    formatName: (name) => {},
+    formatMessage: (message) => {},
+    formatBundleSize:(bundleSize) => {},
+    formatNs: (ns) => {},
+    formatExtraFields: (extraFields) => {},
+    formatStack: (stack) => {},
+    formatUrl: (url) => {},
+    formatStatusCode: (statusCode) => {},
+    formatErrorProp: (err) => {},
+    formatMethod: (method) => {},
   }
 };
 ```
