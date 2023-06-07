@@ -52,5 +52,5 @@ function build(
 
 export {build};
 export default build;
-
 export {default as prettify} from './lib/prettify.js';
+export type {PrettifyOptions as Configuration} from './lib/utils/types.js';

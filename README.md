@@ -78,7 +78,8 @@ These are `blacklist`, `whitelist`, and `formatters`. `blacklist` and `whitelist
 
 `pino-princess.config.js`
 
-```ts
+```js
+/** @type {import('pino-princess').Configuration}*/
 module.exports = {
   /**
    * blacklist
@@ -118,5 +119,18 @@ module.exports = {
     "msg",
     "responseTime",
   ],
+
+  /**
+   * formatters
+   *
+   * For the defaults see ./lib/utils/format.ts
+   *
+   * below is a small example of how to use in the config.
+   */
+  formatters: {
+    formatLevel: (level, {chalk}) => {
+
+    }
+  }
 };
 ```

@@ -10,9 +10,24 @@ export type Levels = 'trace' | 'debug' | 'info' | 'warn' | 'error' | 'fatal';
 
 export type Colors = 'yellow' | 'cyan' | 'red' | 'blue' | 'white';
 
+/**
+ * A small subset of available options for `cli-highlight`
+ * which can be applied to stringified log lines in pino-princess.
+ */
+export type HighlightTheme = Partial<
+  Pick<Theme, 'attr' | 'string' | 'number' | 'literal'>
+>;
+
+/**
+ * A formatter function which takes a segment of a log line,
+ * formats it, and returns it as a string.
+ *
+ * @param arg - The segment of the log line to format.
+ * @param obj - An object containing a `chalk` instance and an optional `theme` object.
+ */
 export type Formatter<Type> = (
   arg: Type,
-  obj?: {chalk: Chalk; theme?: Theme},
+  obj?: {chalk: Chalk; theme?: (chalk: Chalk) => HighlightTheme},
 ) => string;
 
 export type MessageObj = {
@@ -20,6 +35,10 @@ export type MessageObj = {
   message?: string;
 };
 
+/**
+ * A log line object which has been serialized by pino
+ * and is ready to be formatted by pino-princess.
+ */
 export type LogObject = {
   [key: string]: unknown;
   req?: Partial<SerializedRequest>;
@@ -42,6 +61,10 @@ export type LogObject = {
   hostname?: string;
 };
 
+/**
+ * A collection of formatter functions which are used to format
+ * and can be overridden by the user in a config file.
+ */
 export type Formatters = {
   formatLevel: Formatter<Levels | 'userlvl'>;
   formatLoadTime: Formatter<string | number>;
@@ -58,9 +81,12 @@ export type Formatters = {
   formatMethod: Formatter<string>;
 };
 
+/**
+ * Configuration options for `pino-princess`.
+ */
 export type PrettifyOptions = {
   blacklist?: string[];
   whitelist?: string[];
   formatters?: Partial<Formatters>;
-  theme?: Theme;
+  theme?: (chalk: Chalk) => HighlightTheme;
 };

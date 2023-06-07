@@ -1,4 +1,4 @@
 #!/bin/sh
 . "$(dirname "$0")/_/husky.sh"
 
-FORCE_COLOR=1 npx lint-staged && npm run build
+FORCE_COLOR=1 npx lint-staged && npm run test && npm run build

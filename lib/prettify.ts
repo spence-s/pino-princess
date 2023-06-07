@@ -19,7 +19,7 @@ export function prettify({
   // whitelist always overrides black list
   whitelist = [],
   // custom json colors
-  theme = {},
+  theme = (chalk) => ({}),
   // custom format objects
   // support the same func names as seen below
   formatters: {...formatters} = {},
