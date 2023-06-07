@@ -9,18 +9,8 @@
     "declaration": true
   },
   "watchOptions": {
-    "excludeDirectories": [
-      "dist",
-      "node_modules"
-    ]
+    "excludeDirectories": ["dist", "node_modules"]
   },
-  "exclude": [
-    "node_modules",
-    "dist"
-  ],
-  "include": [
-    "lib/**/*",
-    "index.ts",
-    "cli.ts"
-  ]
+  "exclude": ["node_modules", "dist"],
+  "include": ["**/*.ts"]
 }

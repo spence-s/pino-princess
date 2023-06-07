@@ -56,15 +56,15 @@
   },
   "ava": {
     "environmentVariables": {
-      "NODE_OPTIONS": "-r ts-node/register --no-warnings"
+      "NODE_OPTIONS": "-r ts-node/register/transpile-only"
     },
     "extensions": [
-      "js",
       "ts"
     ],
     "files": [
-      "test/**/*test.ts"
-    ]
+      "test/**/*"
+    ],
+    "verbose": true
   },
   "dependencies": {
     "chalk": "^4",
@@ -97,6 +97,7 @@
     "husky": "^8.0.3",
     "lint-staged": "^13.2.2",
     "pino": "^8.14.1",
+    "pino-std-serializers": "^6.2.1",
     "prettier-plugin-packagejson": "^2.4.3",
     "strip-ansi": "^7.1.0",
     "ts-node": "^10.9.1",

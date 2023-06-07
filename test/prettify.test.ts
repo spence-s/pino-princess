@@ -1,6 +1,5 @@
 import anyTest, {type TestFn} from 'ava';
-import dayjs from 'dayjs';
-import prettify from '../dist/lib/prettify';
+import {prettify} from '../lib/prettify';
 
 const test = anyTest as TestFn<{
   stripAnsi: (str: string) => string;
@@ -17,8 +16,20 @@ test.before(async (t) => {
     stripAnsi(prettify()(input) ?? '').trim();
 });
 
+test('creates basic log lines with level', (t) => {
+  const time = new Date('2020-01-01T00:00:00.000Z');
+  const input = JSON.stringify({
+    level: 30,
+    time,
+  });
+
+  const output = t.context.prettify(input);
+
+  t.snapshot(output);
+});
+
 test('creates basic log lines with level, message, and time', (t) => {
-  const time = Date.now();
+  const time = new Date('2020-01-01T00:00:00.000Z');
   const input = JSON.stringify({
     level: 30,
     message: 'hello',
@@ -27,5 +38,97 @@ test('creates basic log lines with level, message, and time', (t) => {
 
   const output = t.context.prettify(input);
 
-  t.is(output, `🕰️ [${dayjs(time).format('HH:mm:ss')}] ✨ INFO  hello`);
+  t.snapshot(output);
 });
+
+test('creates basic log lines with level, message, and time, and res.statusCode', (t) => {
+  const time = new Date('2020-01-01T00:00:00.000Z');
+  const input = JSON.stringify({
+    level: 30,
+    message: 'hello',
+    time,
+    res: {
+      statusCode: 200,
+    },
+  });
+
+  const output = t.context.prettify(input);
+
+  t.snapshot(output);
+});
+
+test('creates basic log lines with level, message, and time, and req.method', (t) => {
+  const time = new Date('2020-01-01T00:00:00.000Z');
+  const input = JSON.stringify({
+    level: 30,
+    message: 'hello',
+    time,
+    res: {
+      statusCode: 200,
+    },
+  });
+
+  const output = t.context.prettify(input);
+
+  t.snapshot(output);
+});
+
+test('full log line with all data and no extra data', (t) => {
+  const time = new Date('2020-01-01T00:00:00.000Z');
+  const input = JSON.stringify({
+    level: 30,
+    time,
+    res: {
+      statusCode: 200,
+    },
+    req: {
+      method: 'GET',
+      url: 'http://localhost:3000',
+    },
+    name: 'test',
+    ns: 'test',
+    msg: 'hello',
+    responseTime: 100,
+  });
+
+  const output = t.context.prettify(input);
+
+  t.snapshot(output);
+});
+
+test('full log line with all data and extra data', (t) => {
+  const time = new Date('2020-01-01T00:00:00.000Z');
+  const input = JSON.stringify({
+    level: 30,
+    time,
+    res: {
+      statusCode: 200,
+    },
+    req: {
+      method: 'GET',
+      url: 'http://localhost:3000',
+    },
+    name: 'test',
+    ns: 'test',
+    msg: 'hello',
+    responseTime: 100,
+    extra: 'data',
+  });
+
+  const output = t.context.prettify(input);
+
+  t.snapshot(output);
+});
+
+// export const WHITE_LIST = [
+//   'res.statusCode',
+//   'req.method',
+//   'req.url',
+//   'level',
+//   'name',
+//   'ns',
+//   'msg',
+//   'responseTime',
+// ];
+
+// export const BLACK_LIST = ['req', 'res'];

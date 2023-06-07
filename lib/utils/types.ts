@@ -1,6 +1,9 @@
-import type {ClientRequest, ServerResponse} from 'node:http';
 import type {Chalk} from 'chalk';
-import type {SerializedError} from 'pino';
+import {
+  type SerializedRequest,
+  type SerializedResponse,
+  type SerializedError,
+} from 'pino';
 import type {Theme} from 'cli-highlight';
 
 export type Levels = 'trace' | 'debug' | 'info' | 'warn' | 'error' | 'fatal';
@@ -18,8 +21,9 @@ export type MessageObj = {
 };
 
 export type LogObject = {
-  req?: Partial<ClientRequest> & {url?: string};
-  res?: Partial<ServerResponse>;
+  [key: string]: unknown;
+  req?: Partial<SerializedRequest>;
+  res?: Partial<SerializedResponse>;
   level?: number | Levels | 'userlvl';
   message?: string;
   name?: string;
@@ -33,10 +37,9 @@ export type LogObject = {
   url?: string;
   contentLength?: string;
   stack?: string;
-  err?: Partial<SerializedError>;
+  err?: SerializedError;
   pid?: string;
   hostname?: string;
-  extraFields?: unknown;
 };
 
 export type Formatters = {

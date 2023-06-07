@@ -30,7 +30,7 @@ import {build} from './index';
         },
         whiteList: {
           type: 'string',
-          alias: 'b',
+          alias: 'w',
         },
       },
     },

@@ -1,5 +1,6 @@
 import anyTest, {type TestFn} from 'ava';
 import dayjs from 'dayjs';
+import {err} from 'pino-std-serializers';
 import getFormatters from '../lib/utils/format';
 
 const test = anyTest as TestFn<{
@@ -173,7 +174,7 @@ test('formatStatusCode', async (t) => {
   t.is(statusCode, '200');
 });
 
-test('formatErrorProp', async (t) => {
+test('formatErrorProp > basic error', async (t) => {
   const {default: stripAnsi} = await import('strip-ansi');
   const error = new Error('test error');
 
@@ -186,4 +187,32 @@ test('formatErrorProp', async (t) => {
   );
 
   t.is(errorProp, `\n  ${error.stack ?? ''}\n`);
+});
+
+test('formatErrorProp > aggregate error', async (t) => {
+  const {default: stripAnsi} = await import('strip-ansi');
+
+  const error = err(
+    new AggregateError(
+      [new Error('test error 1'), new Error('test error 2')],
+      'test error',
+    ),
+  );
+
+  const errorProp = stripAnsi(formatErrorProp(error) ?? '');
+
+  t.is(
+    errorProp.trim(),
+    `AggregateError: test error
+    at /Users/spencer/Projects/pino-princess/test/formatters.test.ts:196:5
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)` +
+      '\n\n  \n  ' +
+      `Error: test error 1
+    at /Users/spencer/Projects/pino-princess/test/formatters.test.ts:197:8
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)` +
+      '\n\n  \n  ' +
+      `Error: test error 2
+    at /Users/spencer/Projects/pino-princess/test/formatters.test.ts:197:35
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)`,
+  );
 });

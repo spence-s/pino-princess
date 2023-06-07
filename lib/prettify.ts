@@ -3,18 +3,13 @@ import jsonParse from 'fast-json-parse';
 import unset from 'unset-value';
 import get from 'get-value';
 import set from 'set-value';
+import type {SerializedRequest, SerializedResponse} from 'pino';
 import isObject from './utils/is-object';
 import isEmpty from './utils/is-empty';
-import isPinoLog from './utils/is-pino-log';
 import convertLogNumber from './utils/convert-log-number';
 import {WHITE_LIST, BLACK_LIST} from './defaults';
 import getFormatters from './utils/format';
-import type {
-  PrettifyOptions,
-  Formatters,
-  LogObject,
-  Formatter,
-} from './utils/types';
+import type {PrettifyOptions, Formatters, LogObject} from './utils/types';
 
 const nl = '\n';
 
@@ -50,25 +45,16 @@ export function prettify({
     inputData: string | Record<string, unknown>,
   ): string | undefined {
     try {
-      let object: LogObject;
+      let object: LogObject = {};
       if (typeof inputData === 'string') {
         const parsedData = jsonParse(inputData);
         if (!parsedData.value || parsedData.err) {
           return inputData + nl;
         }
 
-        object =
-          parsedData.value instanceof Error
-            ? (() => {
-                return {
-                  err: parsedData.value,
-                };
-              })()
-            : parsedData.value;
+        object = parsedData.value as LogObject;
       } else if (isObject(inputData)) {
         object = inputData as LogObject;
-      } else if (inputData instanceof Error) {
-        object = {err: inputData};
       } else {
         return nl;
       }
@@ -111,14 +97,24 @@ export function prettify({
         ...extraFields
       } = object;
 
+      let extraReq: Partial<SerializedRequest>;
       if (isObject(req) && !isEmpty(req)) {
-        ({method, url, ...req} = req ?? {});
-        object.req = req;
+        ({method, url, ...extraReq} = req ?? {});
+        object.req = extraReq;
+        if (!isEmpty(extraReq)) {
+          if (!extraFields) extraFields = {};
+          extraFields.req = extraReq;
+        }
       }
 
+      let extraRes: Partial<SerializedResponse>;
       if (isObject(res) && !isEmpty(res)) {
-        ({statusCode, ...res} = res ?? {});
-        object.res = res;
+        ({statusCode, ...extraRes} = res ?? {});
+        object.res = extraRes;
+        if (!isEmpty(extraRes)) {
+          if (!extraFields) extraFields = {};
+          extraFields.res = extraRes;
+        }
       }
 
       if (!message) message = msg;
