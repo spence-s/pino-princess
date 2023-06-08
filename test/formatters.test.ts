@@ -1,7 +1,9 @@
 import anyTest, {type TestFn} from 'ava';
 import dayjs from 'dayjs';
-import {err} from 'pino-std-serializers';
+import utc from 'dayjs/plugin/utc';
 import getFormatters from '../lib/utils/format';
+
+dayjs.extend(utc);
 
 const test = anyTest as TestFn<{
   stripAnsi: (str: string) => string;
@@ -73,7 +75,7 @@ test('formatDate', async (t) => {
   const ts = new Date('2020-01-01T00:00:00.000Z').getTime();
 
   const date1 = stripAnsi(formatDate(ts) ?? '');
-  t.is(date1, `🕰️ [${dayjs(ts).format('H:mm:ss')}]`);
+  t.is(date1, `🕰️ [${dayjs.utc(ts).format('H:mm:ss')}]`);
 });
 
 test('formatName', async (t) => {

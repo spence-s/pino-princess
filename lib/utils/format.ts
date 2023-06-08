@@ -1,5 +1,6 @@
 import chalk, {type Chalk} from 'chalk';
 import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
 import type {
   SerializedError,
   SerializedRequest,
@@ -11,6 +12,8 @@ import type {Theme} from 'cli-highlight';
 import highlight from 'cli-highlight';
 import isObject from './is-object';
 import type {Formatters, Levels, Colors, MessageObj} from './types';
+
+dayjs.extend(utc);
 
 const nl = '\n';
 
@@ -113,7 +116,7 @@ function formatLoadTime(elapsedTime: string | number): string {
 
 function formatDate(instant: string | number): string {
   if (formatters?.formatDate) return formatters.formatDate(instant, {chalk});
-  return '🕰️ ' + chalk.gray(`[${dayjs(instant).format('H:mm:ss')}]`);
+  return '🕰️ ' + chalk.gray(`[${dayjs.utc(instant).format('H:mm:ss')}]`);
 }
 
 function formatName(name: string): string {
@@ -185,14 +188,17 @@ function formatErrorProp(
 ): string {
   if (Array.isArray(errorPropValue.aggregateErrors)) {
     const {aggregateErrors, ...ogErr} = errorPropValue;
-    return [isObject(ogErr) ? formatErrorProp(ogErr) : undefined]
-      .concat(
-        aggregateErrors.map(
-          (err: Partial<SerializedError>) => '  ' + formatErrorProp(err),
-        ),
-      )
-      .filter(Boolean)
-      .join(nl);
+    return (
+      [isObject(ogErr) ? formatErrorProp(ogErr) : undefined]
+        // eslint-disable-next-line unicorn/prefer-spread
+        .concat(
+          aggregateErrors.map(
+            (err: Partial<SerializedError>) => '  ' + formatErrorProp(err),
+          ),
+        )
+        .filter(Boolean)
+        .join(nl)
+    );
   }
 
   let stack = '';
