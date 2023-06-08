@@ -142,7 +142,7 @@ test('formatExtraFields', async (t) => {
       extra: 'fields',
     }) ?? '',
   );
-  t.is(extraFields, '\n{"extra": "fields"}');
+  t.is(extraFields, '\n  "extra": "fields"');
 });
 
 test('formatMethod', async (t) => {

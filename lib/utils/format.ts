@@ -28,7 +28,7 @@ const stringify = (obj: unknown, indent?: number, theme?: Theme) => {
     },
   });
 
-  return stringified.startsWith('{"')
+  return /^{.*"/.test(stringified)
     ? '  ' + stringified.replace(/^{/, '').replace(/}$/, '')
     : stringified.replace(/^{\n/, '').replace(/\n}$/, '');
 };
