@@ -57,8 +57,7 @@
   },
   "ava": {
     "environmentVariables": {
-      "NODE_OPTIONS": "-r ts-node/register/transpile-only",
-      "TZ": "EST"
+      "NODE_OPTIONS": "-r ts-node/register/transpile-only"
     },
     "extensions": [
       "ts"

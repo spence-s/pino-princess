@@ -120,6 +120,38 @@ test('full log line with all data and extra data', (t) => {
   t.snapshot(output);
 });
 
+test('full log line with all data and extra data multiline', (t) => {
+  const time = new Date('2020-01-01T00:00:00.000Z');
+  const input = JSON.stringify({
+    level: 30,
+    time,
+    res: {
+      statusCode: 200,
+      something: 'extra',
+    },
+    req: {
+      method: 'GET',
+      url: 'http://localhost:3000',
+      something: 'extra',
+    },
+    name: 'test',
+    ns: 'test',
+    msg: 'hello',
+    responseTime: 100,
+    extra: 'data',
+    multi: 'line',
+    idk: 'what',
+    else: 'to add',
+    for: {
+      extra: 'data',
+    },
+  });
+
+  const output = t.context.prettify(input);
+
+  t.snapshot(output);
+});
+
 // export const WHITE_LIST = [
 //   'res.statusCode',
 //   'req.method',
