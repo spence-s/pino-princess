@@ -11,9 +11,9 @@
     "pretty",
     "prettify"
   ],
-  "homepage": "https://github.com/pinojs/pino-princess#readme",
+  "homepage": "https://github.com/spence-s/pino-princess#readme",
   "bugs": {
-    "url": "https://github.com/pinojs/pino-pretty/issues"
+    "url": "https://github.com/spence-s/pino-pretty/issues"
   },
   "repository": {
     "type": "git",
