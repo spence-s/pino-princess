@@ -60,6 +60,7 @@ function getFormatters(_formatters?: Partial<Formatters>): Formatters {
     formatUrl,
     formatStatusCode,
     formatErrorProp,
+    formatId,
     ...formatters,
   };
 }
@@ -244,4 +245,8 @@ function formatExtraFields(
   return (
     nl + chalk.grey(stringify(extraFields, undefined, options?.theme?.(chalk)))
   );
+}
+
+function formatId(id: string) {
+  return id ? chalk.yellow(`[ID:${id}]`) : '';
 }

@@ -4,6 +4,7 @@ export const WHITE_LIST = [
   'res.statusCode',
   'req.method',
   'req.url',
+  'req.id',
   'level',
   'name',
   'ns',

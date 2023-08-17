@@ -63,6 +63,10 @@ test('creates basic log lines with level, message, and time, and req.method', (t
     level: 30,
     message: 'hello',
     time,
+    req: {
+      method: 'GET',
+      id: '123',
+    },
     res: {
       statusCode: 200,
     },
@@ -84,10 +88,12 @@ test('full log line with all data and no extra data', (t) => {
     req: {
       method: 'GET',
       url: 'http://localhost:3000',
+      id: '123',
     },
     name: 'test',
     ns: 'test',
     msg: 'hello',
+    id: '123',
     responseTime: 100,
   });
 
@@ -107,6 +113,7 @@ test('full log line with all data and extra data', (t) => {
     req: {
       method: 'GET',
       url: 'http://localhost:3000',
+      id: '123',
     },
     name: 'test',
     ns: 'test',
@@ -132,6 +139,7 @@ test('full log line with all data and extra data multiline', (t) => {
     req: {
       method: 'GET',
       url: 'http://localhost:3000',
+      id: '123',
       something: 'extra',
     },
     name: 'test',
@@ -156,6 +164,7 @@ test('full log line with all data and extra data multiline', (t) => {
 //   'res.statusCode',
 //   'req.method',
 //   'req.url',
+//   'req.id',
 //   'level',
 //   'name',
 //   'ns',

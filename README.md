@@ -113,6 +113,7 @@ module.exports = {
     "res.statusCode",
     "req.method",
     "req.url",
+    "req.id",
     "level",
     "name",
     "ns",
@@ -170,6 +171,7 @@ module.exports = {
     formatStatusCode: (statusCode) => {},
     formatErrorProp: (err) => {},
     formatMethod: (method) => {},
+    formatId: (id) => {}
   }
 };
 ```

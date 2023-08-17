@@ -59,6 +59,7 @@ export type LogObject = {
   err?: SerializedError;
   pid?: string;
   hostname?: string;
+  id?: string;
 };
 
 /**
@@ -79,6 +80,7 @@ export type Formatters = {
   formatStatusCode: Formatter<number>;
   formatErrorProp: Formatter<Partial<SerializedError>>;
   formatMethod: Formatter<string>;
+  formatId: Formatter<string>;
 };
 
 /**

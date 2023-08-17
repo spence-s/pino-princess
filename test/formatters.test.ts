@@ -28,6 +28,7 @@ const {
   formatUrl,
   formatStatusCode,
   formatErrorProp,
+  formatId,
 } = getFormatters();
 
 test('formatLevel', async (t) => {
@@ -173,6 +174,13 @@ test('formatStatusCode', async (t) => {
 
   const statusCode = stripAnsi(formatStatusCode(200) ?? '');
   t.is(statusCode, '200');
+});
+
+test('formatId', async (t) => {
+  const {default: stripAnsi} = await import('strip-ansi');
+
+  const statusCode = stripAnsi(formatId('12345') ?? '');
+  t.is(statusCode, '[ID:12345]');
 });
 
 test('formatErrorProp > basic error', async (t) => {

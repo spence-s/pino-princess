@@ -38,6 +38,7 @@ export function prettify({
     formatUrl,
     formatStatusCode,
     formatErrorProp,
+    formatId,
   }: Formatters = getFormatters(formatters);
 
   // eslint-disable-next-line complexity
@@ -89,6 +90,7 @@ export function prettify({
         elapsed,
         method,
         url,
+        id,
         contentLength,
         stack,
         err,
@@ -99,7 +101,7 @@ export function prettify({
 
       let extraReq: Partial<SerializedRequest>;
       if (isObject(req) && !isEmpty(req)) {
-        ({method, url, ...extraReq} = req ?? {});
+        ({method, url, id, ...extraReq} = req ?? {});
         object.req = extraReq;
         if (!isEmpty(extraReq)) {
           if (!extraFields) extraFields = {};
@@ -129,6 +131,7 @@ export function prettify({
       output.push(
         formatDate ? formatDate(time ?? Date.now()) : '',
         formatLevel ? formatLevel(level) : '',
+        formatId ? formatId(id ?? '') : '',
         formatNs ? formatNs(ns) : '',
         formatName ? formatName(name) : '',
       );
