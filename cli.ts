@@ -24,6 +24,8 @@ Options
     {
       importMeta: {
         url: pathToFileURL(__filename).toString(),
+        resolve: (specified: string) =>
+          pathToFileURL(require.resolve(specified)).toString(),
       },
       flags: {
         blacklist: {
