@@ -28,7 +28,6 @@ console.log(
   prettify({
     level: 30,
     msg: 'Log lines improve as data is added to the pino log object! Checkout this logger ns field.',
-    ns: 'NAMESPACE',
   }),
 );
 
@@ -40,36 +39,31 @@ console.log(
   }),
 );
 
-console.log(
-  prettify({
-    level: 30,
-    msg: 'Ohhh boy! This logger has a name and a ns!',
-    name: 'NAME',
-    ns: 'NAMESPACE',
-  }),
-);
-
 console.log();
 
-const createLogLine = (level, ns, extra, msg) =>
+// eslint-disable-next-line max-params
+const createLogLine = (level, ns, extra, msg, status = true) =>
   prettify({
     level,
+    name: 'HTTP',
     msg: msg ?? `This is a ${ns} message`,
     req: {
       method: 'POST',
       url: `/api/${ns}`,
+      id: 1,
     },
     res: {
-      statusCode: {
-        trace: 200,
-        info: 204,
-        debug: 200,
-        warn: 404,
-        error: 400,
-        fatal: 500,
-      }[ns],
+      statusCode: status
+        ? {
+            trace: 200,
+            info: 204,
+            debug: 200,
+            warn: 404,
+            error: 400,
+            fatal: 500,
+          }[ns]
+        : 0,
     },
-    // ns: `name`,
     responseTime: Math.random() * 1000,
     ...extra,
   });
@@ -77,15 +71,22 @@ const createLogLine = (level, ns, extra, msg) =>
 console.log(
   prettify({
     level: 40,
-    msg: 'The next few logs will show some http logging!',
+    msg: 'The next few logs will show some http logging! Let\'s give the logger the name "HTTP"',
   }),
 );
-
-console.log();
 
 console.log(createLogLine(10, 'trace'));
 console.log(createLogLine(20, 'debug'));
 console.log(createLogLine(30, 'info'));
+console.log(
+  createLogLine(
+    30,
+    'info',
+    null,
+    'This is a info message with an unknown status code',
+    false,
+  ),
+);
 console.log(createLogLine(40, 'warn'));
 console.log(createLogLine(50, 'error'));
 console.log(createLogLine(60, 'fatal'));
