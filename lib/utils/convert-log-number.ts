@@ -7,7 +7,7 @@ function convertLogNumber(level: number): Levels | 'userlvl' {
   if (level === 40) return 'warn';
   if (level === 50) return 'error';
   if (level === 60) return 'fatal';
-  return 'userlvl';
+  return 'info';
 }
 
 export default convertLogNumber;

@@ -15,19 +15,20 @@ test.before(async (t) => {
 });
 
 const {
-  formatLevel,
-  formatLoadTime,
-  formatDate,
-  formatName,
-  formatMessage,
-  formatBundleSize,
-  formatExtraFields,
-  formatMethod,
-  formatStack,
-  formatUrl,
-  formatStatusCode,
-  formatErrorProp,
-  formatId,
+  level: formatLevel,
+  responseTime: formatLoadTime,
+  date: formatDate,
+  name: formatName,
+  msg: formatMessage,
+  message: formatMesssage,
+  size: formatBundleSize,
+  extraFields: formatExtraFields,
+  'req.method': formatMethod,
+  stack: formatStack,
+  'req.url': formatUrl,
+  'res.statusCode': formatStatusCode,
+  err: formatErrorProp,
+  'req.id': formatId,
 } = getFormatters();
 
 test('formatLevel', async (t) => {
@@ -89,33 +90,33 @@ test('formatMessage', async (t) => {
   const {default: stripAnsi} = await import('strip-ansi');
 
   const messageInfo = stripAnsi(
-    formatMessage({level: 'info', message: 'message'}) ?? '',
+    formatMessage('message', {level: 'info'}) ?? '',
   );
   t.is(messageInfo, 'message');
 
   const messageWarn = stripAnsi(
-    formatMessage({level: 'warn', message: 'message'}) ?? '',
+    formatMessage('message', {level: 'warn'}) ?? '',
   );
   t.is(messageWarn, 'message');
 
   const messageError = stripAnsi(
-    formatMessage({level: 'error', message: 'message'}) ?? '',
+    formatMessage('message', {level: 'error'}) ?? '',
   );
   t.is(messageError, 'message');
 
   const messageFatal = stripAnsi(
-    formatMessage({level: 'fatal', message: 'message'}) ?? '',
+    formatMessage('message', {level: 'fatal'}) ?? '',
   );
   t.is(messageFatal, 'message');
 
   const messageUserlvl = stripAnsi(
-    formatMessage({level: 'userlvl', message: 'message'}) ?? '',
+    formatMessage('message', {level: 'info'}) ?? '',
   );
 
   t.is(messageUserlvl, 'message');
 
   const messageDebug = stripAnsi(
-    formatMessage({level: 'debug', message: 'message'}) ?? '',
+    formatMessage('message', {level: 'debug'}) ?? '',
   );
   t.is(messageDebug, 'message');
 });

@@ -1,45 +1,55 @@
-import chalk from 'chalk';
 import jsonParse from 'fast-json-parse';
 import unset from 'unset-value';
 import get from 'get-value';
 import set from 'set-value';
-import type {SerializedRequest, SerializedResponse} from 'pino';
 import isObject from './utils/is-object';
 import isEmpty from './utils/is-empty';
 import convertLogNumber from './utils/convert-log-number';
 import {WHITE_LIST, BLACK_LIST} from './defaults';
 import getFormatters from './utils/format';
-import type {PrettifyOptions, Formatters, LogObject} from './utils/types';
+import type {PrettifyOptions} from './utils/types';
+
+type LogObject = Record<string, unknown>;
 
 const nl = '\n';
 
 export function prettify({
-  // white list and black list both take keys with dot notation
+  /**
+   * white list and black list both take keys with dot notation
+   */
   blacklist = [],
-  // whitelist always overrides black list
+  /**
+   * whitelist always overrides black list
+   */
   whitelist = [],
-  // custom json colors
+  /**
+   * Theme for the extra fields object
+   */
   theme = (chalk) => ({}),
-  // custom format objects
-  // support the same func names as seen below
-  formatters: {...formatters} = {},
+  /**
+   * Format functions for any given key
+   */
   format = {},
+  /**
+   * defines the order in which format functions are ran
+   */
+  template = [
+    'date',
+    'name',
+    'level',
+    'req.id',
+    'req.method',
+    'res.statusCode',
+    'req.url',
+    'msg',
+    'responseTime',
+  ],
 }: PrettifyOptions = {}) {
-  const {
-    formatLevel,
-    formatLoadTime,
-    formatDate,
-    formatName,
-    formatMessage,
-    formatBundleSize,
-    formatExtraFields,
-    formatMethod,
-    formatStack,
-    formatUrl,
-    formatStatusCode,
-    formatErrorProp,
-    formatId,
-  } = getFormatters();
+  const formatKeys = Object.keys(format);
+  const formatters: Record<string, (...args: any[]) => string> = {
+    ...getFormatters(),
+    ...format,
+  };
 
   // eslint-disable-next-line complexity
   return function (
@@ -62,7 +72,12 @@ export function prettify({
 
       // cache the whitelist
       const whiteListObj = {};
-      for (const key of [...whitelist, ...WHITE_LIST]) {
+      for (const key of [
+        ...whitelist,
+        ...WHITE_LIST,
+        ...formatKeys,
+        ...template,
+      ]) {
         const val: unknown = get(object, key);
         if (val) set(whiteListObj, key, val);
       }
@@ -76,105 +91,31 @@ export function prettify({
         ...whiteListObj,
       };
 
-      let {
-        req,
-        res,
-        level,
-        message,
-        name,
-        ns,
-        msg,
-        time,
-        statusCode,
-        responseTime,
-        elapsed,
-        method,
-        url,
-        id,
-        contentLength,
-        stack,
-        err,
-        pid,
-        hostname,
-        ...extraFields
-      } = object;
+      if (!object.date) object.date = Date.now();
+      if (typeof object.level === 'number')
+        object.level = convertLogNumber(object.level);
+      if (!object.level) object.level = 'info';
 
-      let extraReq: Partial<SerializedRequest>;
-      if (isObject(req) && !isEmpty(req)) {
-        ({method, url, id, ...extraReq} = req ?? {});
-        object.req = extraReq;
-        if (!isEmpty(extraReq)) {
-          if (!extraFields) extraFields = {};
-          extraFields.req = extraReq;
-        }
+      const output: string[] = [];
+
+      for (const key of template) {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        const value = get(object, key);
+        if (!value) continue;
+        const formatter = formatters[key];
+        if (!formatter) continue;
+        output.push(formatter(value, object));
       }
 
-      let extraRes: Partial<SerializedResponse>;
-      if (isObject(res) && !isEmpty(res)) {
-        ({statusCode, ...extraRes} = res ?? {});
-        object.res = extraRes;
-        if (!isEmpty(extraRes)) {
-          if (!extraFields) extraFields = {};
-          extraFields.res = extraRes;
-        }
+      for (const key of template) {
+        unset(object, key);
       }
 
-      if (!message) message = msg;
-      if (typeof level === 'number') level = convertLogNumber(level);
+      if (object.req && isEmpty(object.req)) unset(object, 'req');
+      if (object.res && isEmpty(object.res)) unset(object, 'res');
 
-      const output = [];
-
-      if (!level) level = 'userlvl';
-      if (!name) name = '';
-      if (!ns) ns = '';
-
-      output.push(
-        formatDate ? formatDate(time ?? Date.now()) : '',
-        formatName ? formatName(name) : '',
-        formatLevel ? formatLevel(level) : '',
-        formatId ? formatId(id ?? '') : '',
-        // formatNs ? formatNs(ns) : '',
-      );
-
-      responseTime = responseTime ?? elapsed;
-
-      // Output err if it has more keys than 'stack'
-      /** @type {Partial<import('pino').SerializedError> | undefined} */
-      const error =
-        (!statusCode || statusCode < 500) &&
-        err &&
-        Object.keys(err).some((key) => key !== 'stack')
-          ? err
-          : undefined;
-
-      if (method && formatMethod) output.push(formatMethod(method));
-
-      if (statusCode && formatStatusCode)
-        output.push(formatStatusCode(statusCode));
-
-      if (url && formatUrl)
-        output.push(
-          formatUrl(url, {
-            hasStatus: Boolean(statusCode),
-            padding: url?.length || 0,
-          }),
-        );
-
-      if (formatMessage && typeof level === 'string')
-        output.push(formatMessage({message, level}));
-
-      if (contentLength && formatBundleSize)
-        output.push(formatBundleSize(contentLength));
-
-      if (responseTime && formatLoadTime)
-        output.push(formatLoadTime(responseTime));
-
-      if (stack && formatStack) output.push(formatStack(stack));
-
-      if (error && formatErrorProp) output.push(formatErrorProp(error));
-
-      if (isObject(extraFields) && !isEmpty(extraFields) && formatExtraFields)
-        output.push(formatExtraFields(extraFields, {theme}));
+      if (isObject(object) && !isEmpty(object))
+        output.push(formatters.extraFields(object, {theme}));
 
       let outputString = output.filter(Boolean).join(' ');
 

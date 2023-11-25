@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 import chalk, {type Chalk} from 'chalk';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
@@ -11,7 +12,7 @@ import pcStringify from 'json-stringify-pretty-compact';
 import type {Theme} from 'cli-highlight';
 import highlight from 'cli-highlight';
 import isObject from './is-object';
-import type {Formatters, Levels, Colors, MessageObj} from './types';
+import type {Levels, Colors, MessageObj} from './types';
 
 dayjs.extend(utc);
 
@@ -33,7 +34,7 @@ const stringify = (obj: unknown, indent?: number, theme?: Theme) => {
     : stringified.replace(/^{\n/, '').replace(/\n}$/, '');
 };
 
-let formatters: Partial<Formatters> | undefined;
+let formatters: undefined;
 
 export default getFormatters;
 
@@ -45,19 +46,20 @@ export default getFormatters;
  */
 function getFormatters() {
   return {
-    formatLevel,
-    formatLoadTime,
-    formatDate,
-    formatName,
-    formatMessage,
-    formatBundleSize,
-    formatExtraFields,
-    formatMethod,
-    formatStack,
-    formatUrl,
-    formatStatusCode,
-    formatErrorProp,
-    formatId,
+    level: formatLevel,
+    date: formatDate,
+    name: formatName,
+    msg: formatMessage,
+    message: formatMessage,
+    size: formatBundleSize,
+    'req.method': formatMethod,
+    stack: formatStack,
+    'req.url': formatUrl,
+    'res.statusCode': formatStatusCode,
+    'req.id': formatId,
+    responseTime: formatLoadTime,
+    err: formatErrorProp,
+    extraFields: formatExtraFields,
   };
 }
 
@@ -86,7 +88,6 @@ function isWideEmoji(character: string): boolean {
 }
 
 function formatLevel(level: Levels | 'userlvl'): string {
-  if (formatters?.formatLevel) return formatters.formatLevel(level, {chalk});
   if (!emojiMap?.[level]) return '';
   const endlen = 5;
   const emoji = emojiMap[level];
@@ -97,8 +98,6 @@ function formatLevel(level: Levels | 'userlvl'): string {
 }
 
 function formatLoadTime(elapsedTime: string | number): string {
-  if (formatters?.formatLoadTime)
-    return formatters.formatLoadTime(elapsedTime, {chalk});
   const elapsed =
     typeof elapsedTime === 'string'
       ? Number.parseInt(elapsedTime, 10)
@@ -112,38 +111,26 @@ function formatLoadTime(elapsedTime: string | number): string {
 }
 
 function formatDate(instant: string | number): string {
-  if (formatters?.formatDate) return formatters.formatDate(instant, {chalk});
   return chalk.gray(`[${dayjs.utc(instant).format('H:mm:ss')}]`);
 }
 
 function formatName(name: string): string {
-  if (formatters?.formatName) return formatters.formatName(name, {chalk});
-
   if (!name) return '';
 
   return chalk.blue(name) + ':';
 }
 
-function formatMessage({level, message}: MessageObj): string {
-  if (formatters?.formatMessage)
-    return formatters.formatMessage({level, message}, {chalk});
+function formatMessage(message: string, {level}: {level: string}): string {
   if (message === undefined) return '';
-  message = formatMessageName(message);
   let pretty = '';
   if (level === 'error') pretty = chalk.red(message);
   if (level === 'trace') pretty = chalk.cyan(message);
   if (level === 'warn') pretty = chalk.yellow(message);
   if (level === 'debug') pretty = chalk.white(message);
-  if (level === 'info' || level === 'userlvl') pretty = chalk.white(message);
+  if (level === 'info') pretty = chalk.white(message);
   if (level === 'fatal') pretty = chalk.white.bgRedBright(message);
 
-  return pretty;
-}
-
-function formatMessageName(message: string): string {
-  if (message === 'request') return '<--';
-  if (message === 'response') return '-->';
-  return message;
+  return pretty || message;
 }
 
 function formatBundleSize(bundle: string): string {
@@ -152,17 +139,11 @@ function formatBundleSize(bundle: string): string {
   return chalk.gray(size);
 }
 
-function formatNs(name: string): string {
-  return chalk.cyan(name);
-}
-
 function formatUrl(
   url: string,
-  {hasStatus, padding}: {hasStatus?: boolean; padding?: number} = {},
+  {res: {statusCode} = {}}: {res?: Record<string, unknown>} = {},
 ): string {
-  return hasStatus
-    ? chalk.magenta(url)
-    : `    ${chalk.magenta(url)}`.padEnd(padding ?? 0);
+  return statusCode ? chalk.magenta(url) : `    ${chalk.magenta(url)}`;
 }
 
 function formatMethod(method: string): string {

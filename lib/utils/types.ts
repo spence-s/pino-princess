@@ -1,15 +1,8 @@
 import type {Chalk} from 'chalk';
-import {
-  type SerializedRequest,
-  type SerializedResponse,
-  type SerializedError,
-} from 'pino';
 import type {Theme} from 'cli-highlight';
 
 export type Levels = 'trace' | 'debug' | 'info' | 'warn' | 'error' | 'fatal';
-
 export type Colors = 'yellow' | 'cyan' | 'red' | 'blue' | 'white';
-
 /**
  * A small subset of available options for `cli-highlight`
  * which can be applied to stringified log lines in pino-princess.
@@ -17,7 +10,6 @@ export type Colors = 'yellow' | 'cyan' | 'red' | 'blue' | 'white';
 export type HighlightTheme = Partial<
   Pick<Theme, 'attr' | 'string' | 'number' | 'literal'>
 >;
-
 /**
  * A formatter function which takes a segment of a log line,
  * formats it, and returns it as a string.
@@ -35,63 +27,31 @@ export type Formatter<Type> = (
 ) => string;
 
 export type MessageObj = {
-  level: Levels | 'userlvl';
+  level: Levels;
   message?: string;
 };
-
-/**
- * A log line object which has been serialized by pino
- * and is ready to be formatted by pino-princess.
- */
-export type LogObject = {
-  [key: string]: unknown;
-  req?: Partial<SerializedRequest>;
-  res?: Partial<SerializedResponse>;
-  level?: number | Levels | 'userlvl';
-  message?: string;
-  name?: string;
-  msg?: string;
-  time?: string;
-  statusCode?: number;
-  responseTime?: number;
-  elapsed?: number;
-  method?: string;
-  url?: string;
-  contentLength?: string;
-  stack?: string;
-  err?: SerializedError;
-  pid?: string;
-  hostname?: string;
-  id?: string;
-};
-
-/**
- * A collection of formatter functions which are used to format
- * and can be overridden by the user in a config file.
- */
-export type Formatters = {
-  formatLevel: Formatter<Levels | 'userlvl'>;
-  formatLoadTime: Formatter<string | number>;
-  formatDate: Formatter<string | number>;
-  formatName: Formatter<string>;
-  formatMessage: Formatter<MessageObj>;
-  formatBundleSize: Formatter<string>;
-  formatExtraFields: Formatter<Record<string, unknown>>;
-  formatStack: Formatter<string>;
-  formatUrl: Formatter<string>;
-  formatStatusCode: Formatter<number>;
-  formatErrorProp: Formatter<Partial<SerializedError>>;
-  formatMethod: Formatter<string>;
-  formatId: Formatter<string>;
-};
-
 /**
  * Configuration options for `pino-princess`.
  */
 export type PrettifyOptions = {
+  /**
+   * white list and black list both take keys with dot notation
+   */
   blacklist?: string[];
+  /**
+   * whitelist always overrides black list
+   */
   whitelist?: string[];
+  /**
+   * Format functions for any given key
+   */
   format?: Record<string, (...args: any[]) => string>;
-  formatters?: Partial<Formatters>;
+  /**
+   * defines the order in which format functions are ran
+   */
+  template?: string[];
+  /**
+   * Theme for the extra fields object
+   */
   theme?: (chalk: Chalk) => HighlightTheme;
 };
