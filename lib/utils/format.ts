@@ -43,9 +43,7 @@ export default getFormatters;
  * @param _formatters user supplied formatters
  * @returns user supplied formatters or default formatters
  */
-function getFormatters(_formatters?: Partial<Formatters>): Formatters {
-  formatters = _formatters;
-
+function getFormatters() {
   return {
     formatLevel,
     formatLoadTime,
@@ -53,7 +51,6 @@ function getFormatters(_formatters?: Partial<Formatters>): Formatters {
     formatName,
     formatMessage,
     formatBundleSize,
-    formatNs,
     formatExtraFields,
     formatMethod,
     formatStack,
@@ -61,7 +58,6 @@ function getFormatters(_formatters?: Partial<Formatters>): Formatters {
     formatStatusCode,
     formatErrorProp,
     formatId,
-    ...formatters,
   };
 }
 
@@ -117,7 +113,7 @@ function formatLoadTime(elapsedTime: string | number): string {
 
 function formatDate(instant: string | number): string {
   if (formatters?.formatDate) return formatters.formatDate(instant, {chalk});
-  return '🕰️ ' + chalk.gray(`[${dayjs.utc(instant).format('H:mm:ss')}]`);
+  return chalk.gray(`[${dayjs.utc(instant).format('H:mm:ss')}]`);
 }
 
 function formatName(name: string): string {
@@ -125,7 +121,7 @@ function formatName(name: string): string {
 
   if (!name) return '';
 
-  return `- ${chalk.blue(name)}:`;
+  return chalk.blue(name) + ':';
 }
 
 function formatMessage({level, message}: MessageObj): string {
@@ -160,8 +156,13 @@ function formatNs(name: string): string {
   return chalk.cyan(name);
 }
 
-function formatUrl(url: string): string {
-  return chalk.magenta(url);
+function formatUrl(
+  url: string,
+  {hasStatus, padding}: {hasStatus?: boolean; padding?: number} = {},
+): string {
+  return hasStatus
+    ? chalk.magenta(url)
+    : `    ${chalk.magenta(url)}`.padEnd(padding ?? 0);
 }
 
 function formatMethod(method: string): string {

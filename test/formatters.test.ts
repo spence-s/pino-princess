@@ -21,7 +21,6 @@ const {
   formatName,
   formatMessage,
   formatBundleSize,
-  formatNs,
   formatExtraFields,
   formatMethod,
   formatStack,
@@ -76,14 +75,14 @@ test('formatDate', async (t) => {
   const ts = new Date('2020-01-01T00:00:00.000Z').getTime();
 
   const date1 = stripAnsi(formatDate(ts) ?? '');
-  t.is(date1, `🕰️ [${dayjs.utc(ts).format('H:mm:ss')}]`);
+  t.is(date1, `[${dayjs.utc(ts).format('H:mm:ss')}]`);
 });
 
 test('formatName', async (t) => {
   const {default: stripAnsi} = await import('strip-ansi');
 
   const name1 = stripAnsi(formatName('name') ?? '');
-  t.is(name1, '- name:');
+  t.is(name1, 'name:');
 });
 
 test('formatMessage', async (t) => {
@@ -128,13 +127,6 @@ test('formatBundleSize', async (t) => {
   t.is(bundleSize, '1000B');
 });
 
-test('formatNs', async (t) => {
-  const {default: stripAnsi} = await import('strip-ansi');
-
-  const ns = stripAnsi(formatNs('ns') ?? '');
-  t.is(ns, 'ns');
-});
-
 test('formatExtraFields', async (t) => {
   const {default: stripAnsi} = await import('strip-ansi');
 
@@ -166,7 +158,7 @@ test('formatUrl', async (t) => {
   const {default: stripAnsi} = await import('strip-ansi');
 
   const url = stripAnsi(formatUrl('url') ?? '');
-  t.is(url, 'url');
+  t.is(url, '    url');
 });
 
 test('formatStatusCode', async (t) => {

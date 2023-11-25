@@ -27,7 +27,11 @@ export type HighlightTheme = Partial<
  */
 export type Formatter<Type> = (
   arg: Type,
-  obj?: {chalk: Chalk; theme?: (chalk: Chalk) => HighlightTheme},
+  obj?: {
+    [key: string]: any;
+    chalk?: Chalk;
+    theme?: (chalk: Chalk) => HighlightTheme;
+  },
 ) => string;
 
 export type MessageObj = {
@@ -46,7 +50,6 @@ export type LogObject = {
   level?: number | Levels | 'userlvl';
   message?: string;
   name?: string;
-  ns?: string;
   msg?: string;
   time?: string;
   statusCode?: number;
@@ -73,7 +76,6 @@ export type Formatters = {
   formatName: Formatter<string>;
   formatMessage: Formatter<MessageObj>;
   formatBundleSize: Formatter<string>;
-  formatNs: Formatter<string>;
   formatExtraFields: Formatter<Record<string, unknown>>;
   formatStack: Formatter<string>;
   formatUrl: Formatter<string>;
@@ -89,6 +91,7 @@ export type Formatters = {
 export type PrettifyOptions = {
   blacklist?: string[];
   whitelist?: string[];
+  format?: Record<string, (...args: any[]) => string>;
   formatters?: Partial<Formatters>;
   theme?: (chalk: Chalk) => HighlightTheme;
 };

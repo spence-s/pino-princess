@@ -23,6 +23,7 @@ export function prettify({
   // custom format objects
   // support the same func names as seen below
   formatters: {...formatters} = {},
+  format = {},
 }: PrettifyOptions = {}) {
   const {
     formatLevel,
@@ -31,7 +32,6 @@ export function prettify({
     formatName,
     formatMessage,
     formatBundleSize,
-    formatNs,
     formatExtraFields,
     formatMethod,
     formatStack,
@@ -39,7 +39,7 @@ export function prettify({
     formatStatusCode,
     formatErrorProp,
     formatId,
-  }: Formatters = getFormatters(formatters);
+  } = getFormatters();
 
   // eslint-disable-next-line complexity
   return function (
@@ -130,10 +130,10 @@ export function prettify({
 
       output.push(
         formatDate ? formatDate(time ?? Date.now()) : '',
+        formatName ? formatName(name) : '',
         formatLevel ? formatLevel(level) : '',
         formatId ? formatId(id ?? '') : '',
-        formatNs ? formatNs(ns) : '',
-        formatName ? formatName(name) : '',
+        // formatNs ? formatNs(ns) : '',
       );
 
       responseTime = responseTime ?? elapsed;
@@ -152,7 +152,13 @@ export function prettify({
       if (statusCode && formatStatusCode)
         output.push(formatStatusCode(statusCode));
 
-      if (url && formatUrl) output.push(formatUrl(url));
+      if (url && formatUrl)
+        output.push(
+          formatUrl(url, {
+            hasStatus: Boolean(statusCode),
+            padding: url?.length || 0,
+          }),
+        );
 
       if (formatMessage && typeof level === 'string')
         output.push(formatMessage({message, level}));
@@ -168,7 +174,7 @@ export function prettify({
       if (error && formatErrorProp) output.push(formatErrorProp(error));
 
       if (isObject(extraFields) && !isEmpty(extraFields) && formatExtraFields)
-        output.push(formatExtraFields(extraFields, {chalk, theme}));
+        output.push(formatExtraFields(extraFields, {theme}));
 
       let outputString = output.filter(Boolean).join(' ');
 

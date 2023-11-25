@@ -10,7 +10,6 @@ export default buildSafeSonicBoom;
 
 /**
  * Creates a safe SonicBoom instance
- *
  */
 function buildSafeSonicBoom(options: SonicBoomOpts) {
   const stream = new SonicBoom(options);

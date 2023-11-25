@@ -7,7 +7,6 @@ export const WHITE_LIST = [
   'req.id',
   'level',
   'name',
-  'ns',
   'msg',
   'responseTime',
 ];
