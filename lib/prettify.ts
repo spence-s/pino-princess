@@ -15,6 +15,10 @@ const nl = '\n';
 
 export function prettify({
   /**
+   * The key to use for the error object. Defaults to `err`.
+   */
+  errorKey = 'err',
+  /**
    * white list and black list both take keys with dot notation
    */
   blacklist = [],
@@ -72,12 +76,7 @@ export function prettify({
 
       // cache the whitelist
       const whiteListObj = {};
-      for (const key of [
-        ...whitelist,
-        ...WHITE_LIST,
-        ...formatKeys,
-        ...template,
-      ]) {
+      for (const key of template) {
         const val: unknown = get(object, key);
         if (val) set(whiteListObj, key, val);
       }
@@ -113,6 +112,11 @@ export function prettify({
 
       if (object.req && isEmpty(object.req)) unset(object, 'req');
       if (object.res && isEmpty(object.res)) unset(object, 'res');
+
+      if (object[errorKey]) {
+        output.push(formatters.err(object[errorKey], object));
+        unset(object, errorKey);
+      }
 
       if (isObject(object) && !isEmpty(object))
         output.push(formatters.extraFields(object, {theme}));

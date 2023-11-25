@@ -35,6 +35,10 @@ export type MessageObj = {
  */
 export type PrettifyOptions = {
   /**
+   * The key to use for the error object. Defaults to `err`.
+   */
+  errorKey?: string;
+  /**
    * white list and black list both take keys with dot notation
    */
   blacklist?: string[];
