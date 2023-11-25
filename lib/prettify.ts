@@ -76,7 +76,7 @@ export function prettify({
 
       // cache the whitelist
       const whiteListObj = {};
-      for (const key of template) {
+      for (const key of [...WHITE_LIST, ...template]) {
         const val: unknown = get(object, key);
         if (val) set(whiteListObj, key, val);
       }
@@ -106,18 +106,24 @@ export function prettify({
         output.push(formatter(value, object));
       }
 
+      // remove the properties that were used to create the log-line
       for (const key of template) {
         unset(object, key);
       }
 
-      if (object.req && isEmpty(object.req)) unset(object, 'req');
-      if (object.res && isEmpty(object.res)) unset(object, 'res');
+      // remove empty blacklist that may have had whitelisted properties
+      for (const key of [...BLACK_LIST, ...blacklist]) {
+        if (isEmpty(get(object, key))) unset(object, key);
+      }
 
       if (object[errorKey]) {
         output.push(formatters.err(object[errorKey], object));
         unset(object, errorKey);
       }
 
+      // after processing the rest of the object contains
+      // extra fields that were not in the template nor in the log line nor blacklisted
+      // so these are the ones we want to prettify and highlight
       if (isObject(object) && !isEmpty(object))
         output.push(formatters.extraFields(object, {theme}));
 

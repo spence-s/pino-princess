@@ -2,11 +2,7 @@
 import chalk, {type Chalk} from 'chalk';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
-import type {
-  SerializedError,
-  SerializedRequest,
-  SerializedResponse,
-} from 'pino';
+import type {SerializedError} from 'pino';
 import prettyMs from 'pretty-ms';
 import pcStringify from 'json-stringify-pretty-compact';
 import type {Theme} from 'cli-highlight';
@@ -34,8 +30,6 @@ const stringify = (obj: unknown, indent?: number, theme?: Theme) => {
     : stringified.replace(/^{\n/, '').replace(/\n}$/, '');
 };
 
-let formatters: undefined;
-
 export default getFormatters;
 
 /**
@@ -51,9 +45,8 @@ function getFormatters() {
     name: formatName,
     msg: formatMessage,
     message: formatMessage,
-    size: formatBundleSize,
-    'req.method': formatMethod,
     stack: formatStack,
+    'req.method': formatMethod,
     'req.url': formatUrl,
     'res.statusCode': formatStatusCode,
     'req.id': formatId,
@@ -206,24 +199,9 @@ function formatErrorProp(
 }
 
 function formatExtraFields(
-  extraFields: Record<string, any> & {
-    req?: SerializedRequest;
-    res?: SerializedResponse;
-  },
+  extraFields: Record<string, any>,
   options?: {theme?: (chalk: Chalk) => Theme},
 ): string {
-  // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
-  if (isObject(extraFields) && (extraFields.req || extraFields.res)) {
-    const {req, res} = extraFields;
-    delete extraFields.req;
-    delete extraFields.res;
-    extraFields = {
-      req,
-      res,
-      ...extraFields,
-    };
-  }
-
   return (
     nl + chalk.grey(stringify(extraFields, undefined, options?.theme?.(chalk)))
   );

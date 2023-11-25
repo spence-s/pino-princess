@@ -112,7 +112,8 @@ console.log(
 console.log();
 
 console.log(
-  createLogLine(50, 'error', {
+  prettify({
+    level: 50,
     err: {
       type: 'Error',
       message: 'example error',

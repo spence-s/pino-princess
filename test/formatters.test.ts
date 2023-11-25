@@ -21,7 +21,6 @@ const {
   name: formatName,
   msg: formatMessage,
   message: formatMesssage,
-  size: formatBundleSize,
   extraFields: formatExtraFields,
   'req.method': formatMethod,
   stack: formatStack,
@@ -119,13 +118,6 @@ test('formatMessage', async (t) => {
     formatMessage('message', {level: 'debug'}) ?? '',
   );
   t.is(messageDebug, 'message');
-});
-
-test('formatBundleSize', async (t) => {
-  const {default: stripAnsi} = await import('strip-ansi');
-
-  const bundleSize = stripAnsi(formatBundleSize('1000') ?? '');
-  t.is(bundleSize, '1000B');
 });
 
 test('formatExtraFields', async (t) => {
