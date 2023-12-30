@@ -1,9 +1,6 @@
 import anyTest, {type TestFn} from 'ava';
 import dayjs from 'dayjs';
-import utc from 'dayjs/plugin/utc';
-import getFormatters from '../lib/utils/format';
-
-dayjs.extend(utc);
+import * as getFormatters from '../lib/prettify.js';
 
 const test = anyTest as TestFn<{
   stripAnsi: (str: string) => string;
@@ -15,20 +12,20 @@ test.before(async (t) => {
 });
 
 const {
-  level: formatLevel,
-  responseTime: formatLoadTime,
-  date: formatDate,
-  name: formatName,
-  msg: formatMessage,
-  message: formatMesssage,
-  extraFields: formatExtraFields,
-  'req.method': formatMethod,
-  stack: formatStack,
-  'req.url': formatUrl,
-  'res.statusCode': formatStatusCode,
-  err: formatErrorProp,
-  'req.id': formatId,
-} = getFormatters();
+  formatLevel,
+  formatLoadTime,
+  // formatDate,
+  formatName,
+  formatMessage,
+  // formatMesssage,
+  formatExtraFields,
+  formatMethod,
+  formatStack,
+  formatUrl,
+  formatStatusCode,
+  formatErrorProp,
+  formatId,
+} = getFormatters;
 
 test('formatLevel', async (t) => {
   const {default: stripAnsi} = await import('strip-ansi');
@@ -70,13 +67,13 @@ test('formatLoadTime', async (t) => {
   t.is(loadTime3, '500ms');
 });
 
-test('formatDate', async (t) => {
-  const {default: stripAnsi} = await import('strip-ansi');
-  const ts = new Date('2020-01-01T00:00:00.000Z').getTime();
+// test.skip('formatDate', async (t) => {
+//   const {default: stripAnsi} = await import('strip-ansi');
+//   const ts = new Date('2020-01-01T00:00:00.000Z').getTime();
 
-  const date1 = stripAnsi(formatDate(ts) ?? '');
-  t.is(date1, `[${dayjs.utc(ts).format('H:mm:ss')}]`);
-});
+//   const date1 = stripAnsi(formatDate(ts) ?? '');
+//   t.is(date1, `[${dayjs.utc(ts).format('H:mm:ss')}]`);
+// });
 
 test('formatName', async (t) => {
   const {default: stripAnsi} = await import('strip-ansi');
@@ -88,35 +85,23 @@ test('formatName', async (t) => {
 test('formatMessage', async (t) => {
   const {default: stripAnsi} = await import('strip-ansi');
 
-  const messageInfo = stripAnsi(
-    formatMessage('message', {level: 'info'}) ?? '',
-  );
+  const messageInfo = stripAnsi(formatMessage('message', {level: 30}) ?? '');
   t.is(messageInfo, 'message');
 
-  const messageWarn = stripAnsi(
-    formatMessage('message', {level: 'warn'}) ?? '',
-  );
+  const messageWarn = stripAnsi(formatMessage('message', {level: 40}) ?? '');
   t.is(messageWarn, 'message');
 
-  const messageError = stripAnsi(
-    formatMessage('message', {level: 'error'}) ?? '',
-  );
+  const messageError = stripAnsi(formatMessage('message', {level: 50}) ?? '');
   t.is(messageError, 'message');
 
-  const messageFatal = stripAnsi(
-    formatMessage('message', {level: 'fatal'}) ?? '',
-  );
+  const messageFatal = stripAnsi(formatMessage('message', {level: 60}) ?? '');
   t.is(messageFatal, 'message');
 
-  const messageUserlvl = stripAnsi(
-    formatMessage('message', {level: 'info'}) ?? '',
-  );
+  const messageUserlvl = stripAnsi(formatMessage('message', {level: 30}) ?? '');
 
   t.is(messageUserlvl, 'message');
 
-  const messageDebug = stripAnsi(
-    formatMessage('message', {level: 'debug'}) ?? '',
-  );
+  const messageDebug = stripAnsi(formatMessage('message', {level: 20}) ?? '');
   t.is(messageDebug, 'message');
 });
 

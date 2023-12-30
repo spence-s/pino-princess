@@ -1,5 +1,5 @@
 import anyTest, {type TestFn} from 'ava';
-import {prettify} from '../lib/prettify';
+import {prettify} from '../lib/prettify.js';
 
 const test = anyTest as TestFn<{
   stripAnsi: (str: string) => string;

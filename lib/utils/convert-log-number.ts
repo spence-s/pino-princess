@@ -1,4 +1,4 @@
-import type {Levels} from './types';
+import type {Levels} from './types.js';
 
 function convertLogNumber(level: number): Levels | 'userlvl' {
   if (level === 10) return 'trace';

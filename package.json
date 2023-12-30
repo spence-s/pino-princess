@@ -21,8 +21,8 @@
   },
   "license": "MIT",
   "author": "Spencer Snyder <sasnyde2@gmail.com>",
-  "type": "commonjs",
-  "main": "dist/index.js",
+  "type": "module",
+  "main": "dist/index.cjs",
   "bin": {
     "pino-princess": "./dist/cli.js"
   },
@@ -32,10 +32,17 @@
   ],
   "scripts": {
     "build": "npm run clean && tsc --project tsconfig.json",
-    "clean": "rm -rf dist",
+    "build:watch": "npm run clean && tsc --project tsconfig.json --watch",
+    "check": "tsc --project ./tsconfig.json",
+    "clean": "rimraf dist",
+    "dev": "NODE_NO_WARNINGS=1 node --loader ts-node/esm/transpile-only ./src/index.ts",
+    "dev:watch": "NODE_NO_WARNINGS=1 node --watch --loader ts-node/esm/transpile-only ./src/index.ts",
     "lint": "xo",
-    "test": "ava",
-    "watch": "npm run clean && tsc --project tsconfig.json --watch"
+    "lint:fix": "xo --fix",
+    "prepare": "husky install",
+    "test": "c8 ava",
+    "test:watch": "ava --watch",
+    "update": "ncu -i"
   },
   "xo": {
     "parserOptions": {
@@ -55,53 +62,64 @@
     },
     "space": true
   },
+  "prettier": {
+    "plugins": [
+      "prettier-plugin-packagejson"
+    ]
+  },
   "ava": {
-    "environmentVariables": {
-      "NODE_OPTIONS": "-r ts-node/register/transpile-only"
+    "extensions": {
+      "ts": "module"
     },
-    "extensions": [
-      "ts"
-    ],
     "files": [
-      "test/**/*"
+      "test/**",
+      "!test/fixtures/**",
+      "!test/helpers/**"
+    ],
+    "nodeArguments": [
+      "--loader=ts-node/esm/transpile-only",
+      "--no-warnings"
     ],
     "verbose": true
   },
   "dependencies": {
-    "chalk": "^4",
+    "chalk": "^5",
     "cli-highlight": "^2.1.11",
-    "cosmiconfig": "^8.3.6",
-    "dayjs": "^1.11.9",
+    "cosmiconfig": "^9.0.0",
+    "date-fns": "^3.0.6",
+    "dayjs": "^1.11.10",
     "fast-json-parse": "^1.0.3",
     "get-value": "^3.0.1",
-    "json-stringify-pretty-compact": "^3.0.0",
-    "meow": "^12.1.1",
-    "on-exit-leak-free": "^2.1.0",
+    "json-log-line": "file:../json-log-line",
+    "json-stringify-pretty-compact": "^4.0.0",
+    "meow": "^13.0.0",
+    "on-exit-leak-free": "^2.1.2",
     "pino-abstract-transport": "^1.1.0",
-    "pretty-ms": "^7",
+    "pretty-ms": "^8",
     "pump": "^3.0.0",
-    "readable-stream": "^4.4.2",
+    "readable-stream": "^4.5.2",
     "set-value": "^4.1.0",
-    "sonic-boom": "^3.3.0",
+    "sonic-boom": "^3.7.0",
     "unset-value": "^2.0.1"
   },
   "devDependencies": {
-    "@commitlint/cli": "^17.7.1",
-    "@commitlint/config-conventional": "^17.7.0",
-    "@types/events": "^3.0.0",
-    "@types/get-value": "^3.0.3",
-    "@types/node": "^20.6.0",
-    "@types/pump": "^1.1.1",
-    "@types/set-value": "^4.0.1",
-    "ava": "^5.3.1",
+    "@commitlint/cli": "^18.4.3",
+    "@commitlint/config-conventional": "^18.4.3",
+    "@types/events": "^3.0.3",
+    "@types/get-value": "^3.0.5",
+    "@types/node": "^20.10.6",
+    "@types/pump": "^1.1.3",
+    "@types/set-value": "^4.0.3",
+    "ava": "^6.0.1",
+    "c8": "^8.0.1",
     "fixpack": "^4.0.0",
     "husky": "^8.0.3",
-    "lint-staged": "^14.0.1",
-    "pino": "^8.15.1",
-    "prettier-plugin-packagejson": "^2.4.5",
+    "lint-staged": "^15.2.0",
+    "pino": "^8.17.2",
+    "prettier-plugin-packagejson": "^2.4.8",
     "strip-ansi": "^7.1.0",
-    "ts-node": "^10.9.1",
-    "typescript": "^5.2.2",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.3.3",
     "xo": "^0.56.0"
   },
   "engines": {

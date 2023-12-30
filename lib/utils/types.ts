@@ -1,4 +1,4 @@
-import type {Chalk} from 'chalk';
+import type {ChalkInstance} from 'chalk';
 import type {Theme} from 'cli-highlight';
 
 export type Levels = 'trace' | 'debug' | 'info' | 'warn' | 'error' | 'fatal';
@@ -21,8 +21,8 @@ export type Formatter<Type> = (
   arg: Type,
   obj?: {
     [key: string]: any;
-    chalk?: Chalk;
-    theme?: (chalk: Chalk) => HighlightTheme;
+    chalk?: ChalkInstance;
+    theme?: (chalk: ChalkInstance) => HighlightTheme;
   },
 ) => string;
 
@@ -53,9 +53,9 @@ export type PrettifyOptions = {
   /**
    * defines the order in which format functions are ran
    */
-  template?: string[];
+  logLine?: string | string[];
   /**
    * Theme for the extra fields object
    */
-  theme?: (chalk: Chalk) => HighlightTheme;
+  theme?: (chalk: ChalkInstance) => HighlightTheme;
 };

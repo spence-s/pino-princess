@@ -1,17 +1,196 @@
-import jsonParse from 'fast-json-parse';
-import unset from 'unset-value';
-import get from 'get-value';
-import set from 'set-value';
-import isObject from './utils/is-object';
-import isEmpty from './utils/is-empty';
-import convertLogNumber from './utils/convert-log-number';
-import {WHITE_LIST, BLACK_LIST} from './defaults';
-import getFormatters from './utils/format';
-import type {PrettifyOptions} from './utils/types';
+/* eslint-disable @typescript-eslint/naming-convention */
+import {createLogLine} from 'json-log-line';
+import _highlight from 'cli-highlight';
+import chalk, {type ChalkInstance} from 'chalk';
+import type {SerializedError} from 'pino';
+import prettyMs from 'pretty-ms';
+import pcStringify from 'json-stringify-pretty-compact';
+import {format} from 'date-fns';
+import type {
+  Levels,
+  Colors,
+  MessageObj,
+  PrettifyOptions,
+} from './utils/types.js';
+import isObject from './utils/is-object.js';
 
-type LogObject = Record<string, unknown>;
+const highlight = _highlight.default;
 
 const nl = '\n';
+
+const stringify = (obj: unknown, indent?: number, theme?: _highlight.Theme) => {
+  const stringified = highlight(pcStringify(obj, {indent}), {
+    language: 'json',
+    ignoreIllegals: true,
+    theme: {
+      attr: chalk.cyanBright,
+      string: chalk.yellow,
+      ...theme,
+    },
+  });
+
+  return /^{.*"/.test(stringified)
+    ? '  ' + stringified.replace(/^{/, '').replace(/}$/, '')
+    : stringified.replace(/^{\n/, '').replace(/\n}$/, '');
+};
+
+const emojiMap = {
+  warn: '⚠️',
+  info: '✨',
+  userlvl: '👤',
+  error: '🚨',
+  debug: '🐛',
+  fatal: '💀',
+  trace: '🔍',
+};
+
+const colorMap: Record<Levels | 'userlvl', Colors> = {
+  warn: 'yellow',
+  info: 'cyan',
+  userlvl: 'cyan',
+  error: 'red',
+  debug: 'blue',
+  trace: 'white',
+  fatal: 'red',
+};
+
+function isWideEmoji(character: string): boolean {
+  return character !== '⚠️';
+}
+
+export function formatLevel(level: Levels | 'userlvl'): string {
+  if (!emojiMap?.[level]) return '';
+  const endlen = 5;
+  const emoji = emojiMap[level];
+  const padding = isWideEmoji(emoji) ? ' ' : '  ';
+  const formattedLevel = chalk[colorMap[level]](level.toUpperCase());
+  const endPadding = endlen - level.length;
+  return emoji + padding + formattedLevel + ''.padEnd(endPadding, ' ');
+}
+
+export function formatLoadTime(elapsedTime: string | number): string {
+  const elapsed =
+    typeof elapsedTime === 'string'
+      ? Number.parseInt(elapsedTime, 10)
+      : elapsedTime;
+  const time = prettyMs(elapsed);
+  return elapsed > 750
+    ? chalk.red(time)
+    : elapsed > 450
+    ? chalk.yellow(time)
+    : chalk.green(time);
+}
+
+export function formatTime(instant: string | number): string {
+  return chalk.gray(`[${format(new Date(instant), 'h:mm:ss:Sb')}]`);
+}
+
+export function formatName(name: string): string {
+  if (!name) return '';
+
+  return `[${chalk.blue(name)}]`;
+}
+
+export function formatMessage(
+  message: string,
+  {level}: {level: number},
+): string {
+  if (message === undefined) return '';
+  let pretty = '';
+  if (level === 50) pretty = chalk.red(message);
+  if (level === 10) pretty = chalk.cyan(message);
+  if (level === 40) pretty = chalk.yellow(message);
+  if (level === 20) pretty = chalk.white(message);
+  if (level === 30) pretty = chalk.white(message);
+  if (level === 60) pretty = chalk.white.bgRedBright(message);
+
+  return pretty || message;
+}
+
+export function formatBundleSize(bundle: string): string {
+  const bytes = Number.parseInt(bundle, 10);
+  const size = `${bytes}B`;
+  return chalk.gray(size);
+}
+
+export function formatUrl(
+  url: string,
+  {res: {statusCode} = {}}: {res?: Record<string, unknown>} = {},
+): string {
+  return statusCode ? chalk.magenta(url) : `    ${chalk.magenta(url)}`;
+}
+
+export function formatMethod(method: string): string {
+  return method ? chalk.white(method) : '';
+}
+
+export function formatStatusCode(statusCode: string | number = 'xxx'): string {
+  return chalk[
+    typeof statusCode === 'number' && statusCode < 300
+      ? 'green'
+      : typeof statusCode === 'number' && statusCode < 500
+      ? 'yellow'
+      : 'red'
+  ](statusCode);
+}
+
+export function formatStack(stack: string): string {
+  return stack ? chalk.grey(nl + '  ' + stack) : '';
+}
+
+export function formatErrorProp(
+  errorPropValue: Partial<
+    SerializedError & {aggregateErrors?: SerializedError[]}
+  >,
+): string {
+  if (Array.isArray(errorPropValue.aggregateErrors)) {
+    const {aggregateErrors, ...ogErr} = errorPropValue;
+    return (
+      [isObject(ogErr) ? formatErrorProp(ogErr) : undefined]
+        // eslint-disable-next-line unicorn/prefer-spread
+        .concat(
+          aggregateErrors.map(
+            (err: Partial<SerializedError>) => '  ' + formatErrorProp(err),
+          ),
+        )
+        .filter(Boolean)
+        .join(nl)
+    );
+  }
+
+  let stack = '';
+
+  if (errorPropValue.type) delete errorPropValue.type;
+  if (errorPropValue.stack) {
+    stack += formatStack(errorPropValue.stack);
+    delete errorPropValue.stack;
+  }
+
+  if (errorPropValue.message) delete errorPropValue.message;
+
+  const hasExtraData = Object.keys(errorPropValue).length > 0;
+
+  if (!stack && !hasExtraData) return '';
+
+  return (
+    stack +
+    (stack ? nl : '') +
+    (hasExtraData ? chalk.grey(stringify(errorPropValue, 4)) : '')
+  );
+}
+
+export function formatExtraFields(
+  extraFields: Record<string, any>,
+  options?: {theme?: (chalk: ChalkInstance) => _highlight.Theme},
+): string {
+  return (
+    nl + chalk.grey(stringify(extraFields, undefined, options?.theme?.(chalk)))
+  );
+}
+
+export function formatId(id: string) {
+  return id ? chalk.yellow(`[ID:${id}]`) : '';
+}
 
 export function prettify({
   /**
@@ -34,108 +213,29 @@ export function prettify({
    * Format functions for any given key
    */
   format = {},
-  /**
-   * defines the order in which format functions are ran
-   */
-  template = [
-    'date',
-    'name',
-    'level',
-    'req.id',
-    'req.method',
-    'res.statusCode',
-    'req.url',
-    'msg',
-    'responseTime',
-  ],
 }: PrettifyOptions = {}) {
-  const formatKeys = Object.keys(format);
   const formatters: Record<string, (...args: any[]) => string> = {
-    ...getFormatters(),
+    time: formatTime,
+    name: formatName,
+    level: formatLevel,
+    'req.id': formatId,
+    'req.method': formatMethod,
+    'res.statusCode': formatStatusCode,
+    'req.url': formatUrl,
+    msg: formatMessage,
+    responseTime: formatLoadTime,
+    extraFields: formatExtraFields,
+    err: formatErrorProp,
+    'err.stack': formatStack,
     ...format,
   };
 
-  // eslint-disable-next-line complexity
-  return function (
-    inputData: string | Record<string, unknown>,
-  ): string | undefined {
-    try {
-      let object: LogObject = {};
-      if (typeof inputData === 'string') {
-        const parsedData = jsonParse(inputData);
-        if (!parsedData.value || parsedData.err) {
-          return inputData + nl;
-        }
-
-        object = parsedData.value as LogObject;
-      } else if (isObject(inputData)) {
-        object = inputData as LogObject;
-      } else {
-        return nl;
-      }
-
-      // cache the whitelist
-      const whiteListObj = {};
-      for (const key of [...WHITE_LIST, ...template]) {
-        const val: unknown = get(object, key);
-        if (val) set(whiteListObj, key, val);
-      }
-
-      // remove the blacklist
-      for (const key of [...BLACK_LIST, ...blacklist]) unset(object, key);
-
-      // add back in the whitelist
-      object = {
-        ...object,
-        ...whiteListObj,
-      };
-
-      if (!object.date) object.date = Date.now();
-      if (typeof object.level === 'number')
-        object.level = convertLogNumber(object.level);
-      if (!object.level) object.level = 'info';
-
-      const output: string[] = [];
-
-      for (const key of template) {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        const value = get(object, key);
-        if (!value) continue;
-        const formatter = formatters[key];
-        if (!formatter) continue;
-        output.push(formatter(value, object));
-      }
-
-      // remove the properties that were used to create the log-line
-      for (const key of template) {
-        unset(object, key);
-      }
-
-      // remove empty blacklist that may have had whitelisted properties
-      for (const key of [...BLACK_LIST, ...blacklist]) {
-        if (isEmpty(get(object, key))) unset(object, key);
-      }
-
-      if (object[errorKey]) {
-        output.push(formatters.err(object[errorKey], object));
-        unset(object, errorKey);
-      }
-
-      // after processing the rest of the object contains
-      // extra fields that were not in the template nor in the log line nor blacklisted
-      // so these are the ones we want to prettify and highlight
-      if (isObject(object) && !isEmpty(object))
-        output.push(formatters.extraFields(object, {theme}));
-
-      let outputString = output.filter(Boolean).join(' ');
-
-      if (!outputString.endsWith(nl)) outputString += nl;
-
-      return outputString;
-    } catch (error: unknown) {
-      console.log(error);
-    }
-  };
+  return createLogLine({
+    errorKey,
+    include: [...whitelist, ...Object.keys(formatters)],
+    exclude: ['req', 'res', 'hostname', 'pid', ...blacklist],
+    format: formatters,
+  });
 }
 
 export default prettify;

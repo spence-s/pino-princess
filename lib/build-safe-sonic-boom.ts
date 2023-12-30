@@ -1,7 +1,12 @@
 import {isMainThread} from 'node:worker_threads';
-import type {SonicBoomOpts} from 'sonic-boom';
-import SonicBoom from 'sonic-boom';
+import __SonicBoom, {
+  type SonicBoom as SonicBoomType,
+  type SonicBoomOpts,
+} from 'sonic-boom';
 import * as onExit from 'on-exit-leak-free';
+
+// eslint-disable-next-line @typescript-eslint/naming-convention
+const SonicBoom = __SonicBoom as unknown as typeof SonicBoomType;
 
 // eslint-disable-next-line @typescript-eslint/no-empty-function
 function noop() {}
@@ -34,7 +39,7 @@ function buildSafeSonicBoom(options: SonicBoomOpts) {
   }
 }
 
-function setupOnExit(stream: SonicBoom) {
+function setupOnExit(stream: SonicBoomType) {
   /* istanbul ignore next */
   if (global.WeakRef && global.WeakMap && global.FinalizationRegistry) {
     // This is leak free, it does not leave event handlers
@@ -47,7 +52,7 @@ function setupOnExit(stream: SonicBoom) {
 }
 
 function autoEnd(
-  stream: SonicBoom & {destroyed?: boolean},
+  stream: SonicBoomType & {destroyed?: boolean},
   eventName: string,
 ): void {
   // This check is needed only on some platforms
