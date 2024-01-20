@@ -2,6 +2,7 @@ import type {ChalkInstance} from 'chalk';
 import type {Theme} from 'cli-highlight';
 
 export type Levels = 'trace' | 'debug' | 'info' | 'warn' | 'error' | 'fatal';
+export type NumLevels = 10 | 20 | 30 | 40 | 50 | 60;
 export type Colors = 'yellow' | 'cyan' | 'red' | 'blue' | 'white';
 /**
  * A small subset of available options for `cli-highlight`
@@ -39,13 +40,13 @@ export type PrettifyOptions = {
    */
   errorKey?: string;
   /**
-   * white list and black list both take keys with dot notation
+   * exclude keys from the log object, accepts dot notation
    */
-  blacklist?: string[];
+  exclude?: string[];
   /**
-   * whitelist always overrides black list
+   * include keys in the log object, accepts dot notation, always overrides exclude
    */
-  whitelist?: string[];
+  include?: string[];
   /**
    * Format functions for any given key
    */

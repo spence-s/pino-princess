@@ -2,7 +2,6 @@
 import fs from 'node:fs';
 import process from 'node:process';
 import os from 'node:os';
-import {pathToFileURL} from 'node:url';
 import pump from 'pump';
 import {cosmiconfigSync} from 'cosmiconfig';
 import meow from 'meow';
@@ -15,17 +14,17 @@ Usage
   $ node my-app-with-pino-logging | pino-princess
 
 Options
-  --blacklist, -b    blacklisted log fields separated by comma. Is overriden by whitelisted fields.
-  --whitelist, -w    whitelisted log fields separated by comma. Overrides blacklisted fields.
+  --exclude, -e    excluded log fields separated by comma. Is overriden by whitelisted fields.
+  --include, -i    included log fields separated by comma. Overrides blacklisted fields.
   `,
   {
     importMeta: import.meta,
     flags: {
-      blacklist: {
+      exclude: {
         type: 'string',
         alias: 'b',
       },
-      whitelist: {
+      include: {
         type: 'string',
         alias: 'w',
       },
@@ -34,12 +33,12 @@ Options
 );
 const options: PrettifyOptions = {};
 
-if (cli.flags.blacklist) {
-  options.blacklist = cli.flags.blacklist.split(',').map((str) => str.trim());
+if (cli.flags.exclude) {
+  options.exclude = cli.flags.exclude.split(',').map((str) => str.trim());
 }
 
-if (cli.flags.whitelist) {
-  options.whitelist = cli.flags.whitelist.split(',').map((str) => str.trim());
+if (cli.flags.include) {
+  options.include = cli.flags.include.split(',').map((str) => str.trim());
 }
 
 const explorer = cosmiconfigSync('pino-princess', {stopDir: os.homedir()});

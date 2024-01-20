@@ -7,9 +7,9 @@ import prettyMs from 'pretty-ms';
 import pcStringify from 'json-stringify-pretty-compact';
 import {format} from 'date-fns';
 import type {
+  NumLevels,
   Levels,
   Colors,
-  MessageObj,
   PrettifyOptions,
 } from './utils/types.js';
 import isObject from './utils/is-object.js';
@@ -58,7 +58,16 @@ function isWideEmoji(character: string): boolean {
   return character !== '⚠️';
 }
 
-export function formatLevel(level: Levels | 'userlvl'): string {
+export function formatLevel(_level: NumLevels): string {
+  const level: Levels = {
+    10: 'trace',
+    20: 'debug',
+    30: 'info',
+    40: 'warn',
+    50: 'error',
+    60: 'fatal',
+  }[_level] as Levels;
+
   if (!emojiMap?.[level]) return '';
   const endlen = 5;
   const emoji = emojiMap[level];
@@ -88,7 +97,7 @@ export function formatTime(instant: string | number): string {
 export function formatName(name: string): string {
   if (!name) return '';
 
-  return `[${chalk.blue(name)}]`;
+  return chalk.blue(`[${name}]`);
 }
 
 export function formatMessage(
@@ -200,11 +209,11 @@ export function prettify({
   /**
    * white list and black list both take keys with dot notation
    */
-  blacklist = [],
+  exclude = [],
   /**
    * whitelist always overrides black list
    */
-  whitelist = [],
+  include = [],
   /**
    * Theme for the extra fields object
    */
@@ -215,8 +224,8 @@ export function prettify({
   format = {},
 }: PrettifyOptions = {}) {
   const formatters: Record<string, (...args: any[]) => string> = {
-    time: formatTime,
     name: formatName,
+    time: formatTime,
     level: formatLevel,
     'req.id': formatId,
     'req.method': formatMethod,
@@ -232,8 +241,8 @@ export function prettify({
 
   return createLogLine({
     errorKey,
-    include: [...whitelist, ...Object.keys(formatters)],
-    exclude: ['req', 'res', 'hostname', 'pid', ...blacklist],
+    include: [...include, ...Object.keys(formatters)],
+    exclude: ['req', 'res', 'hostname', 'pid', ...exclude],
     format: formatters,
   });
 }

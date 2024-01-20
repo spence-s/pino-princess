@@ -1,4 +1,4 @@
-const {prettify: createPrettify} = require('../dist');
+import {prettify as createPrettify} from '../dist/index.js';
 
 const _prettify = createPrettify();
 const prettify = (obj) => _prettify(obj)?.replace(/\n$/, '');

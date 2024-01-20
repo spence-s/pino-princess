@@ -1,0 +1,8 @@
+{
+  "extends": "./tsconfig.json",
+  "watchOptions": {
+    "excludeDirectories": ["dist", "node_modules"]
+  },
+  "exclude": ["node_modules", "dist", "test"],
+  "include": ["**/*.ts", "index.ts", "index.cts"]
+}
