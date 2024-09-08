@@ -91,7 +91,7 @@ export function formatLoadTime(elapsedTime: string | number): string {
 }
 
 export function formatTime(instant: string | number): string {
-  return chalk.gray(`[${format(new Date(instant), 'h:mm:ss:Sbbbbb')}]`);
+  return chalk.gray(`[${format(new Date(instant), 'h:mm:ss:SS aaa')}]`);
 }
 
 export function formatName(name: string): string {
@@ -234,8 +234,8 @@ export function prettify({
     msg: formatMessage,
     responseTime: formatLoadTime,
     extraFields: formatExtraFields,
-    err: formatErrorProp,
-    'err.stack': formatStack,
+    [errorKey]: formatErrorProp,
+    [`${errorKey}.stack`]: formatStack,
     ...format,
   };
 

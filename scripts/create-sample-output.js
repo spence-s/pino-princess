@@ -47,6 +47,7 @@ const createLogLine = (level, ns, extra, msg, status = true) =>
     level,
     name: 'HTTP',
     msg: msg ?? `This is a ${ns} message`,
+    time: new Date(),
     req: {
       method: 'POST',
       url: `/api/${ns}`,
@@ -114,6 +115,7 @@ console.log();
 console.log(
   prettify({
     level: 50,
+    time: new Date(),
     err: {
       type: 'Error',
       message: 'example error',
@@ -132,6 +134,7 @@ const aggErr2 = new Error('throw em all the time!');
 console.log(
   prettify({
     level: 60,
+    time: new Date(),
     msg: 'What about aggregate errors??',
     err: {
       message: 'the primary aggregate error',

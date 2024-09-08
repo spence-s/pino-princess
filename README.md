@@ -8,7 +8,6 @@ Largely inspired from the great pino-colada project but with all the bells and w
   - [Features](#features)
   - [SAMPLES](#samples)
       - [Gruvbox](#gruvbox)
-      - [Dracula](#dracula)
   - [Goals](#goals)
     - [Install](#install)
   - [Usage](#usage)
@@ -29,12 +28,6 @@ Largely inspired from the great pino-colada project but with all the bells and w
 > note: these samples are created by changing terminal colors - not by changing themes in pino-princess. However, pino-princess themes are entirely configurable so both ways of changing the colors are possible.
 
 #### Gruvbox
-
-![Basic Formatting](./media/screenshot3.png)
-
-![Error Formatting](./media//screenshot4.png)
-
-#### Dracula
 
 ![Basic Formatting](./media/screenshot1.png)
 
@@ -147,7 +140,7 @@ module.exports = {
     /**
      * The color of boolean and null values
      */
-    literal: chalk.default
+    literal: chalk.default,
   }),
 
   /**
@@ -163,7 +156,7 @@ module.exports = {
     formatDate: (date) => {},
     formatName: (name) => {},
     formatMessage: (message) => {},
-    formatBundleSize:(bundleSize) => {},
+    formatBundleSize: (bundleSize) => {},
     formatNs: (ns) => {},
     formatExtraFields: (extraFields) => {},
     formatStack: (stack) => {},
@@ -171,7 +164,7 @@ module.exports = {
     formatStatusCode: (statusCode) => {},
     formatErrorProp: (err) => {},
     formatMethod: (method) => {},
-    formatId: (id) => {}
-  }
+    formatId: (id) => {},
+  },
 };
 ```
