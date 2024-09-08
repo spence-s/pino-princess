@@ -67,3 +67,4 @@ temp/
 .nyc_output
 
 dist
+!test/snapshots/**/*

@@ -17,10 +17,10 @@ test.before(async (t) => {
 });
 
 test('creates basic log lines with level', (t) => {
-  const date = new Date('2020-01-01T00:00:00.000Z');
+  const time = new Date('2020-01-01T00:00:00.000Z');
   const input = JSON.stringify({
     level: 30,
-    date,
+    time,
   });
 
   const output = t.context.prettify(input);
@@ -28,12 +28,12 @@ test('creates basic log lines with level', (t) => {
   t.snapshot(output);
 });
 
-test('creates basic log lines with level, message, and date', (t) => {
-  const date = new Date('2020-01-01T00:00:00.000Z');
+test('creates basic log lines with level, message, and time', (t) => {
+  const time = new Date('2020-01-01T00:00:00.000Z');
   const input = JSON.stringify({
     level: 30,
     message: 'hello',
-    date,
+    time,
   });
 
   const output = t.context.prettify(input);
@@ -41,12 +41,12 @@ test('creates basic log lines with level, message, and date', (t) => {
   t.snapshot(output);
 });
 
-test('creates basic log lines with level, message, and date, and res.statusCode', (t) => {
-  const date = new Date('2020-01-01T00:00:00.000Z');
+test('creates basic log lines with level, message, and time, and res.statusCode', (t) => {
+  const time = new Date('2020-01-01T00:00:00.000Z');
   const input = JSON.stringify({
     level: 30,
     message: 'hello',
-    date,
+    time,
     res: {
       statusCode: 200,
     },
@@ -57,12 +57,12 @@ test('creates basic log lines with level, message, and date, and res.statusCode'
   t.snapshot(output);
 });
 
-test('creates basic log lines with level, message, and date, and req.method', (t) => {
-  const date = new Date('2020-01-01T00:00:00.000Z');
+test('creates basic log lines with level, message, and time, and req.method', (t) => {
+  const time = new Date('2020-01-01T00:00:00.000Z');
   const input = JSON.stringify({
     level: 30,
     message: 'hello',
-    date,
+    time,
     req: {
       method: 'GET',
       id: '123',
@@ -77,11 +77,11 @@ test('creates basic log lines with level, message, and date, and req.method', (t
   t.snapshot(output);
 });
 
-test('full log line with all date and no extra date', (t) => {
-  const date = new Date('2020-01-01T00:00:00.000Z');
+test('full log line with all time and no extra time', (t) => {
+  const time = new Date('2020-01-01T00:00:00.000Z');
   const input = JSON.stringify({
     level: 30,
-    date,
+    time,
     res: {
       statusCode: 200,
     },
@@ -102,11 +102,11 @@ test('full log line with all date and no extra date', (t) => {
   t.snapshot(output);
 });
 
-test('full log line with all date and extra date', (t) => {
-  const date = new Date('2020-01-01T00:00:00.000Z');
+test('full log line with all time and extra time', (t) => {
+  const time = new Date('2020-01-01T00:00:00.000Z');
   const input = JSON.stringify({
     level: 30,
-    date,
+    time,
     res: {
       statusCode: 200,
     },
@@ -119,7 +119,7 @@ test('full log line with all date and extra date', (t) => {
     ns: 'test',
     msg: 'hello',
     responsedate: 100,
-    extra: 'date',
+    extra: 'time',
   });
 
   const output = t.context.prettify(input);
@@ -127,11 +127,11 @@ test('full log line with all date and extra date', (t) => {
   t.snapshot(output);
 });
 
-test('full log line with all date and extra date multiline', (t) => {
-  const date = new Date('2020-01-01T00:00:00.000Z');
+test('full log line with all time and extra time multiline', (t) => {
+  const time = new Date('2020-01-01T00:00:00.000Z');
   const input = JSON.stringify({
     level: 30,
-    date,
+    time,
     res: {
       statusCode: 200,
       something: 'extra',
@@ -146,12 +146,12 @@ test('full log line with all date and extra date multiline', (t) => {
     ns: 'test',
     msg: 'hello',
     responsedate: 100,
-    extra: 'date',
+    extra: 'time',
     multi: 'line',
     idk: 'what',
     else: 'to add',
     for: {
-      extra: 'date',
+      extra: 'time',
     },
   });
 

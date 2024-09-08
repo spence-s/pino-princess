@@ -74,6 +74,7 @@
       "!dist/test/fixtures/**",
       "!dist/test/helpers/**"
     ],
+    "snapshotDir": "test/snapshots",
     "verbose": true
   },
   "dependencies": {
