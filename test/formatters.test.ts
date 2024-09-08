@@ -1,5 +1,4 @@
 import anyTest, {type TestFn} from 'ava';
-import dayjs from 'dayjs';
 import * as getFormatters from '../lib/prettify.js';
 
 const test = anyTest as TestFn<{
