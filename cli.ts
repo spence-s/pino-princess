@@ -22,11 +22,11 @@ Options
     flags: {
       exclude: {
         type: 'string',
-        alias: 'b',
+        shortFlag: 'b',
       },
       include: {
         type: 'string',
-        alias: 'w',
+        shortFlag: 'w',
       },
     },
   },

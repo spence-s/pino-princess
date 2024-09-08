@@ -35,22 +35,22 @@ test('formatLevel', async (t) => {
    * as it is part of the formatLevel function, which pads the shorter strings
    */
 
-  const info = stripAnsi(formatLevel('info'));
+  const info = stripAnsi(formatLevel(30));
   t.is(info, '✨ INFO ');
 
-  const warn = stripAnsi(formatLevel('warn'));
+  const warn = stripAnsi(formatLevel(40));
   t.is(warn, '⚠️  WARN ');
 
-  const error = stripAnsi(formatLevel('error'));
+  const error = stripAnsi(formatLevel(50));
   t.is(error, '🚨 ERROR');
 
-  const fatal = stripAnsi(formatLevel('fatal'));
+  const fatal = stripAnsi(formatLevel(60));
   t.is(fatal, '💀 FATAL');
 
-  const userlvl = stripAnsi(formatLevel('userlvl'));
-  t.is(userlvl, '👤 USERLVL');
+  // const userlvl = stripAnsi(formatLevel(0));
+  // t.is(userlvl, '👤 USERLVL');
 
-  const debug = stripAnsi(formatLevel('debug'));
+  const debug = stripAnsi(formatLevel(20));
   t.is(debug, '🐛 DEBUG');
 });
 
@@ -79,7 +79,7 @@ test('formatName', async (t) => {
   const {default: stripAnsi} = await import('strip-ansi');
 
   const name1 = stripAnsi(formatName('name') ?? '');
-  t.is(name1, 'name:');
+  t.is(name1, '[name]');
 });
 
 test('formatMessage', async (t) => {

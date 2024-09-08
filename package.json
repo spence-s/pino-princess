@@ -32,6 +32,7 @@
   ],
   "scripts": {
     "build": "npm run clean && tsc --project tsconfig.build.json",
+    "build:test": "tsc --project tsconfig.json",
     "build:watch": "npm run clean && tsc --project tsconfig.build.json --watch",
     "check": "tsc --project ./tsconfig.json",
     "clean": "rimraf dist",
@@ -39,8 +40,8 @@
     "dev:watch": "NODE_NO_WARNINGS=1 node --watch --loader ts-node/esm/transpile-only ./src/index.ts",
     "lint": "xo",
     "lint:fix": "xo --fix",
-    "prepare": "husky install",
-    "test": "c8 ava",
+    "prepare": "husky",
+    "test": "npm run build:test && c8 ava",
     "test:watch": "ava --watch",
     "update": "ncu -i"
   },
@@ -68,17 +69,10 @@
     ]
   },
   "ava": {
-    "extensions": {
-      "ts": "module"
-    },
     "files": [
-      "test/**",
-      "!test/fixtures/**",
-      "!test/helpers/**"
-    ],
-    "nodeArguments": [
-      "--loader=ts-node/esm/transpile-only",
-      "--no-warnings"
+      "dist/test/**",
+      "!dist/test/fixtures/**",
+      "!dist/test/helpers/**"
     ],
     "verbose": true
   },
@@ -86,43 +80,43 @@
     "chalk": "^5",
     "cli-highlight": "^2.1.11",
     "cosmiconfig": "^9.0.0",
-    "date-fns": "^3.2.0",
-    "dayjs": "^1.11.10",
+    "date-fns": "^3.6.0",
+    "dayjs": "^1.11.13",
     "fast-json-parse": "^1.0.3",
     "get-value": "^3.0.1",
-    "json-log-line": "file:../json-log-line",
+    "json-log-line": "^0.0.2",
     "json-stringify-pretty-compact": "^4.0.0",
-    "meow": "^13.1.0",
+    "meow": "^13.2.0",
     "on-exit-leak-free": "^2.1.2",
-    "pino-abstract-transport": "^1.1.0",
-    "pretty-ms": "^8",
+    "pino-abstract-transport": "^2.0.0",
+    "pretty-ms": "^9",
     "pump": "^3.0.0",
     "readable-stream": "^4.5.2",
     "set-value": "^4.1.0",
-    "sonic-boom": "^3.8.0",
+    "sonic-boom": "^4.1.0",
     "unset-value": "^2.0.1"
   },
   "devDependencies": {
-    "@commitlint/cli": "^18.4.4",
-    "@commitlint/config-conventional": "^18.4.4",
+    "@commitlint/cli": "^19.4.1",
+    "@commitlint/config-conventional": "^19.4.1",
     "@types/events": "^3.0.3",
     "@types/get-value": "^3.0.5",
-    "@types/node": "^20.11.5",
+    "@types/node": "^22.5.4",
     "@types/pump": "^1.1.3",
     "@types/set-value": "^4.0.3",
-    "ava": "^6.0.1",
-    "c8": "^9.1.0",
+    "ava": "^6.1.3",
+    "c8": "^10.1.2",
     "fixpack": "^4.0.0",
-    "husky": "^8.0.3",
-    "lint-staged": "^15.2.0",
-    "pino": "^8.17.2",
-    "prettier-plugin-packagejson": "^2.4.9",
+    "husky": "^9.1.5",
+    "lint-staged": "^15.2.10",
+    "pino": "^9.4.0",
+    "prettier-plugin-packagejson": "^2.5.2",
     "strip-ansi": "^7.1.0",
     "ts-node": "^10.9.2",
-    "typescript": "^5.3.3",
-    "xo": "^0.56.0"
+    "typescript": "^5.5.4",
+    "xo": "^0.59.3"
   },
   "engines": {
-    "node": ">=16"
+    "node": ">=20"
   }
 }

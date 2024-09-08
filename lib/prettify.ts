@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import {createLogLine} from 'json-log-line';
+import {logLineFactory} from 'json-log-line';
 import _highlight from 'cli-highlight';
 import chalk, {type ChalkInstance} from 'chalk';
 import type {SerializedError} from 'pino';
@@ -86,12 +86,12 @@ export function formatLoadTime(elapsedTime: string | number): string {
   return elapsed > 750
     ? chalk.red(time)
     : elapsed > 450
-    ? chalk.yellow(time)
-    : chalk.green(time);
+      ? chalk.yellow(time)
+      : chalk.green(time);
 }
 
 export function formatTime(instant: string | number): string {
-  return chalk.gray(`[${format(new Date(instant), 'h:mm:ss:Sb')}]`);
+  return chalk.gray(`[${format(new Date(instant), 'h:mm:ss:Sbbbbb')}]`);
 }
 
 export function formatName(name: string): string {
@@ -130,7 +130,7 @@ export function formatUrl(
 }
 
 export function formatMethod(method: string): string {
-  return method ? chalk.white(method) : '';
+  return method ? chalk.white(method.padEnd(4)) : '';
 }
 
 export function formatStatusCode(statusCode: string | number = 'xxx'): string {
@@ -138,8 +138,8 @@ export function formatStatusCode(statusCode: string | number = 'xxx'): string {
     typeof statusCode === 'number' && statusCode < 300
       ? 'green'
       : typeof statusCode === 'number' && statusCode < 500
-      ? 'yellow'
-      : 'red'
+        ? 'yellow'
+        : 'red'
   ](statusCode);
 }
 
@@ -239,8 +239,7 @@ export function prettify({
     ...format,
   };
 
-  return createLogLine({
-    errorKey,
+  return logLineFactory({
     include: [...include, ...Object.keys(formatters)],
     exclude: ['req', 'res', 'hostname', 'pid', ...exclude],
     format: formatters,
