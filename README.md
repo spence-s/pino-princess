@@ -7,7 +7,6 @@ Largely inspired from the great pino-colada project but with all the bells and w
 - [pino-princess 👸 💅](#pino-princess--)
   - [Features](#features)
   - [SAMPLES](#samples)
-      - [Gruvbox](#gruvbox)
   - [Goals](#goals)
     - [Install](#install)
   - [Usage](#usage)
@@ -26,8 +25,6 @@ Largely inspired from the great pino-colada project but with all the bells and w
 ## SAMPLES
 
 > note: these samples are created by changing terminal colors - not by changing themes in pino-princess. However, pino-princess themes are entirely configurable so both ways of changing the colors are possible.
-
-#### Gruvbox
 
 ![Basic Formatting](./media/screenshot1.png)
 
