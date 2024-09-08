@@ -17,7 +17,7 @@ test.before(async (t) => {
 });
 
 test('creates basic log lines with level', (t) => {
-  const time = new Date('2020-01-01T00:00:00.000Z');
+  const time = new Date('2020-01-01T00:00:00.000Z').getTime();
   const input = JSON.stringify({
     level: 30,
     time,
@@ -29,7 +29,7 @@ test('creates basic log lines with level', (t) => {
 });
 
 test('creates basic log lines with level, message, and time', (t) => {
-  const time = new Date('2020-01-01T00:00:00.000Z');
+  const time = new Date('2020-01-01T00:00:00.000Z').getTime();
   const input = JSON.stringify({
     level: 30,
     message: 'hello',
@@ -42,7 +42,7 @@ test('creates basic log lines with level, message, and time', (t) => {
 });
 
 test('creates basic log lines with level, message, and time, and res.statusCode', (t) => {
-  const time = new Date('2020-01-01T00:00:00.000Z');
+  const time = new Date('2020-01-01T00:00:00.000Z').getTime();
   const input = JSON.stringify({
     level: 30,
     message: 'hello',
@@ -58,7 +58,7 @@ test('creates basic log lines with level, message, and time, and res.statusCode'
 });
 
 test('creates basic log lines with level, message, and time, and req.method', (t) => {
-  const time = new Date('2020-01-01T00:00:00.000Z');
+  const time = new Date('2020-01-01T00:00:00.000Z').getTime();
   const input = JSON.stringify({
     level: 30,
     message: 'hello',
@@ -78,7 +78,7 @@ test('creates basic log lines with level, message, and time, and req.method', (t
 });
 
 test('full log line with all time and no extra time', (t) => {
-  const time = new Date('2020-01-01T00:00:00.000Z');
+  const time = new Date('2020-01-01T00:00:00.000Z').getTime();
   const input = JSON.stringify({
     level: 30,
     time,
@@ -103,7 +103,7 @@ test('full log line with all time and no extra time', (t) => {
 });
 
 test('full log line with all time and extra time', (t) => {
-  const time = new Date('2020-01-01T00:00:00.000Z');
+  const time = new Date('2020-01-01T00:00:00.000Z').getTime();
   const input = JSON.stringify({
     level: 30,
     time,
@@ -128,7 +128,7 @@ test('full log line with all time and extra time', (t) => {
 });
 
 test('full log line with all time and extra time multiline', (t) => {
-  const time = new Date('2020-01-01T00:00:00.000Z');
+  const time = new Date('2020-01-01T00:00:00.000Z').getTime();
   const input = JSON.stringify({
     level: 30,
     time,
