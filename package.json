@@ -41,6 +41,7 @@
     "lint": "xo",
     "lint:fix": "xo --fix",
     "prepare": "husky",
+    "release": "np",
     "test": "npm run build:test && c8 ava",
     "test:watch": "ava --watch",
     "update": "ncu -i"
