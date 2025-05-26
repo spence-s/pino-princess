@@ -32,7 +32,7 @@
   ],
   "scripts": {
     "build": "npm run clean && tsc --project tsconfig.build.json",
-    "build:test": "tsc --project tsconfig.json",
+    "build:test": "npm run clean && tsc --project tsconfig.json",
     "build:watch": "npm run clean && tsc --project tsconfig.build.json --watch",
     "check": "tsc --project ./tsconfig.json",
     "clean": "rimraf dist",
