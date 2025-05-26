@@ -207,6 +207,10 @@ export function prettify({
    */
   errorKey = 'err',
   /**
+   * The key to use for the message object. Defaults to `msg`.
+   */
+  messageKey = 'msg',
+  /**
    * white list and black list both take keys with dot notation
    */
   exclude = [],
@@ -231,7 +235,7 @@ export function prettify({
     'req.method': formatMethod,
     'res.statusCode': formatStatusCode,
     'req.url': formatUrl,
-    msg: formatMessage,
+    [messageKey]: formatMessage,
     responseTime: formatLoadTime,
     extraFields: formatExtraFields,
     [errorKey]: formatErrorProp,

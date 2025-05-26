@@ -13,7 +13,7 @@ Largely inspired from the great pino-colada project but with all the bells and w
     - [CLI](#cli)
     - [Pino v7 transport](#pino-v7-transport)
   - [Configuration](#configuration)
-      - [example](#example)
+    - [example](#example)
 
 ## Features
 
@@ -52,7 +52,7 @@ or
 
 The reccomended usage of pino-princess is as a separate process from your main application which pipes pino logs from stdout into pino-princess for formatting.
 
-`node my-application-which-logs-with-pino.js | npx pino-princess --blacklist "severity" --whitelist "res.headers.ip, res.headers.x-my-important-header"`
+`node my-application-which-logs-with-pino.js | npx pino-princess --exclude "severity" --include "res.headers.ip, res.headers.x-my-important-header"`
 
 ### Pino v7 transport
 
@@ -62,9 +62,7 @@ pino-princess, as a fork of pino-pretty, is also set up to be used as a pino v7 
 
 pino-princess supports a simple configuration which can be supplied as either command line arguments, or alternatively, pino-princess.config.js file located in the path up from where the application is being ran.
 
-These are `blacklist`, `whitelist`, and `formatters`. `blacklist` and `whitelist` are both arrays of strings which represent the dotpath to any field on a deeply nested log object.
-
-#### example
+### example
 
 `pino-princess.config.js`
 
@@ -72,34 +70,34 @@ These are `blacklist`, `whitelist`, and `formatters`. `blacklist` and `whitelist
 /** @type {import('pino-princess').Configuration}*/
 module.exports = {
   /**
-   * blacklist
+   * exclude
    * string[]
    *
    * An array of strings which represent a key on any object.
    * Keys matching any one of these strings cause these keys to be excluded from the log output.
-   * The blacklist is always overridden by the whitelist.
-   * In this way, blacklist can be used to exclude large base objects and the whitelist
+   * The excludes are always overridden by the includes.
+   * In this way, excludes can be used to exclude large base objects and the "include"
    * can be used to pick certain fields and "add them back" to the log output.
-   * For example, by default, pino-princess blacklists the entire req or res object from any http logger.
-   * Because some fields on req and res are required to constuct the core of the log line, these fields are added back via the whitelist.
+   * For example, by default, pino-princess excludes the entire req or res object from any http logger.
+   * Because some fields on req and res are required to constuct the core of the log line, these fields are added back via the include.
    *
    * default value:
    */
-  blacklist: ["req", "res"],
+  exclude: ["req", "res"],
 
   /**
-   * whitelist
+   * include
    * string[]
    *
    * An array of strings which represent a key on any object.
    * Keys matching any one of these strings cause these keys will ensure the key is always part of the log output.
-   * The whitelist always overrides by the blacklist.
-   * In this way, whitelist can be used to "add back" properties of blackListed objects to the log output.
-   * By default pino-princess whiteLists all the properties required to create our standard log line.
+   * The includes always overrides by the excludes.
+   * In this way, include can be used to "add back" properties of excluded objects to the log output.
+   * By default pino-princess includes all the properties required to create our standard log line.
    *
    * default value:
    */
-  whitelist: [
+  include: [
     "res.statusCode",
     "req.method",
     "req.url",
@@ -147,7 +145,7 @@ module.exports = {
    *
    * For the defaults see ./lib/utils/format.ts
    */
-  formatters: {
+  format: {
     formatLevel: (level) => {},
     formatLoadTime: (timestamp) => {},
     formatDate: (date) => {},

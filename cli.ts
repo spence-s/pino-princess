@@ -14,19 +14,19 @@ Usage
   $ node my-app-with-pino-logging | pino-princess
 
 Options
-  --exclude, -e    excluded log fields separated by comma. Is overriden by whitelisted fields.
-  --include, -i    included log fields separated by comma. Overrides blacklisted fields.
+  --exclude, -e    excluded log fields separated by comma. Is overriden by included fields.
+  --include, -i    included log fields separated by comma. Overrides excluded fields.
   `,
   {
     importMeta: import.meta,
     flags: {
       exclude: {
         type: 'string',
-        shortFlag: 'b',
+        shortFlag: 'e',
       },
       include: {
         type: 'string',
-        shortFlag: 'w',
+        shortFlag: 'i',
       },
     },
   },

@@ -40,6 +40,10 @@ export type PrettifyOptions = {
    */
   errorKey?: string;
   /**
+   * The key used for the log message. Defaults to `msg`.
+   */
+  messageKey?: string;
+  /**
    * exclude keys from the log object, accepts dot notation
    */
   exclude?: string[];
