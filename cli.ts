@@ -16,6 +16,8 @@ Usage
 Options
   --exclude, -e    excluded log fields separated by comma. Is overriden by included fields.
   --include, -i    included log fields separated by comma. Overrides excluded fields.
+  --messageKey     key for the message field, defaults to 'msg'
+  --errorKey       key for the error field, defaults to 'err'
   `,
   {
     importMeta: import.meta,
@@ -27,6 +29,14 @@ Options
       include: {
         type: 'string',
         shortFlag: 'i',
+      },
+      messageKey: {
+        type: 'string',
+        default: 'msg',
+      },
+      errorKey: {
+        type: 'string',
+        default: 'err',
       },
     },
   },
@@ -40,6 +50,9 @@ if (cli.flags.exclude) {
 if (cli.flags.include) {
   options.include = cli.flags.include.split(',').map((str) => str.trim());
 }
+
+options.messageKey = cli.flags.messageKey;
+options.errorKey = cli.flags.errorKey;
 
 const explorer = cosmiconfigSync('pino-princess', {stopDir: os.homedir()});
 const {config} = (explorer.search(process.cwd()) ?? {}) as {

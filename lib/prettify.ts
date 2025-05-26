@@ -243,11 +243,13 @@ export function prettify({
     ...format,
   };
 
-  return logLineFactory({
+  const opts = {
     include: [...include, ...Object.keys(formatters)],
     exclude: ['req', 'res', 'hostname', 'pid', ...exclude],
     format: formatters,
-  });
+  };
+
+  return logLineFactory(opts);
 }
 
 export default prettify;

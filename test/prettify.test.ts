@@ -145,17 +145,3 @@ test('full log line with all time and extra time multiline', (t) => {
 
   t.snapshot(output);
 });
-
-// export const WHITE_LIST = [
-//   'res.statusCode',
-//   'req.method',
-//   'req.url',
-//   'req.id',
-//   'level',
-//   'name',
-//   'ns',
-//   'msg',
-//   'responsedate',
-// ];
-
-// export const BLACK_LIST = ['req', 'res'];
