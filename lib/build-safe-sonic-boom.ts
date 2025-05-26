@@ -41,7 +41,11 @@ function buildSafeSonicBoom(options: SonicBoomOpts) {
 
 function setupOnExit(stream: SonicBoomType) {
   /* istanbul ignore next */
-  if (global.WeakRef && global.WeakMap && global.FinalizationRegistry) {
+  if (
+    globalThis.WeakRef &&
+    globalThis.WeakMap &&
+    globalThis.FinalizationRegistry
+  ) {
     // This is leak free, it does not leave event handlers
     onExit.register(stream, autoEnd);
 
