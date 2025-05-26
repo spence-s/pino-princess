@@ -108,7 +108,14 @@ module.exports = {
     "msg",
     "responseTime",
   ],
-
+  /**
+   * Configure the message key
+   */
+  messageKey: 'msg',
+  /**
+   * Configure the error key
+   */
+  errorKey: 'err',
   /**
    * theme
    * (chalk: Chalk) => string
