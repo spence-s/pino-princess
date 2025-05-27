@@ -18,6 +18,8 @@ const highlight = _highlight.default;
 
 const nl = '\n';
 
+const defaultTimeFormat = 'h:mm:ss.SSS aaa';
+
 const stringify = (obj: unknown, indent?: number, theme?: _highlight.Theme) => {
   const stringified = highlight(pcStringify(obj, {indent}), {
     language: 'json',
@@ -92,8 +94,8 @@ export function formatLoadTime(elapsedTime: string | number): string {
       : chalk.green(time);
 }
 
-export function formatTime(instant: string | number): string {
-  return chalk.gray(`[${format(new Date(instant), 'h:mm:ss:SS aaa')}]`);
+export function formatTime(instant: string | number, timeFormat: string = defaultTimeFormat): string {
+  return chalk.gray(`[${format(new Date(instant), timeFormat)}]`);
 }
 
 export function formatName(name: string): string {
@@ -228,10 +230,14 @@ export function prettify({
    * Format functions for any given key
    */
   format = {},
+  /**
+   * Format string for time display using date-fns format
+   */
+  timeFormat = defaultTimeFormat,
 }: PrettifyOptions = {}) {
   const formatters: Record<string, (...args: any[]) => string> = {
     name: formatName,
-    time: formatTime,
+    time: (time) => formatTime(time, timeFormat),
     level: formatLevel,
     'req.id': formatId,
     'req.method': formatMethod,

@@ -63,4 +63,8 @@ export type PrettifyOptions = {
    * Theme for the extra fields object
    */
   theme?: (chalk: ChalkInstance) => HighlightTheme;
+  /**
+   * Format string for time display using date-fns format
+   */
+  timeFormat?: string;
 };
