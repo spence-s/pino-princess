@@ -54,19 +54,21 @@ const colorMap: Record<Levels | 'userlvl', Colors> = {
   fatal: 'red',
 };
 
+const numLevelsMapping: Record<NumLevels, Levels> = {
+  10: 'trace',
+  20: 'debug',
+  30: 'info',
+  40: 'warn',
+  50: 'error',
+  60: 'fatal',
+};
+
 function isWideEmoji(character: string): boolean {
   return character !== '⚠️';
 }
 
-export function formatLevel(_level: NumLevels): string {
-  const level: Levels = {
-    10: 'trace',
-    20: 'debug',
-    30: 'info',
-    40: 'warn',
-    50: 'error',
-    60: 'fatal',
-  }[_level] as Levels;
+export function formatLevel(_level: NumLevels | Levels): string {
+  const level: Levels = numLevelsMapping[_level as NumLevels] || _level as Levels;
 
   if (!emojiMap?.[level]) return '';
   const endlen = 5;
@@ -102,16 +104,16 @@ export function formatName(name: string): string {
 
 export function formatMessage(
   message: string,
-  {level}: {level: number},
+  {level}: {level: NumLevels | Levels},
 ): string {
   if (message === undefined) return '';
   let pretty = '';
-  if (level === 50) pretty = chalk.red(message);
-  if (level === 10) pretty = chalk.cyan(message);
-  if (level === 40) pretty = chalk.yellow(message);
-  if (level === 20) pretty = chalk.white(message);
-  if (level === 30) pretty = chalk.white(message);
-  if (level === 60) pretty = chalk.white.bgRedBright(message);
+  if (level === 50 || level === 'error') pretty = chalk.red(message);
+  if (level === 10 || level === 'trace') pretty = chalk.cyan(message);
+  if (level === 40 || level === 'warn') pretty = chalk.yellow(message);
+  if (level === 20 || level === 'debug') pretty = chalk.white(message);
+  if (level === 30 || level === 'info') pretty = chalk.white(message);
+  if (level === 60 || level === 'fatal') pretty = chalk.white.bgRedBright(message);
 
   return pretty || message;
 }

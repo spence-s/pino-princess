@@ -26,6 +26,17 @@ test('creates basic log lines with level', (t) => {
   t.snapshot(output);
 });
 
+test('creates basic log lines with string level', (t) => {
+  const input = JSON.stringify({
+    level: 'info',
+    msg: 'hello',
+  });
+
+  const output = t.context.prettify(input);
+
+  t.snapshot(output);
+});
+
 test('creates basic log lines with level, message, and time', (t) => {
   const input = JSON.stringify({
     level: 30,
