@@ -7,6 +7,7 @@ const test = anyTest as TestFn<{
    * A little wrapper around prettify to strip ansi codes as there is no need to test them
    */
   prettify: (input: string | Record<string, unknown>) => string;
+  prettifySL: (input: string | Record<string, unknown>) => string;
 }>;
 
 test.before(async (t) => {
@@ -14,6 +15,8 @@ test.before(async (t) => {
   t.context.stripAnsi = stripAnsi;
   t.context.prettify = (input: string | Record<string, unknown>) =>
     stripAnsi(prettify()(input) ?? '').trim();
+  t.context.prettifySL = (input: string | Record<string, unknown>) =>
+    stripAnsi(prettify({singleLine: true})(input) ?? '').trim();
 });
 
 test('creates basic log lines with level', (t) => {
@@ -65,6 +68,21 @@ test('creates basic log lines with level, message, and time, and req.method', (t
   });
 
   const output = t.context.prettify(input);
+
+  t.snapshot(output);
+});
+
+test('creates extra log as single line', (t) => {
+  const input = JSON.stringify({
+    level: 30,
+    msg: 'hello',
+    extra: {
+      a: 'b',
+      c: 'd',
+    },
+  });
+
+  const output = t.context.prettifySL(input);
 
   t.snapshot(output);
 });

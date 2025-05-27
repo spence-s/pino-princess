@@ -29,6 +29,10 @@ const stringify = (obj: unknown, indent?: number, theme?: _highlight.Theme) => {
     },
   });
 
+  if (indent === Infinity) {
+    return stringified;
+  }
+
   return /^{.*"/.test(stringified)
     ? '  ' + stringified.replace(/^{/, '').replace(/}$/, '')
     : stringified.replace(/^{\n/, '').replace(/\n}$/, '');
@@ -190,11 +194,12 @@ export function formatErrorProp(
 
 export function formatExtraFields(
   extraFields: Record<string, any>,
-  options?: {theme?: (chalk: ChalkInstance) => _highlight.Theme},
+  options?: {theme?: (chalk: ChalkInstance) => _highlight.Theme; singleLine?: boolean},
 ): string {
-  return (
-    nl + chalk.grey(stringify(extraFields, undefined, options?.theme?.(chalk)))
-  );
+  if (options?.singleLine) {
+    return '  ' + chalk.grey(stringify(extraFields, Infinity, options?.theme?.(chalk)));
+  }
+  return nl + chalk.grey(stringify(extraFields, undefined, options?.theme?.(chalk)));
 }
 
 export function formatId(id: string) {
@@ -226,6 +231,10 @@ export function prettify({
    * Format functions for any given key
    */
   format = {},
+  /**
+   * Whether to format the output as a single line
+   */
+  singleLine = false,
 }: PrettifyOptions = {}) {
   const formatters: Record<string, (...args: any[]) => string> = {
     name: formatName,
@@ -237,7 +246,7 @@ export function prettify({
     'req.url': formatUrl,
     [messageKey]: formatMessage,
     responseTime: formatLoadTime,
-    extraFields: formatExtraFields,
+    extraFields: (fields) => formatExtraFields(fields, {theme, singleLine}),
     [errorKey]: formatErrorProp,
     [`${errorKey}.stack`]: formatStack,
     ...format,

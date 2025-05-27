@@ -63,4 +63,8 @@ export type PrettifyOptions = {
    * Theme for the extra fields object
    */
   theme?: (chalk: ChalkInstance) => HighlightTheme;
+  /**
+   * Whether to format the extra fields as a single line
+   */
+  singleLine?: boolean;
 };
