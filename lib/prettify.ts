@@ -70,7 +70,8 @@ function isWideEmoji(character: string): boolean {
 }
 
 export function formatLevel(_level: NumLevels | Levels): string {
-  const level: Levels = numLevelsMapping[_level as NumLevels] || _level as Levels;
+  const level: Levels =
+    numLevelsMapping[_level as NumLevels] || (_level as Levels);
 
   if (!emojiMap?.[level]) return '';
   const endlen = 5;
@@ -94,7 +95,10 @@ export function formatLoadTime(elapsedTime: string | number): string {
       : chalk.green(time);
 }
 
-export function formatTime(instant: string | number, timeFormat: string = defaultTimeFormat): string {
+export function formatTime(
+  instant: string | number,
+  timeFormat: string = defaultTimeFormat,
+): string {
   return chalk.gray(`[${format(new Date(instant), timeFormat)}]`);
 }
 
@@ -115,7 +119,8 @@ export function formatMessage(
   if (level === 40 || level === 'warn') pretty = chalk.yellow(message);
   if (level === 20 || level === 'debug') pretty = chalk.white(message);
   if (level === 30 || level === 'info') pretty = chalk.white(message);
-  if (level === 60 || level === 'fatal') pretty = chalk.white.bgRedBright(message);
+  if (level === 60 || level === 'fatal')
+    pretty = chalk.white.bgRedBright(message);
 
   return pretty || message;
 }
@@ -237,7 +242,7 @@ export function prettify({
 }: PrettifyOptions = {}) {
   const formatters: Record<string, (...args: any[]) => string> = {
     name: formatName,
-    time: (time) => formatTime(time, timeFormat),
+    time: (time: string | number) => formatTime(time, timeFormat),
     level: formatLevel,
     'req.id': formatId,
     'req.method': formatMethod,

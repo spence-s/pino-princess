@@ -164,7 +164,82 @@ test('custom time format', (t) => {
     msg: 'hello',
   });
 
-  const output = t.context.stripAnsi(prettify({timeFormat: 'yyyy-MM-dd HH:mm:ss'})(input) ?? '').trim();
+  const output = t.context
+    .stripAnsi(prettify({timeFormat: 'yyyy-MM-dd HH:mm:ss'})(input) ?? '')
+    .trim();
 
   t.snapshot(output);
+});
+
+test('custom message key', (t) => {
+  const inputDefault = JSON.stringify({
+    level: 30,
+    msg: 'hello',
+  });
+
+  const outputDefault = t.context.prettify(inputDefault);
+
+  const input = JSON.stringify({
+    level: 30,
+    message: 'hello',
+  });
+
+  const output = t.context
+    .stripAnsi(prettify({messageKey: 'message'})(input) ?? '')
+    .trim();
+
+  t.is(outputDefault, output);
+});
+
+test('custom error key', (t) => {
+  const error = new Error('test error');
+  const inputDefault = JSON.stringify({
+    level: 50,
+    err: error,
+  });
+
+  const outputDefault = t.context.prettify(inputDefault);
+
+  const input = JSON.stringify({
+    level: 50,
+    error,
+  });
+
+  const output = t.context
+    .stripAnsi(prettify({errorKey: 'error'})(input) ?? '')
+    .trim();
+
+  t.is(outputDefault, output);
+});
+
+test('custom formatters are merged in the same order as default', (t) => {
+  const input = JSON.stringify({
+    level: 30,
+    msg: 'hello',
+    name: 'test',
+    req: {
+      method: 'GET',
+      id: '123',
+    },
+    res: {
+      statusCode: 200,
+    },
+    customField: 'customValue',
+  });
+
+  const defaultOutput = t.context.prettify(input);
+
+  t.snapshot(defaultOutput);
+
+  const output = t.context
+    .stripAnsi(
+      prettify({
+        format: {msg: (msg) => `!!!${msg}!!!`, name: (name) => `!!!${name}!!!`},
+      })(input) ?? '',
+    )
+    .trim();
+
+  t.snapshot(output);
+
+  t.true(output.startsWith('!!!test!!!'));
 });

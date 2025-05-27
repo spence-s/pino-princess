@@ -18,6 +18,7 @@ Options
   --include, -i    included log fields separated by comma. Overrides excluded fields.
   --messageKey     key for the message field, defaults to 'msg'
   --errorKey       key for the error field, defaults to 'err'
+  --timeFormat     format for the time field, passed to date-fns format defaults to 'h:mm:ss.SSS aaa'
   `,
   {
     importMeta: import.meta,
@@ -37,6 +38,10 @@ Options
       errorKey: {
         type: 'string',
         default: 'err',
+      },
+      timeFormat: {
+        type: 'string',
+        default: 'h:mm:ss.SSS aaa',
       },
     },
   },

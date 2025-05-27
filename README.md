@@ -117,6 +117,11 @@ module.exports = {
    */
   errorKey: 'err',
   /**
+   * Supply a custom time format. The time format by default is passed directly to date-fns format
+   * https://date-fns.org/docs/format
+   */
+  timeFormat: 'h:mm:ss.SSS aaa',
+  /**
    * theme
    * (chalk: Chalk) => string
    *
@@ -146,16 +151,15 @@ module.exports = {
   }),
 
   /**
-   * formatters
+   * format
    *
-   * These are functions which format segments of the pino-princess log-line
-   *
-   * For the defaults see ./lib/utils/format.ts
+   * These are functions which are passed to json-log-line, where you can override them directly.
+   * Note you cannot pass functions to pino-princess when using it as a pino v7 transport. These need to be configured in a pino-princess.config.js file.
    */
   format: {
     formatLevel: (level) => {},
     formatLoadTime: (timestamp) => {},
-    formatDate: (date) => {},
+    formatTime: (date) => {},
     formatName: (name) => {},
     formatMessage: (message) => {},
     formatBundleSize: (bundleSize) => {},

@@ -13,10 +13,8 @@ test.before(async (t) => {
 const {
   formatLevel,
   formatLoadTime,
-  // formatDate,
   formatName,
   formatMessage,
-  // formatMesssage,
   formatExtraFields,
   formatMethod,
   formatStack,
