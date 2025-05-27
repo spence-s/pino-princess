@@ -58,6 +58,7 @@ if (cli.flags.include) {
 
 options.messageKey = cli.flags.messageKey;
 options.errorKey = cli.flags.errorKey;
+options.timeFormat = cli.flags.timeFormat;
 
 const explorer = cosmiconfigSync('pino-princess', {stopDir: os.homedir()});
 const {config} = (explorer.search(process.cwd()) ?? {}) as {

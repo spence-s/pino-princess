@@ -1,5 +1,6 @@
 /* eslint-disable ava/no-ignored-test-files */
 import test from 'ava';
+import {format} from 'date-fns';
 import {execa} from 'execa';
 import {err} from 'pino-std-serializers';
 
@@ -79,4 +80,23 @@ test('cli respects --errorKey option', async (t) => {
     },
   );
   t.is(stdoutWithDefaultErrorKey, stdOutWithErrorKeyOption);
+});
+
+// test cli timeformat option
+test('cli respects --timeFormat option', async (t) => {
+  const time = Date.now();
+  const {stdout} = await execa(
+    'node',
+    ['dist/cli.js', '--timeFormat=yyyy-MM-dd HH:mm:ss'],
+    {
+      input: JSON.stringify({
+        level: 30,
+        msg: 'hello',
+        time,
+      }),
+    },
+  );
+
+  // Check if the output contains the formatted time
+  t.true(stdout.includes(format(time, 'yyyy-MM-dd HH:mm:ss')));
 });
