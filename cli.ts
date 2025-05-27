@@ -19,6 +19,7 @@ Options
   --messageKey     key for the message field, defaults to 'msg'
   --errorKey       key for the error field, defaults to 'err'
   --timeFormat     format for the time field, passed to date-fns format defaults to 'h:mm:ss.SSS aaa'
+  --singleLine     format the output as a single line, defaults to false
   `,
   {
     importMeta: import.meta,
@@ -38,6 +39,10 @@ Options
       errorKey: {
         type: 'string',
         default: 'err',
+      },
+      singleLine: {
+        type: 'boolean',
+        default: false,
       },
       timeFormat: {
         type: 'string',
@@ -59,6 +64,7 @@ if (cli.flags.include) {
 options.messageKey = cli.flags.messageKey;
 options.errorKey = cli.flags.errorKey;
 options.timeFormat = cli.flags.timeFormat;
+options.singleLine = cli.flags.singleLine ?? false;
 
 const explorer = cosmiconfigSync('pino-princess', {stopDir: os.homedir()});
 const {config} = (explorer.search(process.cwd()) ?? {}) as {

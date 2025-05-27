@@ -20,7 +20,11 @@ const nl = '\n';
 
 const defaultTimeFormat = 'h:mm:ss.SSS aaa';
 
-const stringify = (obj: unknown, indent?: number, theme?: _highlight.Theme) => {
+const stringify = (
+  obj: unknown,
+  indent?: string | number,
+  theme?: _highlight.Theme,
+) => {
   const stringified = highlight(pcStringify(obj, {indent}), {
     language: 'json',
     ignoreIllegals: true,
@@ -30,6 +34,10 @@ const stringify = (obj: unknown, indent?: number, theme?: _highlight.Theme) => {
       ...theme,
     },
   });
+
+  if (indent === Infinity || indent === '') {
+    return stringified;
+  }
 
   return /^{.*"/.test(stringified)
     ? '  ' + stringified.replace(/^{/, '').replace(/}$/, '')
@@ -199,8 +207,17 @@ export function formatErrorProp(
 
 export function formatExtraFields(
   extraFields: Record<string, any>,
-  options?: {theme?: (chalk: ChalkInstance) => _highlight.Theme},
+  options?: {
+    theme?: (chalk: ChalkInstance) => _highlight.Theme;
+    singleLine?: boolean;
+  },
 ): string {
+  if (options?.singleLine) {
+    return (
+      '  ' + chalk.grey(stringify(extraFields, '', options?.theme?.(chalk)))
+    );
+  }
+
   return (
     nl + chalk.grey(stringify(extraFields, undefined, options?.theme?.(chalk)))
   );
@@ -220,11 +237,19 @@ export function prettify({
    */
   messageKey = 'msg',
   /**
-   * white list and black list both take keys with dot notation
+   * Format string for time display using date-fns format
+   */
+  timeFormat = defaultTimeFormat,
+  /**
+   * Whether to format the output as a single line
+   */
+  singleLine = false,
+  /**
+   * include and exclude both take keys with dot notation
    */
   exclude = [],
   /**
-   * whitelist always overrides black list
+   * include always overrides exclude
    */
   include = [],
   /**
@@ -235,10 +260,6 @@ export function prettify({
    * Format functions for any given key
    */
   format = {},
-  /**
-   * Format string for time display using date-fns format
-   */
-  timeFormat = defaultTimeFormat,
 }: PrettifyOptions = {}) {
   const formatters: Record<string, (...args: any[]) => string> = {
     name: formatName,
@@ -250,7 +271,8 @@ export function prettify({
     'req.url': formatUrl,
     [messageKey]: formatMessage,
     responseTime: formatLoadTime,
-    extraFields: formatExtraFields,
+    extraFields: (fields: Record<string, unknown>) =>
+      formatExtraFields(fields, {theme, singleLine}),
     [errorKey]: formatErrorProp,
     [`${errorKey}.stack`]: formatStack,
     ...format,

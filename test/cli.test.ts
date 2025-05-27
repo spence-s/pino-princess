@@ -1,6 +1,7 @@
 /* eslint-disable ava/no-ignored-test-files */
 import test from 'ava';
 import {format} from 'date-fns';
+import {fi} from 'date-fns/locale';
 import {execa} from 'execa';
 import {err} from 'pino-std-serializers';
 
@@ -99,4 +100,32 @@ test('cli respects --timeFormat option', async (t) => {
 
   // Check if the output contains the formatted time
   t.true(stdout.includes(format(time, 'yyyy-MM-dd HH:mm:ss')));
+});
+
+// test cli singleLine option
+test('cli respects --singleLine option', async (t) => {
+  const input = JSON.stringify({
+    level: 30,
+    msg: 'hello',
+    time: Date.now(),
+    extra: {
+      field1: 'value1',
+      field2: 'value2',
+      field3: 'value3',
+      field4: 'value4',
+      field5: 'value5',
+    },
+  });
+
+  const {stdout: stdoutMultiline} = await execa('node', ['dist/cli.js'], {
+    input,
+  });
+
+  const {stdout} = await execa('node', ['dist/cli.js', '--singleLine'], {
+    input,
+  });
+
+  t.true(stdoutMultiline.includes('\n'));
+  // Check if the output is a single line
+  t.false(stdout.includes('\n'));
 });

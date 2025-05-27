@@ -67,4 +67,8 @@ export type PrettifyOptions = {
    * Format string for time display using date-fns format
    */
   timeFormat?: string;
+  /**
+   * Whether to format the output as a single line
+   */
+  singleLine?: boolean;
 };

@@ -122,6 +122,10 @@ module.exports = {
    */
   timeFormat: 'h:mm:ss.SSS aaa',
   /**
+   * Format the entire log line on a single line with no new lines
+   */
+  singleLine: false,
+  /**
    * theme
    * (chalk: Chalk) => string
    *
