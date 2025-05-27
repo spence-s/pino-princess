@@ -157,20 +157,19 @@ module.exports = {
    * Note you cannot pass functions to pino-princess when using it as a pino v7 transport. These need to be configured in a pino-princess.config.js file.
    */
   format: {
-    formatLevel: (level) => {},
-    formatLoadTime: (timestamp) => {},
-    formatTime: (date) => {},
-    formatName: (name) => {},
-    formatMessage: (message) => {},
-    formatBundleSize: (bundleSize) => {},
-    formatNs: (ns) => {},
-    formatExtraFields: (extraFields) => {},
-    formatStack: (stack) => {},
-    formatUrl: (url) => {},
-    formatStatusCode: (statusCode) => {},
-    formatErrorProp: (err) => {},
-    formatMethod: (method) => {},
-    formatId: (id) => {},
+    name: (name) => {},
+    time: (time, timeFormat) => {},
+    level: (level) => {},
+    'req.id': (id) => {},
+    'req.method': (method) => {},
+    'res.statusCode': (statusCode) => {},
+    'req.url': (url) => {},
+    [messageKey]: (msg) => {},
+    responseTime: (responseTime) => {},
+    extraFields: (extraFieldsObj, {theme}) => {},
+    [errorKey]: (err) => {},
+    [`${errorKey}.stack`]: (errStack) => {},
   },
+
 };
 ```

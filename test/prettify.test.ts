@@ -1,3 +1,4 @@
+import {format} from 'date-fns';
 import anyTest, {type TestFn} from 'ava';
 import {prettify} from '../lib/prettify.js';
 
@@ -158,17 +159,24 @@ test('full log line with all time and extra time multiline', (t) => {
 });
 
 test('custom time format', (t) => {
+  const time = new Date();
+
   const input = JSON.stringify({
     level: 30,
-    time: 1_748_381_511_840,
+    time,
     msg: 'hello',
   });
+
+  const defaultOutput = t.context.prettify(input);
 
   const output = t.context
     .stripAnsi(prettify({timeFormat: 'yyyy-MM-dd HH:mm:ss'})(input) ?? '')
     .trim();
 
-  t.snapshot(output);
+  const formattedTime = format(time, 'yyyy-MM-dd HH:mm:ss');
+
+  t.false(defaultOutput.includes(formattedTime));
+  t.true(output.includes(`[${formattedTime}]`));
 });
 
 test('custom message key', (t) => {
