@@ -145,3 +145,15 @@ test('full log line with all time and extra time multiline', (t) => {
 
   t.snapshot(output);
 });
+
+test('custom time format', (t) => {
+  const input = JSON.stringify({
+    level: 30,
+    time: '2024-03-20T15:30:45.123Z',
+    msg: 'hello',
+  });
+
+  const output = t.context.stripAnsi(prettify({timeFormat: 'yyyy-MM-dd HH:mm:ss'})(input) ?? '').trim();
+
+  t.snapshot(output);
+});
