@@ -22,7 +22,7 @@
   "license": "MIT",
   "author": "Spencer Snyder <sasnyde2@gmail.com>",
   "type": "module",
-  "main": "dist/index.cjs",
+  "main": "dist/index.js",
   "bin": {
     "pino-princess": "./dist/cli.js"
   },
