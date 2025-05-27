@@ -160,7 +160,7 @@ test('full log line with all time and extra time multiline', (t) => {
 test('custom time format', (t) => {
   const input = JSON.stringify({
     level: 30,
-    time: '2024-03-20T15:30:45.123Z',
+    time: 1_748_381_511_840,
     msg: 'hello',
   });
 
