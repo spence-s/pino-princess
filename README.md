@@ -104,7 +104,6 @@ module.exports = {
     "req.id",
     "level",
     "name",
-    "ns",
     "msg",
     "responseTime",
   ],

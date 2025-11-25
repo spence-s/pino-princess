@@ -9,11 +9,20 @@
     "prettifier",
     "pino-colada",
     "pretty",
-    "prettify"
+    "prettify",
+    "pino-princess",
+    "pino princess",
+    "princess",
+    "logging",
+    "logger",
+    "json",
+    "cli",
+    "command line",
+    "streams"
   ],
   "homepage": "https://github.com/spence-s/pino-princess",
   "bugs": {
-    "url": "https://github.com/spence-s/pino-pretty/issues"
+    "url": "https://github.com/spence-s/pino-princess/issues"
   },
   "repository": {
     "type": "git",
