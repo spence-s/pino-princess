@@ -34,44 +34,60 @@ Options
       },
       messageKey: {
         type: 'string',
-        default: 'msg',
       },
       errorKey: {
         type: 'string',
-        default: 'err',
       },
       singleLine: {
         type: 'boolean',
-        default: false,
       },
       timeFormat: {
         type: 'string',
-        default: 'h:mm:ss.SSS aaa',
       },
     },
   },
 );
-const options: PrettifyOptions = {};
+
+const cliConfig: PrettifyOptions = {};
 
 if (cli.flags.exclude) {
-  options.exclude = cli.flags.exclude.split(',').map((str) => str.trim());
+  cliConfig.exclude = cli.flags.exclude.split(',').map((str) => str.trim());
 }
 
 if (cli.flags.include) {
-  options.include = cli.flags.include.split(',').map((str) => str.trim());
+  cliConfig.include = cli.flags.include.split(',').map((str) => str.trim());
 }
 
-options.messageKey = cli.flags.messageKey;
-options.errorKey = cli.flags.errorKey;
-options.timeFormat = cli.flags.timeFormat;
-options.singleLine = cli.flags.singleLine ?? false;
+if (cli.flags.messageKey) {
+  cliConfig.messageKey = cli.flags.messageKey;
+}
+
+if (cli.flags.errorKey) {
+  cliConfig.errorKey = cli.flags.errorKey;
+}
+
+if (cli.flags.timeFormat) {
+  cliConfig.timeFormat = cli.flags.timeFormat;
+}
+
+if (cli.flags.singleLine) {
+  cliConfig.singleLine = cli.flags.singleLine;
+}
+
+const defaultConfig: PrettifyOptions = {
+  messageKey: 'msg',
+  errorKey: 'err',
+  timeFormat: 'h:mm:ss.SSS aaa',
+  singleLine: false,
+};
 
 const explorer = cosmiconfigSync('pino-princess', {stopDir: os.homedir()});
+
 const {config} = (explorer.search(process.cwd()) ?? {}) as {
   config: PrettifyOptions;
 };
 
-const res = build({...config, ...options});
+const res = build({...defaultConfig, ...config, ...cliConfig});
 
 pump(process.stdin, res);
 
