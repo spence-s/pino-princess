@@ -224,6 +224,27 @@ test('custom error key', (t) => {
   t.is(outputDefault, output);
 });
 
+test('custom time key', (t) => {
+  const time = new Date();
+  const inputDefault = JSON.stringify({
+    level: 50,
+    time,
+  });
+
+  const outputDefault = t.context.prettify(inputDefault);
+
+  const input = JSON.stringify({
+    level: 50,
+    timestamp: time,
+  });
+
+  const output = t.context
+    .stripAnsi(prettify({timeKey: 'timestamp'})(input) ?? '')
+    .trim();
+
+  t.is(outputDefault, output);
+});
+
 test('custom formatters are merged in the same order as default', (t) => {
   const input = JSON.stringify({
     level: 30,

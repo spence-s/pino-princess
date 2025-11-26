@@ -237,6 +237,10 @@ export function prettify({
    */
   messageKey = 'msg',
   /**
+   * The key to use for the time segment. Defaults to `time`.
+   */
+  timeKey = 'time',
+  /**
    * Format string for time display using date-fns format
    */
   timeFormat = defaultTimeFormat,
@@ -263,7 +267,7 @@ export function prettify({
 }: PrettifyOptions = {}) {
   const formatters: Record<string, (...args: any[]) => string> = {
     name: formatName,
-    time: (time: string | number) => formatTime(time, timeFormat),
+    [timeKey]: (time: string | number) => formatTime(time, timeFormat),
     level: formatLevel,
     'req.id': formatId,
     'req.method': formatMethod,

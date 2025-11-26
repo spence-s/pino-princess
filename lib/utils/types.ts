@@ -44,6 +44,10 @@ export type PrettifyOptions = {
    */
   messageKey?: string;
   /**
+   * The key used for the time segment. Defaults to `time`.
+   */
+  timeKey?: string;
+  /**
    * exclude keys from the log object, accepts dot notation
    */
   exclude?: string[];

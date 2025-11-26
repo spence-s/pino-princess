@@ -44,6 +44,9 @@ Options
       timeFormat: {
         type: 'string',
       },
+      timeKey: {
+        type: 'string',
+      },
     },
   },
 );
@@ -72,6 +75,10 @@ if (cli.flags.timeFormat) {
 
 if (cli.flags.singleLine) {
   cliConfig.singleLine = cli.flags.singleLine;
+}
+
+if (cli.flags.timeKey) {
+  cliConfig.timeKey = cli.flags.timeKey;
 }
 
 const defaultConfig: PrettifyOptions = {

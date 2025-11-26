@@ -83,6 +83,33 @@ test('cli respects --errorKey option', async (t) => {
   t.is(stdoutWithDefaultErrorKey, stdOutWithErrorKeyOption);
 });
 
+test('cli respects --timeKey option', async (t) => {
+  const time = Date.now();
+
+  const {stdout: stdOutWithDefaultTimeKey} = await execa(
+    'node',
+    ['dist/cli.js'],
+    {
+      input: JSON.stringify({
+        level: 30,
+        time,
+      }),
+    },
+  );
+
+  const {stdout: stdoutWithTimeKeyOption} = await execa(
+    'node',
+    ['dist/cli.js', '--timeKey=timestamp'],
+    {
+      input: JSON.stringify({
+        level: 30,
+        timestamp: time,
+      }),
+    },
+  );
+  t.is(stdoutWithTimeKeyOption, stdOutWithDefaultTimeKey);
+});
+
 // test cli timeformat option
 test('cli respects --timeFormat option', async (t) => {
   const time = Date.now();

@@ -116,6 +116,10 @@ module.exports = {
    */
   errorKey: 'err',
   /**
+   * The key to use for the time segment. Defaults to `time`.
+   */
+  timeKey = 'time',
+  /**
    * Supply a custom time format. The time format by default is passed directly to date-fns format
    * https://date-fns.org/docs/format
    */
