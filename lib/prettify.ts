@@ -1,3 +1,4 @@
+/* eslint-disable complexity */
 /* eslint-disable @typescript-eslint/naming-convention */
 import {logLineFactory} from 'json-log-line';
 import _highlight from 'cli-highlight';
@@ -147,7 +148,7 @@ export function formatUrl(
 }
 
 export function formatMethod(method: string): string {
-  return method ? chalk.white(method.padEnd(4)) : '';
+  return method ? chalk.white(method.toUpperCase().padEnd(4)) : '';
 }
 
 export function formatStatusCode(statusCode: string | number = 'xxx'): string {
@@ -264,17 +265,46 @@ export function prettify({
    * Format functions for any given key
    */
   format = {},
+  /**
+   * Remap the keys of the log line. For instance, if you want to use custom keys for req/res fields that make up the log line.
+   * Note: you cannot set values for both messageKey and keyMap.message at the same time or any other overlapping keys.
+   */
+  keyMap = {},
 }: PrettifyOptions = {}) {
+  if (keyMap.msg && messageKey) {
+    throw new Error('Cannot set both messageKey and keyMap.message');
+  }
+
+  if (keyMap.err && errorKey) {
+    throw new Error('Cannot set both errorKey and keyMap.error');
+  }
+
+  if (keyMap.time && timeKey) {
+    throw new Error('Cannot set both timeKey and keyMap.time');
+  }
+
+  if (keyMap.msg) {
+    messageKey = keyMap.msg;
+  }
+
+  if (keyMap.err) {
+    errorKey = keyMap.err;
+  }
+
+  if (keyMap.time) {
+    timeKey = keyMap.time;
+  }
+
   const formatters: Record<string, (...args: any[]) => string> = {
-    name: formatName,
+    [keyMap.name ?? 'name']: formatName,
     [timeKey]: (time: string | number) => formatTime(time, timeFormat),
-    level: formatLevel,
-    'req.id': formatId,
-    'req.method': formatMethod,
-    'res.statusCode': formatStatusCode,
-    'req.url': formatUrl,
+    [keyMap.level ?? 'level']: formatLevel,
+    [keyMap['req.id'] ?? 'req.id']: formatId,
+    [keyMap['req.method'] ?? 'req.method']: formatMethod,
+    [keyMap['res.statusCode'] ?? 'res.statusCode']: formatStatusCode,
+    [keyMap['req.url'] ?? 'req.url']: formatUrl,
     [messageKey]: formatMessage,
-    responseTime: formatLoadTime,
+    [keyMap.responseTime ?? 'responseTime']: formatLoadTime,
     extraFields: (fields: Record<string, unknown>) =>
       formatExtraFields(fields, {theme, singleLine}),
     [errorKey]: formatErrorProp,

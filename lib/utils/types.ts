@@ -75,4 +75,21 @@ export type PrettifyOptions = {
    * Whether to format the output as a single line
    */
   singleLine?: boolean;
+  /**
+   * Remap the keys of the log line. For instance, if you want to use custom keys for req/res fields that make up the log line.
+   * dot notation is supported for nested keys.
+   * Note: you cannot set values for both messageKey and keyMap.message at the same time or any other overlapping keys.
+   */
+  keyMap?: {
+    name?: string;
+    time?: string;
+    level?: string;
+    'req.id'?: string;
+    'req.method'?: string;
+    'res.statusCode'?: string;
+    'req.url'?: string;
+    msg?: string;
+    err?: string;
+    responseTime?: string;
+  };
 };

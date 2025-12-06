@@ -117,7 +117,7 @@ test('formatMethod', async (t) => {
   const {default: stripAnsi} = await import('strip-ansi');
 
   const method = stripAnsi(formatMethod('method') ?? '');
-  t.is(method, 'method');
+  t.is(method, 'METHOD');
 });
 
 test('formatStack', async (t) => {

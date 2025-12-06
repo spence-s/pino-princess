@@ -90,7 +90,7 @@
     "cli-highlight": "^2.1.11",
     "cosmiconfig": "^9.0.0",
     "date-fns": "^4.1.0",
-    "json-log-line": "^0.0.2",
+    "json-log-line": "^0.0.3",
     "json-stringify-pretty-compact": "^4.0.0",
     "meow": "^14.0.0",
     "on-exit-leak-free": "^2.1.2",
