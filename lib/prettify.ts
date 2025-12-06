@@ -7,6 +7,7 @@ import type {SerializedError} from 'pino';
 import prettyMs from 'pretty-ms';
 import pcStringify from 'json-stringify-pretty-compact';
 import {format} from 'date-fns';
+import getValue from 'get-value';
 import type {
   NumLevels,
   Levels,
@@ -20,6 +21,8 @@ const highlight = _highlight.default;
 const nl = '\n';
 
 const defaultTimeFormat = 'h:mm:ss.SSS aaa';
+
+let _keyMap: Record<string, string> = {};
 
 const stringify = (
   obj: unknown,
@@ -142,8 +145,12 @@ export function formatBundleSize(bundle: string): string {
 
 export function formatUrl(
   url: string,
-  {res: {statusCode} = {}}: {res?: Record<string, unknown>} = {},
+  logObj: Record<string, unknown> = {},
 ): string {
+  const statusCode: unknown = getValue(
+    logObj,
+    _keyMap['res.statusCode'] ?? 'res.statusCode',
+  );
   return statusCode ? chalk.magenta(url) : `    ${chalk.magenta(url)}`;
 }
 
@@ -271,6 +278,8 @@ export function prettify({
    */
   keyMap = {},
 }: PrettifyOptions = {}) {
+  _keyMap = keyMap;
+
   if (keyMap.msg && messageKey) {
     throw new Error('Cannot set both messageKey and keyMap.message');
   }
