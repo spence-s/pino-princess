@@ -18,8 +18,11 @@ Options
   --include, -i    included log fields separated by comma. Overrides excluded fields.
   --messageKey     key for the message field, defaults to 'msg'
   --errorKey       key for the error field, defaults to 'err'
+  --timeKey        key for the time field, defaults to 'time'
   --timeFormat     format for the time field, passed to date-fns format defaults to 'h:mm:ss.SSS aaa'
   --singleLine     format the output as a single line, defaults to false
+  --unicode        force unicode emojis on or off, auto-detected by default
+  --no-colors      disable all color output, auto-detected by default
   `,
   {
     importMeta: import.meta,
@@ -46,6 +49,14 @@ Options
       },
       timeKey: {
         type: 'string',
+      },
+      unicode: {
+        type: 'boolean',
+        default: true,
+      },
+      colors: {
+        type: 'boolean',
+        default: true,
       },
     },
   },
@@ -79,6 +90,14 @@ if (cli.flags.singleLine) {
 
 if (cli.flags.timeKey) {
   cliConfig.timeKey = cli.flags.timeKey;
+}
+
+if (cli.flags.unicode !== undefined) {
+  cliConfig.unicode = cli.flags.unicode;
+}
+
+if (cli.flags.colors !== undefined) {
+  cliConfig.colors = cli.flags.colors;
 }
 
 const defaultConfig: PrettifyOptions = {

@@ -1,6 +1,6 @@
 # pino-princess 👸 💅
 
-A pretty dev logger for pino and other ndjson.
+A pretty and colorful 🌈 dev logger for pino and other ndjson.
 
 Largely inspired from the great pino-colada project but with all the bells and whistles of pino-pretty.
 
@@ -52,7 +52,56 @@ or
 
 The reccomended usage of pino-princess is as a separate process from your main application which pipes pino logs from stdout into pino-princess for formatting.
 
-`node my-application-which-logs-with-pino.js | npx pino-princess --exclude "severity" --include "res.headers.ip, res.headers.x-my-important-header"`
+**Basic usage:**
+
+```bash
+node my-application-which-logs-with-pino.js | npx pino-princess
+```
+
+**Available CLI Options:**
+
+| Option         | Short Flag | Type    | Description                                                                           | Default             |
+| -------------- | ---------- | ------- | ------------------------------------------------------------------------------------- | ------------------- |
+| `--exclude`    | `-e`       | string  | Comma-separated list of log fields to exclude from output. Overridden by `--include`. | `[]`                |
+| `--include`    | `-i`       | string  | Comma-separated list of log fields to include in output. Overrides `--exclude`.       | `[]`                |
+| `--messageKey` |            | string  | Key name for the message field in your log objects.                                   | `'msg'`             |
+| `--errorKey`   |            | string  | Key name for the error field in your log objects.                                     | `'err'`             |
+| `--timeKey`    |            | string  | Key name for the time field in your log objects.                                      | `'time'`            |
+| `--timeFormat` |            | string  | Time format string passed to [date-fns format](https://date-fns.org/docs/format).     | `'h:mm:ss.SSS aaa'` |
+| `--singleLine` |            | boolean | Format the entire log output as a single line with no newlines.                       | `false`             |
+| `--unicode`    |            | boolean | Force unicode emoji support on or off. Auto-detected by default.                      | auto-detect         |
+| `--no-colors`  |            | boolean | Disable all color output (use `--no-colors` flag).                                    | `true`              |
+
+**Examples:**
+
+```bash
+# Exclude specific fields
+node app.js | pino-princess --exclude "severity,hostname,pid"
+
+# Include specific nested fields from excluded objects
+node app.js | pino-princess --exclude "res,req" --include "res.statusCode,req.method,req.url"
+
+# Custom message and error keys
+node app.js | pino-princess --messageKey "message" --errorKey "error"
+
+# Custom time format
+node app.js | pino-princess --timeFormat "yyyy-MM-dd HH:mm:ss"
+
+# Single line output
+node app.js | pino-princess --singleLine
+
+# Force unicode off for CI environments
+node app.js | pino-princess --unicode false
+
+# Disable colors for plain text output
+node app.js | pino-princess --no-colors
+
+# Disable colors when piping to a file
+node app.js | pino-princess --no-colors > app.log
+
+# Combined options
+node app.js | pino-princess -e "hostname,pid" -i "res.headers.x-custom" --timeFormat "HH:mm:ss"
+```
 
 ### Pino v7 transport
 
@@ -66,7 +115,7 @@ pino-princess supports a simple configuration which can be supplied as either co
 
 `pino-princess.config.js`
 
-```js
+````js
 /** @type {import('pino-princess').Configuration}*/
 module.exports = {
   /**
@@ -110,24 +159,82 @@ module.exports = {
   /**
    * Configure the message key
    */
-  messageKey: 'msg',
+  messageKey: "msg",
   /**
    * Configure the error key
    */
-  errorKey: 'err',
+  errorKey: "err",
   /**
    * The key to use for the time segment. Defaults to `time`.
    */
-  timeKey = 'time',
+  timeKey: "time",
   /**
    * Supply a custom time format. The time format by default is passed directly to date-fns format
    * https://date-fns.org/docs/format
    */
-  timeFormat: 'h:mm:ss.SSS aaa',
+  timeFormat: "h:mm:ss.SSS aaa",
   /**
    * Format the entire log line on a single line with no new lines
    */
   singleLine: false,
+  /**
+   * unicode
+   * boolean
+   *
+   * Force unicode emoji support on or off. When undefined, unicode support is auto-detected
+   * based on your terminal capabilities using the 'is-unicode-supported' package.
+   *
+   * Set to false for CI/CD environments or terminals with limited unicode support.
+   * When false, ASCII alternatives are used (e.g., '!' instead of '⚠️').
+   *
+   * default: auto-detected
+   */
+  unicode: true,
+  /**
+   * colors
+   * boolean
+   *
+   * Enable or disable colored output. When set to false, all color formatting is disabled,
+   * producing plain text output. Useful when piping logs to files or in environments
+   * without color support.
+   *
+   * default: auto-detected via chalk's color support detection
+   */
+  colors: true,
+  /**
+   * keyMap
+   * object
+   *
+   * Remap the keys of the log line. This is useful when your log structure uses different
+   * field names than pino-princess expects. Supports dot notation for nested keys.
+   *
+   * IMPORTANT: You cannot set both messageKey and keyMap.msg at the same time
+   * (or errorKey/keyMap.err, or timeKey/keyMap.time). Choose one approach.
+   *
+   * Available remappings:
+   * - name: Logger name
+   * - time: Timestamp field
+   * - level: Log level
+   * - req.id: Request ID
+   * - req.method: HTTP method
+   * - req.url: Request URL/path
+   * - res.statusCode: Response status code
+   * - msg: Log message
+   * - err: Error object
+   * - responseTime: Response time/duration
+   *
+   * @example: If your logs use 'request.path' instead of 'req.url':
+   * ```
+   * keyMap: {
+   *   "name": "namespace",
+   *   "err": "error",
+   *   "req.url": "request.path",
+   *   "req.method": "request.httpMethod",
+   *   "res.statusCode": "response.status",
+   * }
+   * ```
+   */
+  keyMap: {},
   /**
    * theme
    * (chalk: Chalk) => string
@@ -156,27 +263,5 @@ module.exports = {
      */
     literal: chalk.default,
   }),
-
-  /**
-   * format
-   *
-   * These are functions which are passed to json-log-line, where you can override them directly.
-   * Note you cannot pass functions to pino-princess when using it as a pino v7 transport. These need to be configured in a pino-princess.config.js file.
-   */
-  format: {
-    name: (name) => {},
-    time: (time, timeFormat) => {},
-    level: (level) => {},
-    'req.id': (id) => {},
-    'req.method': (method) => {},
-    'res.statusCode': (statusCode) => {},
-    'req.url': (url) => {},
-    [messageKey]: (msg) => {},
-    responseTime: (responseTime) => {},
-    extraFields: (extraFieldsObj, {theme}) => {},
-    [errorKey]: (err) => {},
-    [`${errorKey}.stack`]: (errStack) => {},
-  },
-
 };
-```
+````

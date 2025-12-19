@@ -1,5 +1,5 @@
 import anyTest, {type TestFn} from 'ava';
-import * as getFormatters from '../lib/prettify.js';
+import {Formatter} from '../lib/formatters.js';
 
 const test = anyTest as TestFn<{
   stripAnsi: (str: string) => string;
@@ -22,7 +22,11 @@ const {
   formatStatusCode,
   formatErrorProp,
   formatId,
-} = getFormatters;
+} = new Formatter({
+  keyMap: {},
+  supportsColor: true,
+  supportsUnicode: true,
+});
 
 test('formatLevel', async (t) => {
   const {default: stripAnsi} = await import('strip-ansi');
@@ -123,8 +127,6 @@ test('formatMethod', async (t) => {
 test('formatStack', async (t) => {
   const {default: stripAnsi} = await import('strip-ansi');
 
-  const {stack} = new Error('test error');
-
   const stackFormatted = stripAnsi(formatStack('stack') ?? '');
   t.is(stackFormatted, '\n  stack');
 });
@@ -134,6 +136,13 @@ test('formatUrl', async (t) => {
 
   const url = stripAnsi(formatUrl('url') ?? '');
   t.is(url, '    url');
+
+  // with status code
+  const urlWithStatusCode = stripAnsi(
+    formatUrl('url', {res: {statusCode: 200}}) ?? '',
+  );
+
+  t.is(urlWithStatusCode, 'url');
 });
 
 test('formatStatusCode', async (t) => {
