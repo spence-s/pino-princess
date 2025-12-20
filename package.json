@@ -44,19 +44,14 @@
     "build:test": "npm run clean && tsc --project tsconfig.json",
     "build:test:watch": "npm run clean && tsc --project tsconfig.json --watch",
     "build:watch": "npm run clean && tsc --project tsconfig.build.json --watch",
-    "check": "tsc --project ./tsconfig.json",
     "clean": "rimraf dist",
-    "dev": "NODE_NO_WARNINGS=1 node --loader ts-node/esm/transpile-only ./src/index.ts",
-    "dev:watch": "NODE_NO_WARNINGS=1 node --watch --loader ts-node/esm/transpile-only ./src/index.ts",
     "lint": "xo",
     "lint:fix": "xo --fix",
     "prepare": "husky",
     "release": "np",
     "test": "npm run build:test && c8 ava",
-    "test:all": "npm run test && npm run test:node",
-    "test:node": "npm run build:test && node --test --test-update-snapshots test-node/**/*.test.ts",
-    "test:watch": "ava --watch",
-    "update": "ncu -i"
+    "test:node": "node --watch --test test-node/**/*.test.ts",
+    "test:watch": "ava --watch"
   },
   "xo": {
     "prettier": true,
@@ -79,10 +74,11 @@
     ]
   },
   "ava": {
+    "extensions": {
+      "ts": "module"
+    },
     "files": [
-      "dist/test/**",
-      "!dist/test/fixtures/**",
-      "!dist/test/helpers/**"
+      "test/**/*.ts"
     ],
     "snapshotDir": "test/snapshots",
     "verbose": true
@@ -106,7 +102,7 @@
   "devDependencies": {
     "@commitlint/cli": "^20.2.0",
     "@commitlint/config-conventional": "^20.2.0",
-    "@types/node": "^24.10.1",
+    "@types/node": "^25.0.3",
     "@types/pump": "^1.1.3",
     "ava": "^6.4.1",
     "c8": "^10.1.3",
@@ -120,7 +116,6 @@
     "prettier-plugin-packagejson": "^2.5.20",
     "rimraf": "^6.1.2",
     "strip-ansi": "^7.1.2",
-    "ts-node": "^10.9.2",
     "typescript": "^5.9.3",
     "xo": "^1.2.3"
   },

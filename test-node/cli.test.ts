@@ -17,7 +17,6 @@ test('cli formats a log line', async (t: TestContext) => {
       time: Date.now(),
     }),
   });
-  console.log(stdout);
   t.assert.ok(stdout.includes('INFO  hello'));
 });
 
@@ -26,7 +25,7 @@ test('cli respects --messageKey option', async (t: TestContext) => {
   // Test with default messageKey
   const {stdout: stdoutWithDefaultMessageKey} = await execa(
     'node',
-    ['dist/cli.js'],
+    ['dist/cli.js', '--colors=false'],
     {
       input: JSON.stringify({
         level: 30,
@@ -38,7 +37,7 @@ test('cli respects --messageKey option', async (t: TestContext) => {
 
   const {stdout} = await execa(
     'node',
-    ['dist/cli.js', '--messageKey=message'],
+    ['dist/cli.js', '--messageKey=message', '--colors=false'],
     {
       input: JSON.stringify({
         level: 30,
