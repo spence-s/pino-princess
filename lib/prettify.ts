@@ -2,8 +2,8 @@
 
 import {logLineFactory} from 'json-log-line';
 import _highlight from 'cli-highlight';
-import type {PrettifyOptions} from './utils/types.js';
-import {Formatter} from './formatters.js';
+import type {PrettifyOptions} from './utils/types.ts';
+import {Formatter} from './formatters.ts';
 
 const defaultTimeFormat = 'h:mm:ss.SSS aaa';
 

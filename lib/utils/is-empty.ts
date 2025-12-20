@@ -1,11 +1,11 @@
-import isObject from './is-object.js';
+import isObject from './is-object.ts';
 
 function isEmpty(object: unknown): boolean {
   return Boolean(
     isObject(object) &&
-      (object === undefined ||
-        object === null ||
-        Object.keys(object).length === 0),
+    (object === undefined ||
+      object === null ||
+      Object.keys(object).length === 0),
   );
 }
 

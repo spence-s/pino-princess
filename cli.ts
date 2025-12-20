@@ -5,8 +5,8 @@ import os from 'node:os';
 import pump from 'pump';
 import {cosmiconfigSync} from 'cosmiconfig';
 import meow from 'meow';
-import type {PrettifyOptions} from './lib/utils/types.js';
-import {build} from './index.js';
+import type {PrettifyOptions} from './lib/utils/types.ts';
+import {build} from './index.ts';
 
 const cli = meow(
   `

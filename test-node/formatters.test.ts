@@ -1,5 +1,14 @@
-import test, {type TestFn} from 'ava';
+/* eslint-disable @typescript-eslint/no-floating-promises */
+import {test, before} from 'node:test';
+import assert from 'node:assert';
 import {Formatter} from '../lib/formatters.ts';
+
+let stripAnsi: (str: string) => string;
+
+before(async () => {
+  const {default: stripAnsiModule} = await import('strip-ansi');
+  stripAnsi = stripAnsiModule;
+});
 
 const {
   formatLevel,
@@ -19,139 +28,110 @@ const {
   supportsUnicode: true,
 });
 
-test('formatLevel', async (t) => {
-  const {default: stripAnsi} = await import('strip-ansi');
-
+test('formatLevel', () => {
   /**
    * note: the space after some of the levels is intentional
    * as it is part of the formatLevel function, which pads the shorter strings
    */
 
   const info = stripAnsi(formatLevel(30));
-  t.is(info, '✨ INFO ');
+  assert.strictEqual(info, '✨ INFO ');
 
   const warn = stripAnsi(formatLevel(40));
-  t.is(warn, '⚠️  WARN ');
+  assert.strictEqual(warn, '⚠️  WARN ');
 
   const error = stripAnsi(formatLevel(50));
-  t.is(error, '🚨 ERROR');
+  assert.strictEqual(error, '🚨 ERROR');
 
   const fatal = stripAnsi(formatLevel(60));
-  t.is(fatal, '💀 FATAL');
+  assert.strictEqual(fatal, '💀 FATAL');
 
   // const userlvl = stripAnsi(formatLevel(0));
-  // t.is(userlvl, '👤 USERLVL');
+  // assert.strictEqual(userlvl, '👤 USERLVL');
 
   const debug = stripAnsi(formatLevel(20));
-  t.is(debug, '🐛 DEBUG');
+  assert.strictEqual(debug, '🐛 DEBUG');
 });
 
-test('formatLoadTime', async (t) => {
-  const {default: stripAnsi} = await import('strip-ansi');
-
+test('formatLoadTime', () => {
   const loadTime1 = stripAnsi(formatLoadTime('0.1') ?? '');
-  t.is(loadTime1, '0ms');
+  assert.strictEqual(loadTime1, '0ms');
 
   const loadTime2 = stripAnsi(formatLoadTime('100') ?? '');
-  t.is(loadTime2, '100ms');
+  assert.strictEqual(loadTime2, '100ms');
 
   const loadTime3 = stripAnsi(formatLoadTime(500) ?? '');
-  t.is(loadTime3, '500ms');
+  assert.strictEqual(loadTime3, '500ms');
 });
 
-// test.skip('formatDate', async (t) => {
-//   const {default: stripAnsi} = await import('strip-ansi');
-//   const ts = new Date('2020-01-01T00:00:00.000Z').getTime();
-
-//   const date1 = stripAnsi(formatDate(ts) ?? '');
-//   t.is(date1, `[${dayjs.utc(ts).format('H:mm:ss')}]`);
-// });
-
-test('formatName', async (t) => {
-  const {default: stripAnsi} = await import('strip-ansi');
-
+test('formatName', () => {
   const name1 = stripAnsi(formatName('name') ?? '');
-  t.is(name1, '[name]');
+  assert.strictEqual(name1, '[name]');
 });
 
-test('formatMessage', async (t) => {
-  const {default: stripAnsi} = await import('strip-ansi');
-
+test('formatMessage', () => {
   const messageInfo = stripAnsi(formatMessage('message', {level: 30}) ?? '');
-  t.is(messageInfo, 'message');
+  assert.strictEqual(messageInfo, 'message');
 
   const messageWarn = stripAnsi(formatMessage('message', {level: 40}) ?? '');
-  t.is(messageWarn, 'message');
+  assert.strictEqual(messageWarn, 'message');
 
   const messageError = stripAnsi(formatMessage('message', {level: 50}) ?? '');
-  t.is(messageError, 'message');
+  assert.strictEqual(messageError, 'message');
 
   const messageFatal = stripAnsi(formatMessage('message', {level: 60}) ?? '');
-  t.is(messageFatal, 'message');
+  assert.strictEqual(messageFatal, 'message');
 
   const messageUserlvl = stripAnsi(formatMessage('message', {level: 30}) ?? '');
 
-  t.is(messageUserlvl, 'message');
+  assert.strictEqual(messageUserlvl, 'message');
 
   const messageDebug = stripAnsi(formatMessage('message', {level: 20}) ?? '');
-  t.is(messageDebug, 'message');
+  assert.strictEqual(messageDebug, 'message');
 });
 
-test('formatExtraFields', async (t) => {
-  const {default: stripAnsi} = await import('strip-ansi');
-
+test('formatExtraFields', () => {
   const extraFields = stripAnsi(
     formatExtraFields({
       extra: 'fields',
     }) ?? '',
   );
-  t.is(extraFields, '\n  "extra": "fields"');
+  assert.strictEqual(extraFields, '\n  "extra": "fields"');
 });
 
-test('formatMethod', async (t) => {
-  const {default: stripAnsi} = await import('strip-ansi');
-
+test('formatMethod', () => {
   const method = stripAnsi(formatMethod('method') ?? '');
-  t.is(method, 'METHOD');
+  assert.strictEqual(method, 'METHOD');
 });
 
-test('formatStack', async (t) => {
-  const {default: stripAnsi} = await import('strip-ansi');
-
+test('formatStack', () => {
   const stackFormatted = stripAnsi(formatStack('stack') ?? '');
-  t.is(stackFormatted, '\n  stack');
+  assert.strictEqual(stackFormatted, '\n  stack');
 });
 
-test('formatUrl', async (t) => {
-  const {default: stripAnsi} = await import('strip-ansi');
-
+test('formatUrl', () => {
   const url = stripAnsi(formatUrl('url') ?? '');
-  t.is(url, '    url');
+  assert.strictEqual(url, '    url');
 
   // with status code
   const urlWithStatusCode = stripAnsi(
     formatUrl('url', {res: {statusCode: 200}}) ?? '',
   );
 
-  t.is(urlWithStatusCode, 'url');
+  assert.strictEqual(urlWithStatusCode, 'url');
 });
 
-test('formatStatusCode', async (t) => {
-  const {default: stripAnsi} = await import('strip-ansi');
-
+test('formatStatusCode', () => {
   const statusCode = stripAnsi(formatStatusCode(200) ?? '');
-  t.is(statusCode, '200');
+  assert.strictEqual(statusCode, '200');
 });
 
-test('formatId', async (t) => {
-  const {default: stripAnsi} = await import('strip-ansi');
-
+test('formatId', () => {
   const statusCode = stripAnsi(formatId('12345') ?? '');
-  t.is(statusCode, '[ID:12345]');
+  assert.strictEqual(statusCode, '[ID:12345]');
 });
 
-test('formatErrorProp > basic error', async (t) => {
-  const {default: stripAnsi} = await import('strip-ansi');
+test('formatErrorProp > basic error', () => {
   const error = new Error('test error');
 
   const errorProp = stripAnsi(
@@ -162,5 +142,5 @@ test('formatErrorProp > basic error', async (t) => {
     }) ?? '',
   );
 
-  t.is(errorProp, `\n  ${error.stack ?? ''}\n`);
+  assert.strictEqual(errorProp, `\n  ${error.stack ?? ''}\n`);
 });

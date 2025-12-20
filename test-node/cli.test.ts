@@ -1,26 +1,27 @@
-/* eslint-disable ava/no-ignored-test-files */
-import test from 'ava';
+/* eslint-disable @typescript-eslint/no-floating-promises */
+import {test, type TestContext} from 'node:test';
 import {format} from 'date-fns';
 import {execa} from 'execa';
 import {err} from 'pino-std-serializers';
 
-test('cli --help runs without error', async (t) => {
+test('cli --help runs without error', async (t: TestContext) => {
   const {stdout} = await execa('node', ['dist/cli.js', '--help']);
-  t.snapshot(stdout);
+  t.assert.snapshot(stdout);
 });
 
-test('cli formats a log line', async (t) => {
-  const {stdout} = await execa('node', ['dist/cli.js'], {
+test('cli formats a log line', async (t: TestContext) => {
+  const {stdout} = await execa('node', ['dist/cli.js', '--colors=false'], {
     input: JSON.stringify({
       level: 30,
       msg: 'hello',
       time: Date.now(),
     }),
   });
-  t.true(stdout.includes('INFO  hello'));
+  console.log(stdout);
+  t.assert.ok(stdout.includes('INFO  hello'));
 });
 
-test('cli respects --messageKey option', async (t) => {
+test('cli respects --messageKey option', async (t: TestContext) => {
   const time = Date.now();
   // Test with default messageKey
   const {stdout: stdoutWithDefaultMessageKey} = await execa(
@@ -47,12 +48,12 @@ test('cli respects --messageKey option', async (t) => {
     },
   );
 
-  t.true(stdoutWithDefaultMessageKey.includes('INFO  hello'));
-  t.true(stdout.includes('INFO  hello'));
-  t.is(stdoutWithDefaultMessageKey, stdout);
+  t.assert.ok(stdoutWithDefaultMessageKey.includes('INFO  hello'));
+  t.assert.ok(stdout.includes('INFO  hello'));
+  t.assert.strictEqual(stdoutWithDefaultMessageKey, stdout);
 });
 
-test('cli respects --errorKey option', async (t) => {
+test('cli respects --errorKey option', async (t: TestContext) => {
   const serializedError = err(new Error('test error'));
   const time = Date.now();
 
@@ -79,10 +80,10 @@ test('cli respects --errorKey option', async (t) => {
       }),
     },
   );
-  t.is(stdoutWithDefaultErrorKey, stdOutWithErrorKeyOption);
+  t.assert.strictEqual(stdoutWithDefaultErrorKey, stdOutWithErrorKeyOption);
 });
 
-test('cli respects --timeKey option', async (t) => {
+test('cli respects --timeKey option', async (t: TestContext) => {
   const time = Date.now();
 
   const {stdout: stdOutWithDefaultTimeKey} = await execa(
@@ -106,11 +107,11 @@ test('cli respects --timeKey option', async (t) => {
       }),
     },
   );
-  t.is(stdoutWithTimeKeyOption, stdOutWithDefaultTimeKey);
+  t.assert.strictEqual(stdoutWithTimeKeyOption, stdOutWithDefaultTimeKey);
 });
 
 // test cli timeformat option
-test('cli respects --timeFormat option', async (t) => {
+test('cli respects --timeFormat option', async (t: TestContext) => {
   const time = Date.now();
   const {stdout} = await execa(
     'node',
@@ -125,11 +126,11 @@ test('cli respects --timeFormat option', async (t) => {
   );
 
   // Check if the output contains the formatted time
-  t.true(stdout.includes(format(time, 'yyyy-MM-dd HH:mm:ss')));
+  t.assert.ok(stdout.includes(format(time, 'yyyy-MM-dd HH:mm:ss')));
 });
 
 // test cli singleLine option
-test('cli respects --singleLine option', async (t) => {
+test('cli respects --singleLine option', async (t: TestContext) => {
   const input = JSON.stringify({
     level: 30,
     msg: 'hello',
@@ -151,7 +152,7 @@ test('cli respects --singleLine option', async (t) => {
     input,
   });
 
-  t.true(stdoutMultiline.includes('\n'));
+  t.assert.ok(stdoutMultiline.includes('\n'));
   // Check if the output is a single line
-  t.false(stdout.includes('\n'));
+  t.assert.ok(!stdout.includes('\n'));
 });

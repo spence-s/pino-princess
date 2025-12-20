@@ -53,6 +53,8 @@
     "prepare": "husky",
     "release": "np",
     "test": "npm run build:test && c8 ava",
+    "test:all": "npm run test && npm run test:node",
+    "test:node": "npm run build:test && node --test --test-update-snapshots test-node/**/*.test.ts",
     "test:watch": "ava --watch",
     "update": "ncu -i"
   },

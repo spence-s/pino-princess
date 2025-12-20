@@ -1,6 +1,6 @@
 import {format} from 'date-fns';
 import anyTest, {type TestFn} from 'ava';
-import {prettify} from '../lib/prettify.js';
+import {prettify} from '../lib/prettify.ts';
 
 const test = anyTest as TestFn<{
   stripAnsi: (str: string) => string;

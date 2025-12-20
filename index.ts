@@ -2,9 +2,9 @@ import {Transform} from 'node:stream';
 import pump from 'pump';
 import abstractTransport, {type OnUnknown} from 'pino-abstract-transport';
 import type {SonicBoom, SonicBoomOpts} from 'sonic-boom';
-import prettify from './lib/prettify.js';
-import buildSafeSonicBoom from './lib/build-safe-sonic-boom.js';
-import type {PrettifyOptions} from './lib/utils/types.js';
+import prettify from './lib/prettify.ts';
+import buildSafeSonicBoom from './lib/build-safe-sonic-boom.ts';
+import type {PrettifyOptions} from './lib/utils/types.ts';
 
 function build(
   options: PrettifyOptions &

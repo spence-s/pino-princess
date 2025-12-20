@@ -11,8 +11,8 @@ import pcStringify from 'json-stringify-pretty-compact';
 import {format} from 'date-fns';
 import getValue from 'get-value';
 import isUnicodeSupported from 'is-unicode-supported';
-import type {NumLevels, Levels, Colors} from './utils/types.js';
-import isObject from './utils/is-object.js';
+import type {NumLevels, Levels, Colors} from './utils/types.ts';
+import isObject from './utils/is-object.ts';
 
 const nl = '\n';
 
@@ -21,10 +21,9 @@ const defaultTimeFormat = 'h:mm:ss.SSS aaa';
 /** key map cache - assigned once at startup if user has custom keymap */
 const highlight = _highlight.default;
 
-const colorMap: Record<Levels | 'userlvl', Colors> = {
+const colorMap: Record<Levels, Colors> = {
   warn: 'yellow',
   info: 'cyan',
-  userlvl: 'cyan',
   error: 'red',
   debug: 'blue',
   trace: 'white',

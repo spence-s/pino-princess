@@ -1,12 +1,35 @@
 {
   "compilerOptions": {
-    "module": "Node16",
-    "target": "ES2021",
+    "module": "node20",
+    "target": "es2023",
+
     "esModuleInterop": true,
+
     "strict": true,
+    "noUncheckedIndexedAccess": true,
+
+    /** Use the latest version of ECMAScript modules */
+    "lib": ["esnext"],
+    /** For nodejs libs, for browser or other environments, this will change */
+    "types": ["node"],
+
     "outDir": "dist",
     "declaration": true,
-    "declarationMap": true
+    "declarationMap": true,
+
+    /** OPTIMIZATION */
+    /** Skip unneeded typechecking of node-modules */
+    "skipLibCheck": true,
+    /** ensure we use type imports properly - also validated and autofixed by xo */
+    "verbatimModuleSyntax": true,
+    /** Allow only syntax that can be erased (no runtime impact) when transpiling to JS */
+    "erasableSyntaxOnly": true,
+    /** Rewrite relative imports to include file extensions for nodejs */
+    "rewriteRelativeImportExtensions": true,
+    /** Help ts know that we are only using modules (may need to change for cjs) */
+    "moduleDetection": "force",
+    /** Show the entire type in intellisense if possible */
+    "noErrorTruncation": true
   },
   "watchOptions": {
     "excludeDirectories": ["dist", "node_modules"]
