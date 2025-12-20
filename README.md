@@ -22,6 +22,9 @@ Largely inspired from the great pino-colada project but with all the bells and w
 - All data is displayed with highlighting for _kick-ass_ readability
 - ez to customize
 
+> TIP: Getting the most out of pino-princess
+> Specifically designed for easiest use with pino-http
+
 ## SAMPLES
 
 > note: these samples are created by changing terminal colors - not by changing themes in pino-princess. However, pino-princess themes are entirely configurable so both ways of changing the colors are possible.
@@ -70,7 +73,7 @@ node my-application-which-logs-with-pino.js | npx pino-princess
 | `--timeFormat` |            | string  | Time format string passed to [date-fns format](https://date-fns.org/docs/format).     | `'h:mm:ss.SSS aaa'` |
 | `--singleLine` |            | boolean | Format the entire log output as a single line with no newlines.                       | `false`             |
 | `--unicode`    |            | boolean | Force unicode emoji support on or off. Auto-detected by default.                      | auto-detect         |
-| `--no-colors`  |            | boolean | Disable all color output (use `--no-colors` flag).                                    | `true`              |
+| `--colors`     |            | boolean | Disable all color. Auto-detected by default.                                          | `true`              |
 
 **Examples:**
 

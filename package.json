@@ -41,15 +41,13 @@
   ],
   "scripts": {
     "build": "npm run clean && tsc --project tsconfig.build.json",
-    "build:test": "npm run clean && tsc --project tsconfig.json",
-    "build:test:watch": "npm run clean && tsc --project tsconfig.json --watch",
-    "build:watch": "npm run clean && tsc --project tsconfig.build.json --watch",
+    "check": "npm run build -- --noEmit",
     "clean": "rimraf dist",
-    "lint": "xo",
+    "lint": "npm run check && xo",
     "lint:fix": "xo --fix",
     "prepare": "husky",
     "release": "np",
-    "test": "npm run build:test && c8 ava",
+    "test": "c8 ava",
     "test:node": "node --watch --test test-node/**/*.test.ts",
     "test:watch": "ava --watch"
   },
@@ -80,7 +78,6 @@
     "files": [
       "test/**/*.ts"
     ],
-    "snapshotDir": "test/snapshots",
     "verbose": true
   },
   "dependencies": {

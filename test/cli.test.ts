@@ -1,16 +1,15 @@
-/* eslint-disable ava/no-ignored-test-files */
 import test from 'ava';
 import {format} from 'date-fns';
 import {execa} from 'execa';
 import {err} from 'pino-std-serializers';
 
 test('cli --help runs without error', async (t) => {
-  const {stdout} = await execa('node', ['dist/cli.js', '--help']);
+  const {stdout} = await execa('node', ['cli.ts', '--help']);
   t.snapshot(stdout);
 });
 
 test('cli formats a log line', async (t) => {
-  const {stdout} = await execa('node', ['dist/cli.js'], {
+  const {stdout} = await execa('node', ['cli.ts'], {
     input: JSON.stringify({
       level: 30,
       msg: 'hello',
@@ -25,7 +24,7 @@ test('cli respects --messageKey option', async (t) => {
   // Test with default messageKey
   const {stdout: stdoutWithDefaultMessageKey} = await execa(
     'node',
-    ['dist/cli.js'],
+    ['cli.ts'],
     {
       input: JSON.stringify({
         level: 30,
@@ -35,17 +34,13 @@ test('cli respects --messageKey option', async (t) => {
     },
   );
 
-  const {stdout} = await execa(
-    'node',
-    ['dist/cli.js', '--messageKey=message'],
-    {
-      input: JSON.stringify({
-        level: 30,
-        message: 'hello',
-        time,
-      }),
-    },
-  );
+  const {stdout} = await execa('node', ['cli.ts', '--messageKey=message'], {
+    input: JSON.stringify({
+      level: 30,
+      message: 'hello',
+      time,
+    }),
+  });
 
   t.true(stdoutWithDefaultMessageKey.includes('INFO  hello'));
   t.true(stdout.includes('INFO  hello'));
@@ -56,21 +51,17 @@ test('cli respects --errorKey option', async (t) => {
   const serializedError = err(new Error('test error'));
   const time = Date.now();
 
-  const {stdout: stdoutWithDefaultErrorKey} = await execa(
-    'node',
-    ['dist/cli.js'],
-    {
-      input: JSON.stringify({
-        level: 50,
-        err: serializedError,
-        time,
-      }),
-    },
-  );
+  const {stdout: stdoutWithDefaultErrorKey} = await execa('node', ['cli.ts'], {
+    input: JSON.stringify({
+      level: 50,
+      err: serializedError,
+      time,
+    }),
+  });
 
   const {stdout: stdOutWithErrorKeyOption} = await execa(
     'node',
-    ['dist/cli.js', '--errorKey=error'],
+    ['cli.ts', '--errorKey=error'],
     {
       input: JSON.stringify({
         level: 50,
@@ -85,20 +76,16 @@ test('cli respects --errorKey option', async (t) => {
 test('cli respects --timeKey option', async (t) => {
   const time = Date.now();
 
-  const {stdout: stdOutWithDefaultTimeKey} = await execa(
-    'node',
-    ['dist/cli.js'],
-    {
-      input: JSON.stringify({
-        level: 30,
-        time,
-      }),
-    },
-  );
+  const {stdout: stdOutWithDefaultTimeKey} = await execa('node', ['cli.ts'], {
+    input: JSON.stringify({
+      level: 30,
+      time,
+    }),
+  });
 
   const {stdout: stdoutWithTimeKeyOption} = await execa(
     'node',
-    ['dist/cli.js', '--timeKey=timestamp'],
+    ['cli.ts', '--timeKey=timestamp'],
     {
       input: JSON.stringify({
         level: 30,
@@ -114,7 +101,7 @@ test('cli respects --timeFormat option', async (t) => {
   const time = Date.now();
   const {stdout} = await execa(
     'node',
-    ['dist/cli.js', '--timeFormat=yyyy-MM-dd HH:mm:ss'],
+    ['cli.ts', '--timeFormat=yyyy-MM-dd HH:mm:ss'],
     {
       input: JSON.stringify({
         level: 30,
@@ -143,11 +130,11 @@ test('cli respects --singleLine option', async (t) => {
     },
   });
 
-  const {stdout: stdoutMultiline} = await execa('node', ['dist/cli.js'], {
+  const {stdout: stdoutMultiline} = await execa('node', ['cli.ts'], {
     input,
   });
 
-  const {stdout} = await execa('node', ['dist/cli.js', '--singleLine'], {
+  const {stdout} = await execa('node', ['cli.ts', '--singleLine'], {
     input,
   });
 
