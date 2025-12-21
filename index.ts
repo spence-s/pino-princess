@@ -1,4 +1,4 @@
-import {Transform} from 'node:stream';
+import {Transform, Writable} from 'node:stream';
 import pump from 'pump';
 import abstractTransport, {type OnUnknown} from 'pino-abstract-transport';
 import type {SonicBoom, SonicBoomOpts} from 'sonic-boom';
@@ -8,7 +8,7 @@ import type {PrettifyOptions} from './lib/utils/types.ts';
 
 function build(
   options: PrettifyOptions &
-    SonicBoomOpts & {destination?: Transform & OnUnknown},
+    SonicBoomOpts & {destination?: (Transform & OnUnknown) | Writable},
 ): Transform & OnUnknown {
   const pretty = prettify(options);
 
@@ -22,12 +22,12 @@ function build(
       },
     });
 
-    let destination: Transform | (SonicBoom & OnUnknown);
+    let destination: Transform | Writable | (SonicBoom & OnUnknown);
 
     if (
       (typeof options?.destination === 'object' &&
         typeof options?.destination.write === 'function') ||
-      options.destination instanceof Transform
+      options.destination instanceof Writable
     ) {
       destination = options.destination;
     } else {

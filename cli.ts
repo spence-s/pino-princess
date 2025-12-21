@@ -22,7 +22,7 @@ Options
   --timeFormat     format for the time field, passed to date-fns format defaults to 'h:mm:ss.SSS aaa'
   --singleLine     format the output as a single line, defaults to false
   --unicode        force unicode emojis on or off, auto-detected by default
-  --no-colors      disable all color output, auto-detected by default
+  --colors         enable or disable all color output, auto-detected by default
   `,
   {
     importMeta: import.meta,
@@ -52,11 +52,9 @@ Options
       },
       unicode: {
         type: 'boolean',
-        default: true,
       },
       colors: {
         type: 'boolean',
-        default: true,
       },
     },
   },

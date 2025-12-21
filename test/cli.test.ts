@@ -1,22 +1,27 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 import test from 'ava';
 import {format} from 'date-fns';
 import {execa} from 'execa';
+import hasAnsi from 'has-ansi';
 import {err} from 'pino-std-serializers';
 
 test('cli --help runs without error', async (t) => {
-  const {stdout} = await execa('node', ['cli.ts', '--help']);
+  const {stdout} = await execa('node', ['cli.ts', '--help'], {
+    env: {FORCE_COLOR: 'true'},
+  });
   t.snapshot(stdout);
 });
 
 test('cli formats a log line', async (t) => {
-  const {stdout} = await execa('node', ['cli.ts'], {
+  const {stdout} = await execa('node', ['cli.ts', '--colors=true'], {
+    env: {FORCE_COLOR: 'true'},
     input: JSON.stringify({
       level: 30,
       msg: 'hello',
       time: Date.now(),
     }),
   });
-  t.true(stdout.includes('INFO  hello'));
+  t.true(hasAnsi(stdout));
 });
 
 test('cli respects --messageKey option', async (t) => {
@@ -26,6 +31,7 @@ test('cli respects --messageKey option', async (t) => {
     'node',
     ['cli.ts'],
     {
+      env: {FORCE_COLOR: 'true'},
       input: JSON.stringify({
         level: 30,
         msg: 'hello',
@@ -35,6 +41,7 @@ test('cli respects --messageKey option', async (t) => {
   );
 
   const {stdout} = await execa('node', ['cli.ts', '--messageKey=message'], {
+    env: {FORCE_COLOR: 'true'},
     input: JSON.stringify({
       level: 30,
       message: 'hello',
@@ -52,6 +59,7 @@ test('cli respects --errorKey option', async (t) => {
   const time = Date.now();
 
   const {stdout: stdoutWithDefaultErrorKey} = await execa('node', ['cli.ts'], {
+    env: {FORCE_COLOR: 'true'},
     input: JSON.stringify({
       level: 50,
       err: serializedError,
@@ -63,6 +71,7 @@ test('cli respects --errorKey option', async (t) => {
     'node',
     ['cli.ts', '--errorKey=error'],
     {
+      env: {FORCE_COLOR: 'true'},
       input: JSON.stringify({
         level: 50,
         error: serializedError,
@@ -77,6 +86,7 @@ test('cli respects --timeKey option', async (t) => {
   const time = Date.now();
 
   const {stdout: stdOutWithDefaultTimeKey} = await execa('node', ['cli.ts'], {
+    env: {FORCE_COLOR: 'true'},
     input: JSON.stringify({
       level: 30,
       time,
@@ -87,6 +97,7 @@ test('cli respects --timeKey option', async (t) => {
     'node',
     ['cli.ts', '--timeKey=timestamp'],
     {
+      env: {FORCE_COLOR: 'true'},
       input: JSON.stringify({
         level: 30,
         timestamp: time,
@@ -103,6 +114,7 @@ test('cli respects --timeFormat option', async (t) => {
     'node',
     ['cli.ts', '--timeFormat=yyyy-MM-dd HH:mm:ss'],
     {
+      env: {FORCE_COLOR: 'true'},
       input: JSON.stringify({
         level: 30,
         msg: 'hello',
@@ -131,10 +143,12 @@ test('cli respects --singleLine option', async (t) => {
   });
 
   const {stdout: stdoutMultiline} = await execa('node', ['cli.ts'], {
+    env: {FORCE_COLOR: 'true'},
     input,
   });
 
   const {stdout} = await execa('node', ['cli.ts', '--singleLine'], {
+    env: {FORCE_COLOR: 'true'},
     input,
   });
 

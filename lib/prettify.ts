@@ -8,9 +8,9 @@ import {Formatter} from './formatters.ts';
 const defaultTimeFormat = 'h:mm:ss.SSS aaa';
 
 export function prettify({
-  errorKey = 'err',
-  messageKey = 'msg',
-  timeKey = 'time',
+  errorKey,
+  messageKey,
+  timeKey,
   timeFormat = defaultTimeFormat,
   singleLine = false,
   exclude = [],
@@ -53,19 +53,19 @@ export function prettify({
 
   const formatters: Record<string, (...args: any[]) => string> = {
     [keyMap.name ?? 'name']: formatter.formatName,
-    [timeKey]: (time: string | number) =>
+    [timeKey ?? 'time']: (time: string | number) =>
       formatter.formatTime(time, timeFormat),
     [keyMap.level ?? 'level']: formatter.formatLevel,
     [keyMap['req.id'] ?? 'req.id']: formatter.formatId,
     [keyMap['req.method'] ?? 'req.method']: formatter.formatMethod,
     [keyMap['res.statusCode'] ?? 'res.statusCode']: formatter.formatStatusCode,
     [keyMap['req.url'] ?? 'req.url']: formatter.formatUrl,
-    [messageKey]: formatter.formatMessage,
+    [messageKey ?? 'msg']: formatter.formatMessage,
     [keyMap.responseTime ?? 'responseTime']: formatter.formatLoadTime,
     extraFields: (fields: Record<string, unknown>) =>
       formatter.formatExtraFields(fields, {theme, singleLine}),
-    [errorKey]: formatter.formatErrorProp,
-    [`${errorKey}.stack`]: formatter.formatStack,
+    [errorKey ?? 'err']: formatter.formatErrorProp,
+    [`${errorKey ?? 'err'}.stack`]: formatter.formatStack,
     ...format,
   };
 

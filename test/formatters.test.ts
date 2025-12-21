@@ -1,4 +1,5 @@
 import test, {type TestFn} from 'ava';
+import stripAnsi from 'strip-ansi';
 import {Formatter} from '../lib/formatters.ts';
 
 const {
@@ -20,8 +21,6 @@ const {
 });
 
 test('formatLevel', async (t) => {
-  const {default: stripAnsi} = await import('strip-ansi');
-
   /**
    * note: the space after some of the levels is intentional
    * as it is part of the formatLevel function, which pads the shorter strings
@@ -47,8 +46,6 @@ test('formatLevel', async (t) => {
 });
 
 test('formatLoadTime', async (t) => {
-  const {default: stripAnsi} = await import('strip-ansi');
-
   const loadTime1 = stripAnsi(formatLoadTime('0.1') ?? '');
   t.is(loadTime1, '0ms');
 
@@ -60,7 +57,7 @@ test('formatLoadTime', async (t) => {
 });
 
 // test.skip('formatDate', async (t) => {
-//   const {default: stripAnsi} = await import('strip-ansi');
+//
 //   const ts = new Date('2020-01-01T00:00:00.000Z').getTime();
 
 //   const date1 = stripAnsi(formatDate(ts) ?? '');
@@ -68,15 +65,11 @@ test('formatLoadTime', async (t) => {
 // });
 
 test('formatName', async (t) => {
-  const {default: stripAnsi} = await import('strip-ansi');
-
   const name1 = stripAnsi(formatName('name') ?? '');
   t.is(name1, '[name]');
 });
 
 test('formatMessage', async (t) => {
-  const {default: stripAnsi} = await import('strip-ansi');
-
   const messageInfo = stripAnsi(formatMessage('message', {level: 30}) ?? '');
   t.is(messageInfo, 'message');
 
@@ -98,8 +91,6 @@ test('formatMessage', async (t) => {
 });
 
 test('formatExtraFields', async (t) => {
-  const {default: stripAnsi} = await import('strip-ansi');
-
   const extraFields = stripAnsi(
     formatExtraFields({
       extra: 'fields',
@@ -109,22 +100,16 @@ test('formatExtraFields', async (t) => {
 });
 
 test('formatMethod', async (t) => {
-  const {default: stripAnsi} = await import('strip-ansi');
-
   const method = stripAnsi(formatMethod('method') ?? '');
   t.is(method, 'METHOD');
 });
 
 test('formatStack', async (t) => {
-  const {default: stripAnsi} = await import('strip-ansi');
-
   const stackFormatted = stripAnsi(formatStack('stack') ?? '');
   t.is(stackFormatted, '\n  stack');
 });
 
 test('formatUrl', async (t) => {
-  const {default: stripAnsi} = await import('strip-ansi');
-
   const url = stripAnsi(formatUrl('url') ?? '');
   t.is(url, '    url');
 
@@ -137,21 +122,16 @@ test('formatUrl', async (t) => {
 });
 
 test('formatStatusCode', async (t) => {
-  const {default: stripAnsi} = await import('strip-ansi');
-
   const statusCode = stripAnsi(formatStatusCode(200) ?? '');
   t.is(statusCode, '200');
 });
 
 test('formatId', async (t) => {
-  const {default: stripAnsi} = await import('strip-ansi');
-
   const statusCode = stripAnsi(formatId('12345') ?? '');
   t.is(statusCode, '[ID:12345]');
 });
 
 test('formatErrorProp > basic error', async (t) => {
-  const {default: stripAnsi} = await import('strip-ansi');
   const error = new Error('test error');
 
   const errorProp = stripAnsi(
