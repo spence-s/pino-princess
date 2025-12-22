@@ -4,6 +4,7 @@ import {
   Chalk,
   supportsColor as chalkSupportsColor,
   type ChalkInstance,
+  type ColorSupportLevel,
 } from 'chalk';
 import type {SerializedError} from 'pino';
 import prettyMs from 'pretty-ms';
@@ -84,13 +85,21 @@ export class Formatter {
 
     this.supportsUnicode = supportsUnicode ?? isUnicodeSupported();
 
+    let level: ColorSupportLevel = 0;
+
+    if (supportsColor === false) {
+      level = 0;
+    } else if (supportsColor === true) {
+      level = 3;
+    } else if (
+      typeof chalkSupportsColor === 'object' &&
+      typeof chalkSupportsColor.level === 'number'
+    ) {
+      level = chalkSupportsColor.level;
+    }
+
     this.chalk = new Chalk({
-      level:
-        supportsColor === false
-          ? 0
-          : typeof chalkSupportsColor === 'object'
-            ? chalkSupportsColor.level
-            : 0,
+      level,
     });
   }
 

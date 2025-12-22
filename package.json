@@ -89,7 +89,6 @@
     "is-unicode-supported": "^2.1.0",
     "json-log-line": "^0.0.3",
     "json-stringify-pretty-compact": "^4.0.0",
-    "meow": "^14.0.0",
     "on-exit-leak-free": "^2.1.2",
     "pino-abstract-transport": "^3.0.0",
     "pretty-ms": "^9",

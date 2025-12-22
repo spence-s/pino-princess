@@ -1,15 +1,14 @@
 #!/usr/bin/env node
 import fs from 'node:fs';
+import util from 'node:util';
 import process from 'node:process';
 import os from 'node:os';
 import pump from 'pump';
 import {cosmiconfigSync} from 'cosmiconfig';
-import meow from 'meow';
 import type {PrettifyOptions} from './lib/utils/types.ts';
 import {build} from './index.ts';
 
-const cli = meow(
-  `
+const helpText = `
 Usage
   $ node my-app-with-pino-logging | pino-princess
 
@@ -23,80 +22,86 @@ Options
   --singleLine     format the output as a single line, defaults to false
   --unicode        force unicode emojis on or off, auto-detected by default
   --colors         enable or disable all color output, auto-detected by default
-  `,
-  {
-    importMeta: import.meta,
-    flags: {
-      exclude: {
-        type: 'string',
-        shortFlag: 'e',
-      },
-      include: {
-        type: 'string',
-        shortFlag: 'i',
-      },
-      messageKey: {
-        type: 'string',
-      },
-      errorKey: {
-        type: 'string',
-      },
-      singleLine: {
-        type: 'boolean',
-      },
-      timeFormat: {
-        type: 'string',
-      },
-      timeKey: {
-        type: 'string',
-      },
-      unicode: {
-        type: 'boolean',
-      },
-      colors: {
-        type: 'boolean',
-      },
+  `;
+
+const cli = util.parseArgs({
+  options: {
+    help: {
+      type: 'boolean',
+      short: 'h',
+    },
+    exclude: {
+      type: 'string',
+      short: 'e',
+    },
+    include: {
+      type: 'string',
+      short: 'i',
+    },
+    messageKey: {
+      type: 'string',
+    },
+    errorKey: {
+      type: 'string',
+    },
+    singleLine: {
+      type: 'boolean',
+    },
+    timeFormat: {
+      type: 'string',
+    },
+    timeKey: {
+      type: 'string',
+    },
+    // Set to string so we can detect if the user passed them or not
+    unicode: {
+      type: 'boolean',
+    },
+    // Set to string so we can detect if the user passed them or not
+    colors: {
+      type: 'boolean',
     },
   },
-);
+  allowNegative: true,
+});
 
 const cliConfig: PrettifyOptions = {};
 
-if (cli.flags.exclude) {
-  cliConfig.exclude = cli.flags.exclude.split(',').map((str) => str.trim());
+if (cli.values.help) {
+  console.log(helpText);
+  process.exit(0);
 }
 
-if (cli.flags.include) {
-  cliConfig.include = cli.flags.include.split(',').map((str) => str.trim());
+if (cli.values.exclude) {
+  cliConfig.exclude = cli.values.exclude.split(',').map((str) => str.trim());
 }
 
-if (cli.flags.messageKey) {
-  cliConfig.messageKey = cli.flags.messageKey;
+if (cli.values.include) {
+  cliConfig.include = cli.values.include.split(',').map((str) => str.trim());
 }
 
-if (cli.flags.errorKey) {
-  cliConfig.errorKey = cli.flags.errorKey;
+if (cli.values.messageKey) {
+  cliConfig.messageKey = cli.values.messageKey;
 }
 
-if (cli.flags.timeFormat) {
-  cliConfig.timeFormat = cli.flags.timeFormat;
+if (cli.values.errorKey) {
+  cliConfig.errorKey = cli.values.errorKey;
 }
 
-if (cli.flags.singleLine) {
-  cliConfig.singleLine = cli.flags.singleLine;
+if (cli.values.timeFormat) {
+  cliConfig.timeFormat = cli.values.timeFormat;
 }
 
-if (cli.flags.timeKey) {
-  cliConfig.timeKey = cli.flags.timeKey;
+if (cli.values.singleLine) {
+  cliConfig.singleLine = cli.values.singleLine;
 }
 
-if (cli.flags.unicode !== undefined) {
-  cliConfig.unicode = cli.flags.unicode;
+if (cli.values.timeKey) {
+  cliConfig.timeKey = cli.values.timeKey;
 }
 
-if (cli.flags.colors !== undefined) {
-  cliConfig.colors = cli.flags.colors;
-}
+cliConfig.unicode = cli.values.unicode;
+cliConfig.colors = cli.values.colors;
 
 const defaultConfig: PrettifyOptions = {
   messageKey: 'msg',
