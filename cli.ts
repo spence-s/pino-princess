@@ -9,6 +9,8 @@ import type {PrettifyOptions} from './lib/utils/types.ts';
 import {build} from './index.ts';
 
 const helpText = `
+Pino Princess - Pretty print json logs with emojis and colors
+
 Usage
   $ node my-app-with-pino-logging | pino-princess
 
