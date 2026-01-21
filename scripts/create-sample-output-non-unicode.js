@@ -1,13 +1,12 @@
 import {prettify as createPrettify} from '../dist/index.js';
 
-const _prettify = createPrettify({unicode: false, colors: false});
+const _prettify = createPrettify({unicode: false, colors: true});
 const prettify = (obj) => _prettify(obj)?.replace(/\n$/, '');
 
 const createBasicMessage = (level) =>
   prettify({
     level,
     msg: 'Just the most basic message',
-    unicode: false,
   });
 
 console.log(createBasicMessage(10));

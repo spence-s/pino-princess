@@ -7,7 +7,7 @@ import buildSafeSonicBoom from './lib/build-safe-sonic-boom.ts';
 import type {PrettifyOptions} from './lib/utils/types.ts';
 
 function build(
-  options: PrettifyOptions &
+  options?: PrettifyOptions &
     SonicBoomOpts & {destination?: (Transform & OnUnknown) | Writable},
 ): Transform & OnUnknown {
   const pretty = prettify(options);
@@ -27,15 +27,15 @@ function build(
     if (
       (typeof options?.destination === 'object' &&
         typeof options?.destination.write === 'function') ||
-      options.destination instanceof Writable
+      options?.destination instanceof Writable
     ) {
       destination = options.destination;
     } else {
       destination = buildSafeSonicBoom({
-        dest: options.destination ?? 1,
-        append: options.append,
-        mkdir: options.mkdir,
-        sync: options.sync,
+        dest: options?.destination ?? 1,
+        append: options?.append,
+        mkdir: options?.mkdir,
+        sync: options?.sync,
       });
     }
 

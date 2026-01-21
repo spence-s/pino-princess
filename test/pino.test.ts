@@ -37,7 +37,6 @@ test('respects messageKey option', (t) => {
 test('respects errorKey option', (t) => {
   const transport = build({
     destination: createDestination(t),
-    errorKey: 'error',
   });
 
   const logger = pino(transport);

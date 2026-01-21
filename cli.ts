@@ -18,7 +18,7 @@ Options
   --exclude, -e    excluded log fields separated by comma. Is overriden by included fields.
   --include, -i    included log fields separated by comma. Overrides excluded fields.
   --messageKey     key for the message field, defaults to 'msg'
-  --errorKey       key for the error field, defaults to 'err'
+  --errorLikeKeys  additional keys for error fields, defaults to 'error' and 'err'
   --timeKey        key for the time field, defaults to 'time'
   --timeFormat     format for the time field, passed to date-fns format defaults to 'h:mm:ss.SSS aaa'
   --singleLine     format the output as a single line, defaults to false
@@ -43,8 +43,9 @@ const cli = util.parseArgs({
     messageKey: {
       type: 'string',
     },
-    errorKey: {
+    errorLikeKeys: {
       type: 'string',
+      isMultiple: true,
     },
     singleLine: {
       type: 'boolean',
@@ -86,8 +87,10 @@ if (cli.values.messageKey) {
   cliConfig.messageKey = cli.values.messageKey;
 }
 
-if (cli.values.errorKey) {
-  cliConfig.errorKey = cli.values.errorKey;
+if (cli.values.errorLikeKeys) {
+  cliConfig.errorLikeKeys = cli.values.errorLikeKeys
+    .split(',')
+    .map((str) => str.trim());
 }
 
 if (cli.values.timeFormat) {
@@ -107,7 +110,6 @@ cliConfig.colors = cli.values.colors;
 
 const defaultConfig: PrettifyOptions = {
   messageKey: 'msg',
-  errorKey: 'err',
   timeFormat: 'h:mm:ss.SSS aaa',
   singleLine: false,
 };

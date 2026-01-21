@@ -8,7 +8,6 @@ import {Formatter} from './formatters.ts';
 const defaultTimeFormat = 'h:mm:ss.SSS aaa';
 
 export function prettify({
-  errorKey,
   messageKey,
   timeKey,
   timeFormat = defaultTimeFormat,
@@ -20,13 +19,10 @@ export function prettify({
   keyMap = {},
   unicode,
   colors,
+  errorLikeKeys = [],
 }: PrettifyOptions = {}) {
   if (keyMap.msg && messageKey) {
     throw new Error('Cannot set both messageKey and keyMap.message');
-  }
-
-  if (keyMap.err && errorKey) {
-    throw new Error('Cannot set both errorKey and keyMap.error');
   }
 
   if (keyMap.time && timeKey) {
@@ -35,10 +31,6 @@ export function prettify({
 
   if (keyMap.msg) {
     messageKey = keyMap.msg;
-  }
-
-  if (keyMap.err) {
-    errorKey = keyMap.err;
   }
 
   if (keyMap.time) {
@@ -50,6 +42,8 @@ export function prettify({
     supportsUnicode: unicode,
     keyMap,
   });
+
+  const errorKeys = ['err', 'error', ...errorLikeKeys];
 
   const formatters: Record<string, (...args: any[]) => string> = {
     [keyMap.name ?? 'name']: formatter.formatName,
@@ -64,8 +58,8 @@ export function prettify({
     [keyMap.responseTime ?? 'responseTime']: formatter.formatLoadTime,
     extraFields: (fields: Record<string, unknown>) =>
       formatter.formatExtraFields(fields, {theme, singleLine}),
-    [errorKey ?? 'err']: formatter.formatErrorProp,
-    [`${errorKey ?? 'err'}.stack`]: formatter.formatStack,
+    [errorKeys.join(',')]: formatter.formatErrorProp,
+    [errorKeys.map((key) => `${key}.stack`).join(',')]: formatter.formatStack,
     ...format,
   };
 

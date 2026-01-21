@@ -158,7 +158,7 @@ test('custom message key', (t) => {
   t.is(outputDefault, output);
 });
 
-test('custom error key', (t) => {
+test('err key', (t) => {
   const error = new Error('test error');
   const inputDefault = JSON.stringify({
     level: 50,
@@ -169,7 +169,7 @@ test('custom error key', (t) => {
     level: 50,
     error,
   });
-  const output = prettify({errorKey: 'error'})(input);
+  const output = prettify()(input);
   t.is(outputDefault, output);
 });
 

@@ -68,12 +68,6 @@ export type PrettifyOptions = {
    */
   messageKey?: string;
   /**
-   * The key to use for the error object.
-   *
-   * @default "err"
-   */
-  errorKey?: string;
-  /**
    * The key used for the time segment.
    *
    * @default "time"
@@ -148,7 +142,6 @@ export type PrettifyOptions = {
     'res.statusCode'?: string;
     'req.url'?: string;
     msg?: string;
-    err?: string;
     responseTime?: string;
   };
   /**
@@ -186,4 +179,5 @@ export type PrettifyOptions = {
    * ```
    */
   format?: Record<string, (...args: any[]) => string>;
+  errorLikeKeys?: string[];
 };

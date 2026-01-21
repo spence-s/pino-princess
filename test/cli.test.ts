@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/naming-convention */
 import stripAnsi from 'strip-ansi';
 import test from 'ava';
 import {format} from 'date-fns';
@@ -55,11 +54,11 @@ test('cli respects --messageKey option', async (t) => {
   t.is(stdoutWithDefaultMessageKey, stdout);
 });
 
-test('cli respects --errorKey option', async (t) => {
+test('cli respects --errorLikeKeys option', async (t) => {
   const serializedError = err(new Error('test error'));
   const time = Date.now();
 
-  const {stdout: stdoutWithDefaultErrorKey} = await execa('node', ['cli.ts'], {
+  const {stdout: stdoutWithErr} = await execa('node', ['cli.ts'], {
     env,
     input: JSON.stringify({
       level: 50,
@@ -68,19 +67,34 @@ test('cli respects --errorKey option', async (t) => {
     }),
   });
 
-  const {stdout: stdOutWithErrorKeyOption} = await execa(
+  t.log(stdoutWithErr);
+
+  const {stdout: stdoutWithError} = await execa('node', ['cli.ts'], {
+    env,
+    input: JSON.stringify({
+      level: 50,
+      err: serializedError,
+      time,
+    }),
+  });
+
+  t.log(stdoutWithError);
+
+  const {stdout: stdOutWithErrorLikeKeys} = await execa(
     'node',
-    ['cli.ts', '--errorKey=error'],
+    ['cli.ts', '--errorLikeKeys=errata'],
     {
       env,
       input: JSON.stringify({
         level: 50,
-        error: serializedError,
+        errata: serializedError,
         time,
       }),
     },
   );
-  t.is(stdoutWithDefaultErrorKey, stdOutWithErrorKeyOption);
+
+  t.is(stdoutWithErr, stdoutWithError);
+  t.is(stdoutWithErr, stdOutWithErrorLikeKeys);
 });
 
 test('cli respects --timeKey option', async (t) => {
