@@ -88,7 +88,7 @@
     "date-fns": "^4.1.0",
     "get-value": "^4.0.1",
     "is-unicode-supported": "^2.1.0",
-    "json-log-line": "file:../json-log-line",
+    "json-log-line": "^1.0.6",
     "json-stringify-pretty-compact": "^4.0.0",
     "on-exit-leak-free": "^2.1.2",
     "pino-abstract-transport": "^3.0.0",

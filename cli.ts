@@ -43,6 +43,11 @@ const cli = util.parseArgs({
     messageKey: {
       type: 'string',
     },
+    // Keeping errorKey for backward compatibility
+    errorKey: {
+      type: 'string',
+      isMultiple: true,
+    },
     errorLikeKeys: {
       type: 'string',
       isMultiple: true,
@@ -87,8 +92,8 @@ if (cli.values.messageKey) {
   cliConfig.messageKey = cli.values.messageKey;
 }
 
-if (cli.values.errorLikeKeys) {
-  cliConfig.errorLikeKeys = cli.values.errorLikeKeys
+if (cli.values.errorLikeKeys ?? cli.values.errorKey) {
+  cliConfig.errorLikeKeys = (cli.values.errorLikeKeys ?? cli.values.errorKey!)
     .split(',')
     .map((str) => str.trim());
 }

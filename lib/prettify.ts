@@ -20,6 +20,7 @@ export function prettify({
   unicode,
   colors,
   errorLikeKeys = [],
+  errorKey, // eslint-disable-line @typescript-eslint/no-deprecated
 }: PrettifyOptions = {}) {
   if (keyMap.msg && messageKey) {
     throw new Error('Cannot set both messageKey and keyMap.message');
@@ -43,7 +44,12 @@ export function prettify({
     keyMap,
   });
 
-  const errorKeys = ['err', 'error', ...errorLikeKeys];
+  let errorKeys = ['err', 'error', ...errorLikeKeys];
+
+  if (errorKey) errorKeys.push(errorKey);
+
+  // deduplicate error keys
+  errorKeys = [...new Set(errorKeys)];
 
   const formatters: Record<string, (...args: any[]) => string> = {
     [keyMap.name ?? 'name']: formatter.formatName,

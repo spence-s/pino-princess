@@ -97,6 +97,49 @@ test('cli respects --errorLikeKeys option', async (t) => {
   t.is(stdoutWithErr, stdOutWithErrorLikeKeys);
 });
 
+test('cli respects deprecated --errorKey option (backward compatibility)', async (t) => {
+  const serializedError = err(new Error('test error'));
+  const time = Date.now();
+
+  // Test that --errorKey works as an alias for --errorLikeKeys
+  const {stdout: stdoutWithErrorKey} = await execa(
+    'node',
+    ['cli.ts', '--errorKey=customErr'],
+    {
+      env,
+      input: JSON.stringify({
+        level: 50,
+        customErr: serializedError,
+        err: serializedError,
+        time,
+      }),
+    },
+  );
+
+  const {stdout: stdoutWithErrorLikeKeys} = await execa(
+    'node',
+    ['cli.ts', '--errorLikeKeys=customErr'],
+    {
+      env,
+      input: JSON.stringify({
+        level: 50,
+        customErr: serializedError,
+        err: serializedError,
+        time,
+      }),
+    },
+  );
+
+  t.log('errorKey', stdoutWithErrorKey);
+  t.log('errorLikeKeys', stdoutWithErrorLikeKeys);
+
+  // Both options should produce identical output
+  t.is(stdoutWithErrorKey, stdoutWithErrorLikeKeys);
+
+  // Verify the error is actually being formatted (contains stack trace indicator)
+  t.true(stdoutWithErrorKey.includes('Error: test error'));
+});
+
 test('cli respects --timeKey option', async (t) => {
   const time = Date.now();
 

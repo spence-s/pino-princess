@@ -63,17 +63,17 @@ node my-application-which-logs-with-pino.js | npx pino-princess
 
 **Available CLI Options:**
 
-| Option         | Short Flag | Type    | Description                                                                           | Default             |
-| -------------- | ---------- | ------- | ------------------------------------------------------------------------------------- | ------------------- |
-| `--exclude`    | `-e`       | string  | Comma-separated list of log fields to exclude from output. Overridden by `--include`. | `[]`                |
-| `--include`    | `-i`       | string  | Comma-separated list of log fields to include in output. Overrides `--exclude`.       | `[]`                |
-| `--messageKey` |            | string  | Key name for the message field in your log objects.                                   | `'msg'`             |
-| `--errorKey`   |            | string  | Key name for the error field in your log objects.                                     | `'err'`             |
-| `--timeKey`    |            | string  | Key name for the time field in your log objects.                                      | `'time'`            |
-| `--timeFormat` |            | string  | Time format string passed to [date-fns format](https://date-fns.org/docs/format).     | `'h:mm:ss.SSS aaa'` |
-| `--singleLine` |            | boolean | Format the entire log output as a single line with no newlines.                       | `false`             |
-| `--unicode`    |            | boolean | Force unicode emoji support on or off. Auto-detected by default.                      | auto-detect         |
-| `--colors`     |            | boolean | Disable all color. Auto-detected by default.                                          | `true`              |
+| Option            | Short Flag | Type    | Description                                                                           | Default             |
+| ----------------- | ---------- | ------- | ------------------------------------------------------------------------------------- | ------------------- |
+| `--exclude`       | `-e`       | string  | Comma-separated list of log fields to exclude from output. Overridden by `--include`. | `[]`                |
+| `--include`       | `-i`       | string  | Comma-separated list of log fields to include in output. Overrides `--exclude`.       | `[]`                |
+| `--messageKey`    |            | string  | Key name for the message field in your log objects.                                   | `'msg'`             |
+| `--errorLikeKeys` |            | string  | Comma-separated list of additional keys to treat as error objects for formatting.     | `'err,error'`       |
+| `--timeKey`       |            | string  | Key name for the time field in your log objects.                                      | `'time'`            |
+| `--timeFormat`    |            | string  | Time format string passed to [date-fns format](https://date-fns.org/docs/format).     | `'h:mm:ss.SSS aaa'` |
+| `--singleLine`    |            | boolean | Format the entire log output as a single line with no newlines.                       | `false`             |
+| `--unicode`       |            | boolean | Force unicode emoji support on or off. Auto-detected by default.                      | auto-detect         |
+| `--colors`        |            | boolean | Disable all color. Auto-detected by default.                                          | `true`              |
 
 **Examples:**
 
@@ -84,8 +84,11 @@ node app.js | pino-princess --exclude "severity,hostname,pid"
 # Include specific nested fields from excluded objects
 node app.js | pino-princess --exclude "res,req" --include "res.statusCode,req.method,req.url"
 
-# Custom message and error keys
-node app.js | pino-princess --messageKey "message" --errorKey "error"
+# Custom message key
+node app.js | pino-princess --messageKey "message"
+
+# Add additional error-like keys for error formatting
+node app.js | pino-princess --errorLikeKeys "exception,fault"
 
 # Custom time format
 node app.js | pino-princess --timeFormat "yyyy-MM-dd HH:mm:ss"
@@ -164,9 +167,25 @@ module.exports = {
    */
   messageKey: "msg",
   /**
-   * Configure the error key
+   * errorLikeKeys
+   * string[]
+   *
+   * Additional keys to treat as error objects for special error formatting.
+   * By default, pino-princess already recognizes 'err' and 'error' as error keys.
+   * Use this option to add additional keys that should receive error formatting
+   * (stack traces, error highlighting, etc.).
+   *
+   * This is useful when your application uses custom error field names like
+   * 'exception', 'fault', or 'errata'.
+   *
+   * @example
+   * ```js
+   * errorLikeKeys: ['exception', 'fault', 'errata']
+   * ```
+   *
+   * default: [] (only 'err' and 'error' are recognized)
    */
-  errorKey: "err",
+  errorLikeKeys: [],
   /**
    * The key to use for the time segment. Defaults to `time`.
    */

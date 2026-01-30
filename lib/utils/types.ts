@@ -68,6 +68,32 @@ export type PrettifyOptions = {
    */
   messageKey?: string;
   /**
+   * errorLikeKeys
+   * string[]
+   *
+   * Additional keys to treat as error objects for special error formatting.
+   * By default, pino-princess already recognizes 'err' and 'error' as error keys.
+   * Use this option to add additional keys that should receive error formatting
+   * (stack traces, error highlighting, etc.).
+   *
+   * This is useful when your application uses custom error field names like
+   * 'exception', 'fault', or 'errata'.
+   *
+   * @example
+   * ```js
+   * errorLikeKeys: ['exception', 'fault', 'errata']
+   * ```
+   *
+   * default: [] (only 'err' and 'error' are recognized)
+   */
+  errorLikeKeys?: string[];
+  /**
+   * @deprecated The key used for the error segment, now merged into errorLikeKeys.
+   *
+   * Use errorLikeKeys instead.
+   */
+  errorKey?: string;
+  /**
    * The key used for the time segment.
    *
    * @default "time"
@@ -179,5 +205,4 @@ export type PrettifyOptions = {
    * ```
    */
   format?: Record<string, (...args: any[]) => string>;
-  errorLikeKeys?: string[];
 };
