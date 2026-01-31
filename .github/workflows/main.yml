@@ -17,6 +17,8 @@ jobs:
       matrix:
         node-version: [22, 24, 25]
     name: Node ${{ matrix.node-version }}
+    env:
+      TZ: America/New_York
     steps:
       - uses: actions/checkout@v4
       - name: Setup Node
