@@ -4,5 +4,5 @@
     "excludeDirectories": ["dist", "node_modules"]
   },
   "exclude": ["node_modules", "dist", "test", "scripts"],
-  "include": ["**/*.ts", "index.ts", "index.cts"]
+  "include": ["lib/**/*.ts", "index.ts", "index.cts"]
 }
