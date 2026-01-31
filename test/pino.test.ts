@@ -46,8 +46,13 @@ test('respects errorKey option', (t) => {
   });
 
   const logger = pino(transport);
-  const error = new Error('Test error');
-  logger.error({time, error: serializeError(error)}, 'An error occurred');
+  const error = {
+    type: 'Error',
+    message: 'Test error',
+    stack:
+      'Error: Test error\n    at Object.<anonymous> (/path/to/file.js:10:15)\n    at Module._compile (internal/modules/cjs/loader.js:1137:30)',
+  };
+  logger.error({time, error}, 'An error occurred');
 });
 
 test('respects timeKey option', (t) => {
@@ -237,8 +242,13 @@ test('formats error with stack trace', (t) => {
   });
 
   const logger = pino(transport);
-  const error = new Error('Something went wrong');
-  logger.error({time, err: serializeError(error)}, 'Error occurred');
+  const error = {
+    type: 'Error',
+    message: 'Something went wrong',
+    stack:
+      'Error: Something went wrong\n    at Object.<anonymous> (/path/to/file.js:10:15)\n    at Module._compile (internal/modules/cjs/loader.js:1137:30)',
+  };
+  logger.error({time, err: error}, 'Error occurred');
 });
 
 test('formats all log levels', (t) => {

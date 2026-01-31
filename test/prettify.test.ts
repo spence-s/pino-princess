@@ -165,7 +165,12 @@ test('custom message key', (t) => {
 });
 
 test('err key', (t) => {
-  const error = new Error('test error');
+  const error = {
+    type: 'Error',
+    message: 'test error',
+    stack:
+      'Error: test error\n    at Object.<anonymous> (/path/to/file.js:10:15)\n    at Module._compile (internal/modules/cjs/loader.js:1137:30)',
+  };
   const inputDefault = JSON.stringify({
     level: 50,
     err: error,

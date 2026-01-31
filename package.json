@@ -73,6 +73,10 @@
     ]
   },
   "ava": {
+    "environmentVariables": {
+      "FORCE_COLOR": "true",
+      "TERM": "vscode"
+    },
     "extensions": {
       "ts": "module"
     },
