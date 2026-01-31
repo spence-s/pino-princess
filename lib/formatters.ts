@@ -133,7 +133,7 @@ export class Formatter {
     if (!this.emojiMap?.[level]) return '';
     const endlen = 5;
     const emoji = this.emojiMap[level];
-    const padding = isWideEmoji(emoji(this.supportsUnicode)) ? ' ' : '  ';
+    const padding = ' ';
     const formattedLevel = this.chalk[colorMap[level]](level.toUpperCase());
     const endPadding = endlen - level.length;
     return (

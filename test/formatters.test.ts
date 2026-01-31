@@ -30,7 +30,7 @@ test('formatLevel', async (t) => {
   t.is(info, '✨ INFO ');
 
   const warn = stripAnsi(formatLevel(40));
-  t.is(warn, '⚠️  WARN ');
+  t.is(warn, '⚠️ WARN ');
 
   const error = stripAnsi(formatLevel(50));
   t.is(error, '🚨 ERROR');
