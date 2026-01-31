@@ -46,14 +46,12 @@ You could probably get something pretty similar with just an advanced pino-prett
 ### Install
 
 `npm install pino-princess --save-dev`
-or
-`yarn install -D pino-princess`
 
 ## Usage
 
 ### CLI
 
-The reccomended usage of pino-princess is as a separate process from your main application which pipes pino logs from stdout into pino-princess for formatting.
+The recommended usage of pino-princess is as a separate process from your main application which pipes pino logs from stdout into pino-princess for formatting.
 
 **Basic usage:**
 
@@ -73,7 +71,7 @@ node my-application-which-logs-with-pino.js | npx pino-princess
 | `--timeFormat`    |            | string  | Time format string passed to [date-fns format](https://date-fns.org/docs/format).     | `'h:mm:ss.SSS aaa'` |
 | `--singleLine`    |            | boolean | Format the entire log output as a single line with no newlines.                       | `false`             |
 | `--unicode`       |            | boolean | Force unicode emoji support on or off. Auto-detected by default.                      | auto-detect         |
-| `--colors`        |            | boolean | Disable all color. Auto-detected by default.                                          | `true`              |
+| `--colors`        |            | boolean | Enable or disable colored output. Auto-detected by default.                           | auto-detect         |
 
 **Examples:**
 
@@ -97,7 +95,7 @@ node app.js | pino-princess --timeFormat "yyyy-MM-dd HH:mm:ss"
 node app.js | pino-princess --singleLine
 
 # Force unicode off for CI environments
-node app.js | pino-princess --unicode false
+node app.js | pino-princess --no-unicode
 
 # Disable colors for plain text output
 node app.js | pino-princess --no-colors
@@ -115,7 +113,7 @@ pino-princess, as a fork of pino-pretty, is also set up to be used as a pino v7 
 
 ## Configuration
 
-pino-princess supports a simple configuration which can be supplied as either command line arguments, or alternatively, pino-princess.config.js file located in the path up from where the application is being ran.
+pino-princess supports a simple configuration which can be supplied as either command line arguments, or alternatively, a pino-princess.config.js file. The config file is automatically discovered by searching up from the current working directory to your home directory.
 
 ### example
 
@@ -134,7 +132,7 @@ module.exports = {
    * In this way, excludes can be used to exclude large base objects and the "include"
    * can be used to pick certain fields and "add them back" to the log output.
    * For example, by default, pino-princess excludes the entire req or res object from any http logger.
-   * Because some fields on req and res are required to constuct the core of the log line, these fields are added back via the include.
+   * Because some fields on req and res are required to construct the core of the log line, these fields are added back via the include.
    *
    * default value:
    */
@@ -146,7 +144,7 @@ module.exports = {
    *
    * An array of strings which represent a key on any object.
    * Keys matching any one of these strings cause these keys will ensure the key is always part of the log output.
-   * The includes always overrides by the excludes.
+   * The includes always override the excludes.
    * In this way, include can be used to "add back" properties of excluded objects to the log output.
    * By default pino-princess includes all the properties required to create our standard log line.
    *
@@ -259,7 +257,7 @@ module.exports = {
   keyMap: {},
   /**
    * theme
-   * (chalk: Chalk) => string
+   * (chalk: Chalk) => object
    *
    * This determines the colors of any extra fields that are not included in the pino-princess log line
    *
