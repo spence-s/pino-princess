@@ -18,6 +18,8 @@ const createDestination = (t: ExecutionContext) =>
 test('acts as a pino transport stream and formats a basic info message', (t) => {
   const transport = build({
     destination: createDestination(t),
+    colors: true,
+    unicode: true,
   });
 
   const logger = pino(transport);
@@ -28,6 +30,8 @@ test('respects messageKey option', (t) => {
   const transport = build({
     destination: createDestination(t),
     messageKey: 'message',
+    colors: true,
+    unicode: true,
   });
 
   const logger = pino(transport);
@@ -37,6 +41,8 @@ test('respects messageKey option', (t) => {
 test('respects errorKey option', (t) => {
   const transport = build({
     destination: createDestination(t),
+    colors: true,
+    unicode: true,
   });
 
   const logger = pino(transport);
@@ -48,6 +54,8 @@ test('respects timeKey option', (t) => {
   const transport = build({
     destination: createDestination(t),
     timeKey: 'timestamp',
+    colors: true,
+    unicode: true,
   });
 
   const logger = pino({timestamp: false}, transport);
@@ -58,6 +66,8 @@ test('respects timeFormat option', (t) => {
   const transport = build({
     destination: createDestination(t),
     timeFormat: 'yyyy-MM-dd HH:mm:ss',
+    colors: true,
+    unicode: true,
   });
 
   const logger = pino(transport);
@@ -68,6 +78,8 @@ test('respects exclude option', (t) => {
   const transport = build({
     destination: createDestination(t),
     exclude: ['userId', 'sessionId'],
+    colors: true,
+    unicode: true,
   });
 
   const logger = pino(transport);
@@ -81,6 +93,8 @@ test('respects include option', (t) => {
   const transport = build({
     destination: createDestination(t),
     include: ['time', 'level', 'msg', 'email'],
+    colors: true,
+    unicode: true,
   });
 
   const logger = pino(transport);
@@ -96,6 +110,8 @@ test('respects keyMap option', (t) => {
     keyMap: {
       msg: 'message',
     },
+    colors: true,
+    unicode: true,
   });
 
   const logger = pino(transport);
@@ -106,6 +122,8 @@ test('respects singleLine option', (t) => {
   const transport = build({
     destination: createDestination(t),
     singleLine: true,
+    colors: true,
+    unicode: true,
   });
 
   const logger = pino(transport);
@@ -119,6 +137,7 @@ test('formats with colors when supportsColor is true', (t) => {
   const transport = build({
     destination: createDestination(t),
     colors: true,
+    unicode: true,
   });
 
   const logger = pino(transport);
@@ -129,6 +148,7 @@ test('formats without colors when supportsColor is false', (t) => {
   const transport = build({
     destination: createDestination(t),
     colors: false,
+    unicode: true,
   });
 
   const logger = pino(transport);
@@ -138,6 +158,7 @@ test('formats without colors when supportsColor is false', (t) => {
 test('formats with emoji when supportsUnicode is true', (t) => {
   const transport = build({
     destination: createDestination(t),
+    colors: true,
     unicode: true,
   });
 
@@ -148,6 +169,7 @@ test('formats with emoji when supportsUnicode is true', (t) => {
 test('formats without emoji when supportsUnicode is false', (t) => {
   const transport = build({
     destination: createDestination(t),
+    colors: true,
     unicode: false,
   });
 
@@ -158,6 +180,8 @@ test('formats without emoji when supportsUnicode is false', (t) => {
 test('formats HTTP request method', (t) => {
   const transport = build({
     destination: createDestination(t),
+    colors: true,
+    unicode: true,
   });
 
   const logger = pino(transport);
@@ -167,6 +191,8 @@ test('formats HTTP request method', (t) => {
 test('formats HTTP response status code', (t) => {
   const transport = build({
     destination: createDestination(t),
+    colors: true,
+    unicode: true,
   });
 
   const logger = pino(transport);
@@ -176,6 +202,8 @@ test('formats HTTP response status code', (t) => {
 test('formats HTTP response time', (t) => {
   const transport = build({
     destination: createDestination(t),
+    colors: true,
+    unicode: true,
   });
 
   const logger = pino(transport);
@@ -185,6 +213,8 @@ test('formats HTTP response time', (t) => {
 test('formats complete HTTP log', (t) => {
   const transport = build({
     destination: createDestination(t),
+    colors: true,
+    unicode: true,
   });
 
   const logger = pino(transport);
@@ -202,6 +232,8 @@ test('formats complete HTTP log', (t) => {
 test('formats error with stack trace', (t) => {
   const transport = build({
     destination: createDestination(t),
+    colors: true,
+    unicode: true,
   });
 
   const logger = pino(transport);
@@ -212,6 +244,8 @@ test('formats error with stack trace', (t) => {
 test('formats all log levels', (t) => {
   const transport = build({
     destination: createDestination(t),
+    colors: true,
+    unicode: true,
   });
 
   const logger = pino({level: 'trace'}, transport);
@@ -226,6 +260,8 @@ test('formats all log levels', (t) => {
 test('formats nested objects', (t) => {
   const transport = build({
     destination: createDestination(t),
+    colors: true,
+    unicode: true,
   });
 
   const logger = pino(transport);
@@ -248,6 +284,8 @@ test('formats nested objects', (t) => {
 test('handles missing message', (t) => {
   const transport = build({
     destination: createDestination(t),
+    colors: true,
+    unicode: true,
   });
 
   const logger = pino(transport);
@@ -257,6 +295,8 @@ test('handles missing message', (t) => {
 test('formats log with name field', (t) => {
   const transport = build({
     destination: createDestination(t),
+    colors: true,
+    unicode: true,
   });
 
   const logger = pino(transport);

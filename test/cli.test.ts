@@ -67,8 +67,6 @@ test('cli respects --errorLikeKeys option', async (t) => {
     }),
   });
 
-  t.log(stdoutWithErr);
-
   const {stdout: stdoutWithError} = await execa('node', ['cli.ts'], {
     env,
     input: JSON.stringify({
@@ -77,8 +75,6 @@ test('cli respects --errorLikeKeys option', async (t) => {
       time,
     }),
   });
-
-  t.log(stdoutWithError);
 
   const {stdout: stdOutWithErrorLikeKeys} = await execa(
     'node',
@@ -129,9 +125,6 @@ test('cli respects deprecated --errorKey option (backward compatibility)', async
       }),
     },
   );
-
-  t.log('errorKey', stdoutWithErrorKey);
-  t.log('errorLikeKeys', stdoutWithErrorLikeKeys);
 
   // Both options should produce identical output
   t.is(stdoutWithErrorKey, stdoutWithErrorLikeKeys);
