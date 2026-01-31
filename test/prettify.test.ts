@@ -8,7 +8,7 @@ test('creates basic log lines with level', (t) => {
   const input = JSON.stringify({
     level: 30,
   });
-  const output = prettify()(input) ?? '';
+  const output = prettify({colors: true, unicode: true})(input) ?? '';
   t.true(hasAnsi(output));
   t.snapshot(output);
 });
@@ -18,7 +18,7 @@ test('creates basic log lines with string level', (t) => {
     level: 'info',
     msg: 'hello',
   });
-  const output = prettify()(input);
+  const output = prettify({colors: true, unicode: true})(input);
   t.snapshot(output);
 });
 
@@ -27,7 +27,7 @@ test('creates basic log lines with level, message, and time', (t) => {
     level: 30,
     message: 'hello',
   });
-  const output = prettify()(input);
+  const output = prettify({colors: true, unicode: true})(input);
   t.snapshot(output);
 });
 
@@ -39,7 +39,7 @@ test('creates basic log lines with level, message, and time, and res.statusCode'
       statusCode: 200,
     },
   });
-  const output = prettify()(input);
+  const output = prettify({colors: true, unicode: true})(input);
   t.snapshot(output);
 });
 
@@ -55,7 +55,7 @@ test('creates basic log lines with level, message, and time, and req.method', (t
       statusCode: 200,
     },
   });
-  const output = prettify()(input);
+  const output = prettify({colors: true, unicode: true})(input);
   t.snapshot(output);
 });
 
@@ -76,7 +76,7 @@ test('full log line with all time and no extra time', (t) => {
     id: '123',
     responsedate: 100,
   });
-  const output = prettify()(input);
+  const output = prettify({colors: true, unicode: true})(input);
   t.snapshot(output);
 });
 
@@ -97,7 +97,7 @@ test('full log line with all time and extra time', (t) => {
     responsedate: 100,
     extra: 'time',
   });
-  const output = prettify()(input);
+  const output = prettify({colors: true, unicode: true})(input);
   t.snapshot(output);
 });
 
@@ -126,7 +126,7 @@ test('full log line with all time and extra time multiline', (t) => {
       extra: 'time',
     },
   });
-  const output = prettify()(input);
+  const output = prettify({colors: true, unicode: true})(input);
   t.snapshot(output);
 });
 
@@ -137,8 +137,12 @@ test('custom time format', (t) => {
     time,
     msg: 'hello',
   });
-  const defaultOutput = prettify()(input);
-  const output = prettify({timeFormat: 'yyyy-MM-dd HH:mm:ss'})(input);
+  const defaultOutput = prettify({colors: true, unicode: true})(input);
+  const output = prettify({
+    timeFormat: 'yyyy-MM-dd HH:mm:ss',
+    colors: true,
+    unicode: true,
+  })(input);
   const formattedTime = format(time, 'yyyy-MM-dd HH:mm:ss');
   t.false(defaultOutput.includes(formattedTime));
   t.true(output.includes(`[${formattedTime}]`));
@@ -149,12 +153,14 @@ test('custom message key', (t) => {
     level: 30,
     msg: 'hello',
   });
-  const outputDefault = prettify()(inputDefault);
+  const outputDefault = prettify({colors: true, unicode: true})(inputDefault);
   const input = JSON.stringify({
     level: 30,
     message: 'hello',
   });
-  const output = prettify({messageKey: 'message'})(input);
+  const output = prettify({messageKey: 'message', colors: true, unicode: true})(
+    input,
+  );
   t.is(outputDefault, output);
 });
 
@@ -164,12 +170,12 @@ test('err key', (t) => {
     level: 50,
     err: error,
   });
-  const outputDefault = prettify()(inputDefault);
+  const outputDefault = prettify({colors: true, unicode: true})(inputDefault);
   const input = JSON.stringify({
     level: 50,
     error,
   });
-  const output = prettify()(input);
+  const output = prettify({colors: true, unicode: true})(input);
   t.is(outputDefault, output);
 });
 
@@ -179,12 +185,14 @@ test('custom time key', (t) => {
     level: 50,
     time,
   });
-  const outputDefault = prettify()(inputDefault);
+  const outputDefault = prettify({colors: true, unicode: true})(inputDefault);
   const input = JSON.stringify({
     level: 50,
     timestamp: time,
   });
-  const output = prettify({timeKey: 'timestamp'})(input);
+  const output = prettify({timeKey: 'timestamp', colors: true, unicode: true})(
+    input,
+  );
   t.is(outputDefault, output);
 });
 
@@ -202,10 +210,12 @@ test('custom formatters are merged in the same order as default', (t) => {
     },
     customField: 'customValue',
   });
-  const defaultOutput = prettify()(input);
+  const defaultOutput = prettify({colors: true, unicode: true})(input);
   t.snapshot(defaultOutput);
   const output = prettify({
     format: {msg: (msg) => `!!!${msg}!!!`, name: (name) => `!!!${name}!!!`},
+    colors: true,
+    unicode: true,
   })(input);
   t.snapshot(output);
   t.true(output.startsWith('!!!test!!!'));
@@ -220,8 +230,10 @@ test('creates extra log as single line', (t) => {
       c: 'd',
     },
   });
-  const output = prettify({singleLine: true})(input);
-  const defaultOutput = prettify()(input);
+  const output = prettify({singleLine: true, colors: true, unicode: true})(
+    input,
+  );
+  const defaultOutput = prettify({colors: true, unicode: true})(input);
   t.snapshot(output);
   t.true(defaultOutput.trim().includes('\n'));
   t.false(output.trim().includes('\n'));
