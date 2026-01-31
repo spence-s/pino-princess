@@ -11,7 +11,7 @@ const createBasicMessage = (level: number, withStatusCode: boolean, inc = 0) =>
     time: new Date().toISOString(),
     req: {
       id: inc + 1,
-      method: 'GET',
+      method: 'DELETE',
       url: '/api/basic',
     },
     res: {

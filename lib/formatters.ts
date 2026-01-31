@@ -204,6 +204,10 @@ export class Formatter {
   };
 
   formatMethod = (method: string): string => {
+    if (method.toLowerCase() === 'delete') {
+      method = 'DEL';
+    }
+
     return method ? this.chalk.white(method.toUpperCase().padEnd(4)) : '';
   };
 
