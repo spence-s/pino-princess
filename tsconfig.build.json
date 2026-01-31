@@ -3,6 +3,6 @@
   "watchOptions": {
     "excludeDirectories": ["dist", "node_modules"]
   },
-  "exclude": ["node_modules", "dist", "test"],
+  "exclude": ["node_modules", "dist", "test", "scripts"],
   "include": ["**/*.ts", "index.ts", "index.cts"]
 }
