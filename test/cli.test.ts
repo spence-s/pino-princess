@@ -5,18 +5,13 @@ import {execa} from 'execa';
 import hasAnsi from 'has-ansi';
 import {err} from 'pino-std-serializers';
 
-const env = {FORCE_COLOR: 'true', TERM: 'vscode'};
-
 test('cli --help runs without error', async (t) => {
-  const {stdout} = await execa('node', ['cli.ts', '--help'], {
-    env,
-  });
+  const {stdout} = await execa('node', ['cli.ts', '--help']);
   t.snapshot(stdout);
 });
 
 test('cli formats a log line', async (t) => {
   const {stdout} = await execa('node', ['cli.ts'], {
-    env,
     input: JSON.stringify({
       level: 30,
       msg: 'hello',
@@ -33,7 +28,6 @@ test('cli respects --messageKey option', async (t) => {
     'node',
     ['cli.ts'],
     {
-      env,
       input: JSON.stringify({
         level: 30,
         msg: 'hello',
@@ -43,7 +37,6 @@ test('cli respects --messageKey option', async (t) => {
   );
 
   const {stdout} = await execa('node', ['cli.ts', '--messageKey=message'], {
-    env,
     input: JSON.stringify({
       level: 30,
       message: 'hello',
@@ -59,7 +52,6 @@ test('cli respects --errorLikeKeys option', async (t) => {
   const time = Date.now();
 
   const {stdout: stdoutWithErr} = await execa('node', ['cli.ts'], {
-    env,
     input: JSON.stringify({
       level: 50,
       err: serializedError,
@@ -68,7 +60,6 @@ test('cli respects --errorLikeKeys option', async (t) => {
   });
 
   const {stdout: stdoutWithError} = await execa('node', ['cli.ts'], {
-    env,
     input: JSON.stringify({
       level: 50,
       err: serializedError,
@@ -80,7 +71,6 @@ test('cli respects --errorLikeKeys option', async (t) => {
     'node',
     ['cli.ts', '--errorLikeKeys=errata'],
     {
-      env,
       input: JSON.stringify({
         level: 50,
         errata: serializedError,
@@ -102,7 +92,6 @@ test('cli respects deprecated --errorKey option (backward compatibility)', async
     'node',
     ['cli.ts', '--errorKey=customErr'],
     {
-      env,
       input: JSON.stringify({
         level: 50,
         customErr: serializedError,
@@ -116,7 +105,6 @@ test('cli respects deprecated --errorKey option (backward compatibility)', async
     'node',
     ['cli.ts', '--errorLikeKeys=customErr'],
     {
-      env,
       input: JSON.stringify({
         level: 50,
         customErr: serializedError,
@@ -137,7 +125,6 @@ test('cli respects --timeKey option', async (t) => {
   const time = Date.now();
 
   const {stdout: stdOutWithDefaultTimeKey} = await execa('node', ['cli.ts'], {
-    env,
     input: JSON.stringify({
       level: 30,
       time,
@@ -148,7 +135,6 @@ test('cli respects --timeKey option', async (t) => {
     'node',
     ['cli.ts', '--timeKey=timestamp'],
     {
-      env,
       input: JSON.stringify({
         level: 30,
         timestamp: time,
@@ -165,7 +151,6 @@ test('cli respects --timeFormat option', async (t) => {
     'node',
     ['cli.ts', '--timeFormat=yyyy-MM-dd HH:mm:ss'],
     {
-      env,
       input: JSON.stringify({
         level: 30,
         msg: 'hello',
@@ -194,12 +179,10 @@ test('cli respects --singleLine option', async (t) => {
   });
 
   const {stdout: stdoutMultiline} = await execa('node', ['cli.ts'], {
-    env,
     input,
   });
 
   const {stdout} = await execa('node', ['cli.ts', '--singleLine'], {
-    env,
     input,
   });
 
@@ -213,14 +196,12 @@ test('cli respects --colors option', async (t) => {
     level: 30,
   };
   const {stdout: stdoutStandard} = await execa('node', ['cli.ts'], {
-    env,
     input: JSON.stringify(input),
   });
   const {stdout: stdoutWithColors} = await execa(
     'node',
     ['cli.ts', '--colors'],
     {
-      env,
       input: JSON.stringify(input),
     },
   );
@@ -228,7 +209,6 @@ test('cli respects --colors option', async (t) => {
     'node',
     ['cli.ts', '--no-colors'],
     {
-      env,
       input: JSON.stringify(input),
     },
   );
