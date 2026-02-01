@@ -39,10 +39,6 @@ const numLevelsMapping: Record<NumLevels, Levels> = {
   60: 'fatal',
 };
 
-function isWideEmoji(character: string): boolean {
-  return character !== '⚠️';
-}
-
 export class Formatter {
   chalk: ChalkInstance;
 

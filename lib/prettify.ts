@@ -65,7 +65,6 @@ export function prettify({
     extraFields: (fields: Record<string, unknown>) =>
       formatter.formatExtraFields(fields, {theme, singleLine}),
     [errorKeys.join(',')]: formatter.formatErrorProp,
-    [errorKeys.map((key) => `${key}.stack`).join(',')]: formatter.formatStack,
     ...format,
   };
 
