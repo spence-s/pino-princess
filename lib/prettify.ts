@@ -1,6 +1,6 @@
 /* eslint-disable complexity */
 
-import {logLineFactory} from 'json-log-line';
+import {logLineFactory, type Options} from 'json-log-line';
 import _highlight from 'cli-highlight';
 import type {PrettifyOptions} from './utils/types.ts';
 import {Formatter} from './formatters.ts';
@@ -68,9 +68,10 @@ export function prettify({
     ...format,
   };
 
-  const opts = {
+  const opts: Options = {
     include: [...include, ...Object.keys(formatters)],
     exclude: ['req', 'res', 'hostname', 'pid', ...exclude],
+    parseDeep: true,
     format: formatters,
   };
 
