@@ -122,11 +122,13 @@ export class Formatter {
       : stringified.replace(/^{\n/, '').replace(/\n}$/, '');
   };
 
-  formatLevel = (_level: NumLevels | Levels): string => {
-    const level: Levels =
-      numLevelsMapping[_level as NumLevels] || (_level as Levels);
+  formatLevel = (_level?: NumLevels | Levels): string => {
+    const level: Levels | undefined =
+      typeof _level === 'number'
+        ? (numLevelsMapping[_level] as Levels | undefined)
+        : (_level?.toLowerCase() as Levels | undefined);
 
-    if (!this.emojiMap?.[level]) return '';
+    if (!level || !this.emojiMap?.[level]) return '';
     const endlen = 5;
     const emoji = this.emojiMap[level];
     const padding = ' ';
@@ -140,11 +142,11 @@ export class Formatter {
     );
   };
 
-  formatLoadTime = (elapsedTime: string | number): string => {
+  formatLoadTime = (elapsedTime?: string | number): string => {
     const elapsed =
       typeof elapsedTime === 'string'
         ? Number.parseInt(elapsedTime, 10)
-        : elapsedTime;
+        : (elapsedTime ?? 0);
     const time = prettyMs(elapsed);
     return elapsed > 750
       ? this.chalk.red(time)
@@ -154,21 +156,23 @@ export class Formatter {
   };
 
   formatTime = (
-    instant: string | number,
+    instant?: string | number,
     timeFormat: string = defaultTimeFormat,
   ): string => {
-    return this.chalk.gray(`[${format(new Date(instant), timeFormat)}]`);
+    return this.chalk.gray(
+      `[${format(new Date(instant ?? Date.now()), timeFormat)}]`,
+    );
   };
 
-  formatName = (name: string): string => {
+  formatName = (name?: string): string => {
     if (!name) return '';
 
     return this.chalk.blue(`[${name}]`);
   };
 
   formatMessage = (
-    message: string,
-    {level}: {level: NumLevels | Levels},
+    message?: string,
+    {level}: {level?: NumLevels | Levels} = {},
   ): string => {
     if (message === undefined) return '';
     let pretty = '';
@@ -183,13 +187,13 @@ export class Formatter {
     return pretty || message;
   };
 
-  formatBundleSize = (bundle: string): string => {
-    const bytes = Number.parseInt(bundle, 10);
+  formatBundleSize = (bundle?: string): string => {
+    const bytes = Number.parseInt(bundle ?? '0', 10);
     const size = `${bytes}B`;
     return this.chalk.gray(size);
   };
 
-  formatUrl = (url: string, logObj: Record<string, unknown> = {}): string => {
+  formatUrl = (url?: string, logObj: Record<string, unknown> = {}): string => {
     const statusCode: unknown = getValue(
       logObj,
       this.keyMap['res.statusCode'] ?? 'res.statusCode',
@@ -199,7 +203,8 @@ export class Formatter {
       : `    ${this.chalk.magenta(url)}`;
   };
 
-  formatMethod = (method: string): string => {
+  formatMethod = (method?: string): string => {
+    if (!method) return '';
     if (method.toLowerCase() === 'delete') {
       method = 'DEL';
     }
@@ -217,16 +222,16 @@ export class Formatter {
     ](statusCode);
   };
 
-  formatStack = (stack: string): string => {
+  formatStack = (stack?: string): string => {
     return stack ? this.chalk.grey(nl + '  ' + stack) : '';
   };
 
   formatErrorProp = (
-    errorPropValue: Partial<
+    errorPropValue?: Partial<
       SerializedError & {aggregateErrors?: SerializedError[]}
     >,
   ): string => {
-    if (Array.isArray(errorPropValue.aggregateErrors)) {
+    if (Array.isArray(errorPropValue?.aggregateErrors)) {
       const {aggregateErrors, ...ogErr} = errorPropValue;
       return (
         [isObject(ogErr) ? this.formatErrorProp(ogErr) : undefined]
@@ -244,15 +249,15 @@ export class Formatter {
 
     let stack = '';
 
-    if (errorPropValue.type) delete errorPropValue.type;
-    if (errorPropValue.stack) {
+    if (errorPropValue?.type) delete errorPropValue.type;
+    if (errorPropValue?.stack) {
       stack += this.formatStack(errorPropValue.stack);
       delete errorPropValue.stack;
     }
 
-    if (errorPropValue.message) delete errorPropValue.message;
+    if (errorPropValue?.message) delete errorPropValue.message;
 
-    const hasExtraData = Object.keys(errorPropValue).length > 0;
+    const hasExtraData = Object.keys(errorPropValue ?? {}).length > 0;
 
     if (!stack && !hasExtraData) return '';
 
