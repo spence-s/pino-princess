@@ -7,6 +7,7 @@ import pump from 'pump';
 import {cosmiconfigSync} from 'cosmiconfig';
 import type {PrettifyOptions} from './lib/utils/types.ts';
 import {build} from './index.ts';
+import pkg from './package.json' with {type: 'json'};
 
 const helpText = `
 Pino Princess - Pretty print json logs with emojis and colors
@@ -22,6 +23,7 @@ Options
   --timeKey        key for the time field, defaults to 'time'
   --timeFormat     format for the time field, passed to date-fns format defaults to 'h:mm:ss.SSS aaa'
   --singleLine     format the output as a single line, defaults to false
+  --sync           enable synchronous SonicBoom writes
   --unicode        force unicode emojis on, auto-detected by default
   --no-unicode     force unicode emojis off
   --colors         enable all color output, auto-detected by default
@@ -33,6 +35,10 @@ const cli = util.parseArgs({
     help: {
       type: 'boolean',
       short: 'h',
+    },
+    version: {
+      type: 'boolean',
+      short: 'v',
     },
     exclude: {
       type: 'string',
@@ -57,6 +63,9 @@ const cli = util.parseArgs({
     singleLine: {
       type: 'boolean',
     },
+    sync: {
+      type: 'boolean',
+    },
     timeFormat: {
       type: 'string',
     },
@@ -79,6 +88,11 @@ const cliConfig: PrettifyOptions = {};
 
 if (cli.values.help) {
   console.log(helpText);
+  process.exit(0);
+}
+
+if (cli.values.version) {
+  console.log(pkg.version);
   process.exit(0);
 }
 
@@ -112,6 +126,7 @@ if (cli.values.timeKey) {
   cliConfig.timeKey = cli.values.timeKey;
 }
 
+cliConfig.sync = cli.values.sync;
 cliConfig.unicode = cli.values.unicode;
 cliConfig.colors = cli.values.colors;
 

@@ -5,7 +5,6 @@ import __SonicBoom, {
 } from 'sonic-boom';
 import * as onExit from 'on-exit-leak-free';
 
-// eslint-disable-next-line @typescript-eslint/naming-convention
 const SonicBoom = __SonicBoom as unknown as typeof SonicBoomType;
 
 // eslint-disable-next-line @typescript-eslint/no-empty-function

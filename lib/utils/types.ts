@@ -113,6 +113,13 @@ export type PrettifyOptions = {
    */
   singleLine?: boolean;
   /**
+   * Enable synchronous writes in SonicBoom when pino-princess creates the destination stream.
+   * This matches SonicBoom's `sync` option and defaults to asynchronous writes when unset.
+   *
+   * @default false
+   */
+  sync?: boolean;
+  /**
    * Force unicode emoji support on or off. When undefined, unicode support is auto-detected
    * based on your terminal capabilities using the 'is-unicode-supported' package.
    *

@@ -191,6 +191,31 @@ test('cli respects --singleLine option', async (t) => {
   t.false(stdout.includes('\n'));
 });
 
+test('cli accepts --sync and --no-sync options', async (t) => {
+  const input = JSON.stringify({
+    level: 30,
+    msg: 'hello',
+    time: Date.now(),
+  });
+
+  const {stdout: stdoutDefault} = await execa('node', ['cli.ts'], {
+    input,
+  });
+  const {stdout: stdoutWithSync} = await execa('node', ['cli.ts', '--sync'], {
+    input,
+  });
+  const {stdout: stdoutWithoutSync} = await execa(
+    'node',
+    ['cli.ts', '--no-sync'],
+    {
+      input,
+    },
+  );
+
+  t.is(stdoutWithSync, stdoutDefault);
+  t.is(stdoutWithoutSync, stdoutDefault);
+});
+
 test('cli respects --colors option', async (t) => {
   const input = {
     level: 30,

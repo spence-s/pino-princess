@@ -70,6 +70,7 @@ node my-application-which-logs-with-pino.js | npx pino-princess
 | `--timeKey`       |            | string  | Key name for the time field in your log objects.                                      | `'time'`            |
 | `--timeFormat`    |            | string  | Time format string passed to [date-fns format](https://date-fns.org/docs/format).     | `'h:mm:ss.SSS aaa'` |
 | `--singleLine`    |            | boolean | Format the entire log output as a single line with no newlines.                       | `false`             |
+| `--sync`          |            | boolean | Enable synchronous SonicBoom writes for the output stream.                            | `false`             |
 | `--unicode`       |            | boolean | Force unicode emoji support on or off. Auto-detected by default.                      | auto-detect         |
 | `--colors`        |            | boolean | Enable or disable colored output. Auto-detected by default.                           | auto-detect         |
 
@@ -93,6 +94,9 @@ node app.js | pino-princess --timeFormat "yyyy-MM-dd HH:mm:ss"
 
 # Single line output
 node app.js | pino-princess --singleLine
+
+# Enable synchronous writes
+node app.js | pino-princess --sync
 
 # Force unicode off for CI environments
 node app.js | pino-princess --no-unicode
@@ -197,6 +201,16 @@ module.exports = {
    * Format the entire log line on a single line with no new lines
    */
   singleLine: false,
+  /**
+   * sync
+   * boolean
+   *
+   * Enable synchronous SonicBoom writes when pino-princess creates the destination stream.
+   * By default, writes are asynchronous.
+   *
+   * default: false
+   */
+  sync: false,
   /**
    * unicode
    * boolean
