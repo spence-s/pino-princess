@@ -20,7 +20,7 @@ const {
   supportsUnicode: true,
 });
 
-test('formatLevel', async (t) => {
+test('formatLevel', (t) => {
   /**
    * note: the space after some of the levels is intentional
    * as it is part of the formatLevel function, which pads the shorter strings
@@ -45,7 +45,7 @@ test('formatLevel', async (t) => {
   t.is(debug, '🐛 DEBUG');
 });
 
-test('formatLoadTime', async (t) => {
+test('formatLoadTime', (t) => {
   const loadTime1 = stripAnsi(formatLoadTime('0.1') ?? '');
   t.is(loadTime1, '0ms');
 
@@ -56,20 +56,12 @@ test('formatLoadTime', async (t) => {
   t.is(loadTime3, '500ms');
 });
 
-// test.skip('formatDate', async (t) => {
-//
-//   const ts = new Date('2020-01-01T00:00:00.000Z').getTime();
-
-//   const date1 = stripAnsi(formatDate(ts) ?? '');
-//   t.is(date1, `[${dayjs.utc(ts).format('H:mm:ss')}]`);
-// });
-
-test('formatName', async (t) => {
+test('formatName', (t) => {
   const name1 = stripAnsi(formatName('name') ?? '');
   t.is(name1, '[name]');
 });
 
-test('formatMessage', async (t) => {
+test('formatMessage', (t) => {
   const messageInfo = stripAnsi(formatMessage('message', {level: 30}) ?? '');
   t.is(messageInfo, 'message');
 
@@ -90,7 +82,7 @@ test('formatMessage', async (t) => {
   t.is(messageDebug, 'message');
 });
 
-test('formatExtraFields', async (t) => {
+test('formatExtraFields', (t) => {
   const extraFields = stripAnsi(
     formatExtraFields({
       extra: 'fields',
@@ -99,17 +91,17 @@ test('formatExtraFields', async (t) => {
   t.is(extraFields, '\n  "extra": "fields"');
 });
 
-test('formatMethod', async (t) => {
+test('formatMethod', (t) => {
   const method = stripAnsi(formatMethod('method') ?? '');
   t.is(method, 'METHOD');
 });
 
-test('formatStack', async (t) => {
+test('formatStack', (t) => {
   const stackFormatted = stripAnsi(formatStack('stack') ?? '');
   t.is(stackFormatted, '\n  stack');
 });
 
-test('formatUrl', async (t) => {
+test('formatUrl', (t) => {
   const url = stripAnsi(formatUrl('url') ?? '');
   t.is(url, '    url');
 
@@ -121,17 +113,17 @@ test('formatUrl', async (t) => {
   t.is(urlWithStatusCode, 'url');
 });
 
-test('formatStatusCode', async (t) => {
+test('formatStatusCode', (t) => {
   const statusCode = stripAnsi(formatStatusCode(200) ?? '');
   t.is(statusCode, '200');
 });
 
-test('formatId', async (t) => {
+test('formatId', (t) => {
   const statusCode = stripAnsi(formatId('12345') ?? '');
   t.is(statusCode, '[ID:12345]');
 });
 
-test('formatErrorProp > basic error', async (t) => {
+test('formatErrorProp > basic error', (t) => {
   const error = new Error('test error');
 
   const errorProp = stripAnsi(

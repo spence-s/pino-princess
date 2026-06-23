@@ -140,7 +140,7 @@ module.exports = {
    *
    * default value:
    */
-  exclude: ["req", "res"],
+  exclude: ['req', 'res'],
 
   /**
    * include
@@ -155,19 +155,19 @@ module.exports = {
    * default value:
    */
   include: [
-    "res.statusCode",
-    "req.method",
-    "req.url",
-    "req.id",
-    "level",
-    "name",
-    "msg",
-    "responseTime",
+    'res.statusCode',
+    'req.method',
+    'req.url',
+    'req.id',
+    'level',
+    'name',
+    'msg',
+    'responseTime',
   ],
   /**
    * Configure the message key
    */
-  messageKey: "msg",
+  messageKey: 'msg',
   /**
    * errorLikeKeys
    * string[]
@@ -191,12 +191,12 @@ module.exports = {
   /**
    * The key to use for the time segment. Defaults to `time`.
    */
-  timeKey: "time",
+  timeKey: 'time',
   /**
    * Supply a custom time format. The time format by default is passed directly to date-fns format
    * https://date-fns.org/docs/format
    */
-  timeFormat: "h:mm:ss.SSS aaa",
+  timeFormat: 'h:mm:ss.SSS aaa',
   /**
    * Format the entire log line on a single line with no new lines
    */

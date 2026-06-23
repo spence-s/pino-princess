@@ -1,5 +1,3 @@
-/* eslint-disable complexity */
-
 import {logLineFactory, type Options} from 'json-log-line';
 import _highlight from 'cli-highlight';
 import type {PrettifyOptions} from './utils/types.ts';
@@ -7,6 +5,7 @@ import {Formatter} from './formatters.ts';
 
 const defaultTimeFormat = 'h:mm:ss.SSS aaa';
 
+// eslint-disable-next-line complexity
 export function prettify({
   messageKey,
   timeKey,
@@ -46,7 +45,9 @@ export function prettify({
 
   let errorKeys = ['err', 'error', ...errorLikeKeys];
 
-  if (errorKey) errorKeys.push(errorKey);
+  if (errorKey) {
+    errorKeys.push(errorKey);
+  }
 
   // deduplicate error keys
   errorKeys = [...new Set(errorKeys)];

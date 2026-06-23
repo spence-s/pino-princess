@@ -40,18 +40,16 @@ function buildSafeSonicBoom(options: SonicBoomOpts) {
 
 function setupOnExit(stream: SonicBoomType) {
   /* istanbul ignore next */
-  if (
-    globalThis.WeakRef &&
-    globalThis.WeakMap &&
-    globalThis.FinalizationRegistry
-  ) {
-    // This is leak free, it does not leave event handlers
-    onExit.register(stream, autoEnd);
-
-    stream.on('close', function () {
-      onExit.unregister(stream);
-    });
+  if (!(WeakRef && WeakMap && FinalizationRegistry)) {
+    return;
   }
+
+  // This is leak free, it does not leave event handlers
+  onExit.register(stream, autoEnd);
+
+  stream.on('close', () => {
+    onExit.unregister(stream);
+  });
 }
 
 function autoEnd(
@@ -67,7 +65,7 @@ function autoEnd(
   if (eventName === 'beforeExit') {
     // We still have an event loop, let's use it
     stream.flush();
-    stream.on('drain', function () {
+    stream.on('drain', () => {
       stream.end();
     });
   } else {

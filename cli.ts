@@ -148,5 +148,5 @@ pump(process.stdin, res);
 
 if (!process.stdin.isTTY && !fs.fstatSync(process.stdin.fd).isFile()) {
   // eslint-disable-next-line @typescript-eslint/no-empty-function
-  process.once('SIGINT', function () {});
+  process.once('SIGINT', () => {});
 }

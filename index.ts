@@ -39,7 +39,7 @@ function build(
       });
     }
 
-    source.on('unknown', function (line) {
+    source.on('unknown', (line) => {
       destination.write(line + '\n');
     });
 

@@ -117,18 +117,21 @@ export class Formatter {
       return stringified;
     }
 
-    return /^{.*"/.test(stringified)
-      ? '  ' + stringified.replace(/^{/, '').replace(/}$/, '')
-      : stringified.replace(/^{\n/, '').replace(/\n}$/, '');
+    return /^\{.*"/.test(stringified)
+      ? '  ' + stringified.replace(/^\{/, '').replace(/\}$/, '')
+      : stringified.replace(/^\{\n/, '').replace(/\n\}$/, '');
   };
 
   formatLevel = (_level?: NumLevels | Levels): string => {
     const level: Levels | undefined =
       typeof _level === 'number'
-        ? (numLevelsMapping[_level] as Levels | undefined)
+        ? numLevelsMapping[_level]
         : (_level?.toLowerCase() as Levels | undefined);
 
-    if (!level || !this.emojiMap?.[level]) return '';
+    if (!level || !this.emojiMap?.[level]) {
+      return '';
+    }
+
     const endlen = 5;
     const emoji = this.emojiMap[level];
     const padding = ' ';
@@ -158,14 +161,13 @@ export class Formatter {
   formatTime = (
     instant?: string | number,
     timeFormat: string = defaultTimeFormat,
-  ): string => {
-    return this.chalk.gray(
-      `[${format(new Date(instant ?? Date.now()), timeFormat)}]`,
-    );
-  };
+  ): string =>
+    this.chalk.gray(`[${format(new Date(instant ?? Date.now()), timeFormat)}]`);
 
   formatName = (name?: string): string => {
-    if (!name) return '';
+    if (!name) {
+      return '';
+    }
 
     return this.chalk.blue(`[${name}]`);
   };
@@ -174,15 +176,34 @@ export class Formatter {
     message?: string,
     {level}: {level?: NumLevels | Levels} = {},
   ): string => {
-    if (message === undefined) return '';
+    if (message === undefined) {
+      return '';
+    }
+
     let pretty = '';
-    if (level === 50 || level === 'error') pretty = this.chalk.red(message);
-    if (level === 10 || level === 'trace') pretty = this.chalk.cyan(message);
-    if (level === 40 || level === 'warn') pretty = this.chalk.yellow(message);
-    if (level === 20 || level === 'debug') pretty = this.chalk.white(message);
-    if (level === 30 || level === 'info') pretty = this.chalk.white(message);
-    if (level === 60 || level === 'fatal')
+    if (level === 50 || level === 'error') {
+      pretty = this.chalk.red(message);
+    }
+
+    if (level === 10 || level === 'trace') {
+      pretty = this.chalk.cyan(message);
+    }
+
+    if (level === 40 || level === 'warn') {
+      pretty = this.chalk.yellow(message);
+    }
+
+    if (level === 20 || level === 'debug') {
+      pretty = this.chalk.white(message);
+    }
+
+    if (level === 30 || level === 'info') {
+      pretty = this.chalk.white(message);
+    }
+
+    if (level === 60 || level === 'fatal') {
       pretty = this.chalk.white.bgRedBright(message);
+    }
 
     return pretty || message;
   };
@@ -204,7 +225,10 @@ export class Formatter {
   };
 
   formatMethod = (method?: string): string => {
-    if (!method) return '';
+    if (!method) {
+      return '';
+    }
+
     if (method.toLowerCase() === 'delete') {
       method = 'DEL';
     }
@@ -212,19 +236,17 @@ export class Formatter {
     return method ? this.chalk.white(method.toUpperCase().padEnd(4)) : '';
   };
 
-  formatStatusCode = (statusCode: string | number = 'xxx'): string => {
-    return this.chalk[
+  formatStatusCode = (statusCode: string | number = 'xxx'): string =>
+    this.chalk[
       typeof statusCode === 'number' && statusCode < 300
         ? 'green'
         : typeof statusCode === 'number' && statusCode < 500
           ? 'yellow'
           : 'red'
     ](statusCode);
-  };
 
-  formatStack = (stack?: string): string => {
-    return stack ? this.chalk.grey(nl + '  ' + stack) : '';
-  };
+  formatStack = (stack?: string): string =>
+    stack ? this.chalk.grey(nl + '  ' + stack) : '';
 
   formatErrorProp = (
     errorPropValue?: Partial<
@@ -249,17 +271,24 @@ export class Formatter {
 
     let stack = '';
 
-    if (errorPropValue?.type) delete errorPropValue.type;
+    if (errorPropValue?.type) {
+      delete errorPropValue.type;
+    }
+
     if (errorPropValue?.stack) {
       stack += this.formatStack(errorPropValue.stack);
       delete errorPropValue.stack;
     }
 
-    if (errorPropValue?.message) delete errorPropValue.message;
+    if (errorPropValue?.message) {
+      delete errorPropValue.message;
+    }
 
     const hasExtraData = Object.keys(errorPropValue ?? {}).length > 0;
 
-    if (!stack && !hasExtraData) return '';
+    if (!stack && !hasExtraData) {
+      return '';
+    }
 
     return (
       stack +
@@ -292,7 +321,5 @@ export class Formatter {
     );
   };
 
-  formatId = (id: string) => {
-    return id ? this.chalk.yellow(`[ID:${id}]`) : '';
-  };
+  formatId = (id: string) => (id ? this.chalk.yellow(`[ID:${id}]`) : '');
 }

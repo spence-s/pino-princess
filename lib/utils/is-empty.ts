@@ -1,11 +1,11 @@
 import isObject from './is-object.ts';
 
 function isEmpty(object: unknown): boolean {
-  return Boolean(
+  return (
     isObject(object) &&
     (object === undefined ||
       object === null ||
-      Object.keys(object).length === 0),
+      Object.keys(object).length === 0)
   );
 }
 
